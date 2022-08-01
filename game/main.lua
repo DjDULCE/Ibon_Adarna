@@ -1,8 +1,12 @@
 require("libs.batteries"):export()
+io.stdout:setvbuf("no")
+
 WW = 1920/2
 WH = 1080/2
 
-local StateManager = require("state_manager")
+Assets= require("assets")
+StateManager = require("state_manager")
+
 local Menu = require("menu")
 local canvas
 

@@ -8,11 +8,13 @@ function StateManager:switch(next_state, ...)
     end
 
     self.current = next_state(...)
+    print("Switched to", self.current:type())
     self.current:load(...)
 end
 
 function StateManager:load(...)
     self.current:load(...)
+    print("Loaded", self.current:type())
 end
 
 function StateManager:update(dt)
