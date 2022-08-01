@@ -1,0 +1,3 @@
+[submodule "game/libs/batteries"]
+	path = game/libs/batteries
+	url = https://github.com/1bardesign/batteries
