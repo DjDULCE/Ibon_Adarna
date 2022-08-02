@@ -19,8 +19,8 @@ function love.conf(t)
 	t.modules.video = false
 	t.modules.window = true
 
-	t.window.width = 1920/2
-	t.window.height = 1080/2
+	t.window.width = 960
+	t.window.height = 540
 	t.window.resizable = false
 	t.console = true
 

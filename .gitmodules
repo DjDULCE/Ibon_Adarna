@@ -1,3 +1,6 @@
 [submodule "game/libs/batteries"]
 	path = game/libs/batteries
 	url = https://github.com/1bardesign/batteries
+[submodule "game/libs/anim8"]
+	path = game/libs/anim8
+	url = https://github.com/kikito/anim8
