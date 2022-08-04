@@ -4,3 +4,6 @@
 [submodule "game/libs/anim8"]
 	path = game/libs/anim8
 	url = https://github.com/kikito/anim8
+[submodule "game/libs/json"]
+	path = game/libs/json
+	url = https://github.com/rxi/json.lua

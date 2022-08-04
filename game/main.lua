@@ -11,6 +11,7 @@ Anim8 = require("libs.anim8.anim8")
 Assets= require("assets")
 Button = require("button")
 StateManager = require("state_manager")
+UserData = require("user_data")
 
 local Menu = require("menu")
 local canvas
@@ -25,6 +26,7 @@ function iter_objects(tbl_orders, tbl_objects, fn, ...)
 end
 
 function love.load()
+	UserData:init()
 	canvas = love.graphics.newCanvas(WW, WH)
 
     StateManager.current = Menu()

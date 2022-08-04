@@ -10,6 +10,7 @@ function Button:new(opts)
     self.ox, self.oy = opts.ox or 0, opts.oy or 0
     self.sx_dt = opts.sx_dt or 0.1
     self.sy_dt = opts.sy_dt or 0.1
+    self.color = opts.color or {1, 1, 1}
 
     self.animated = opts.animated
     if self.animated then
@@ -94,7 +95,8 @@ function Button:draw()
         sy = sy + self.sy_dt
     end
 
-    love.graphics.setColor(1, 1, 1, self.alpha)
+    local r, g, b = unpack(self.color)
+    love.graphics.setColor(r, g, b, self.alpha)
 
     if self.anim8 then
         self.anim8:draw(self.image, self.x, self.y, self.r, self.sx, self.sy, self.ox, self.oy)

@@ -1,4 +1,8 @@
-local Assets = {}
+local Assets = {
+    fonts = {
+        impact = love.graphics.newFont(24)
+    }
+}
 
 local ASSETS_PATH = "assets/"
 
