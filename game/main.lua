@@ -27,6 +27,7 @@ end
 
 function love.load()
 	UserData:init()
+	Assets.init()
 	canvas = love.graphics.newCanvas(WW, WH)
 
     StateManager.current = Menu()

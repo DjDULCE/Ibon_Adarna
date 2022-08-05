@@ -1,10 +1,16 @@
 local Assets = {
-    fonts = {
-        impact = love.graphics.newFont(24)
-    }
+    fonts = {}
 }
 
 local ASSETS_PATH = "assets/"
+local IMPACT_PATH = ASSETS_PATH .. "impact.ttf"
+local font_sizes = {24, 32}
+
+function Assets.init()
+    for _, size in ipairs(font_sizes) do
+        Assets.fonts["impact" .. size] = love.graphics.newFont(IMPACT_PATH, size)
+    end
+end
 
 function Assets.load_images(id)
     local images = {}

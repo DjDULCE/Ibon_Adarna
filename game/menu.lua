@@ -13,9 +13,9 @@ function Menu:new()
         "box_title", "ibong_adarna", "title",
         "btn_gear", "btn_trophy", "btn_credits",
         "settings_box", "box_settings", "box_settings_controls1",
-        "box_settings_controls2", "btn_reset",
+        "box_settings_controls2",
         "btn_music_left", "btn_music_right",
-        "btn_sound_left", "btn_sound_right",
+        "btn_sound_left", "btn_sound_right", "btn_x",
     }
 
     for _, opt in ipairs(options) do
@@ -81,7 +81,7 @@ function Menu:load()
     local bb_sx, bb_sy = 0.55, 0.5
     local bb_w, bb_h = self.images.box_button:getDimensions()
     local text_color = {0, 0, 0, 1}
-    local font = Assets.fonts.impact
+    local font = Assets.fonts.impact24
     for i, opt in ipairs(options) do
         local y = WH * 0.4 + (pad + bb_h * bb_sy) * i
         self.objects["btn_" .. string.lower(opt)] = Button({
@@ -113,6 +113,7 @@ function Menu:load()
         ty = credits_y - font:getHeight() * 0.5,
     })
 
+    local font_settings = Assets.fonts.impact32
     local sb_width, sb_height = self.images.settings_box:getDimensions()
     self.objects.settings_box = Button({
         image = self.images.settings_box,
@@ -132,9 +133,9 @@ function Menu:load()
         sx = bs_sx, sy = bs_sy,
         text = "SETTINGS",
         text_color = text_color,
-        font = font,
-        tx = HALF_WW - font:getWidth("SETTINGS") * 0.5,
-        ty = bs_y - font:getHeight() * 0.5,
+        font = font_settings,
+        tx = HALF_WW - font_settings:getWidth("SETTINGS") * 0.5,
+        ty = bs_y - font_settings:getHeight() * 0.5,
         is_clickable = false, is_hoverable = false,
         alpha = 0,
     })
@@ -155,9 +156,9 @@ function Menu:load()
             sx = bsc_sx, sy = bsc_sy,
             text = text,
             text_color = text_color,
-            font = font,
-            tx = self.objects.settings_box.x - sb_width * 0.5 + font:getWidth(text) * 0.5,
-            ty = bsc_y - font:getHeight() * 0.5,
+            font = font_settings,
+            tx = self.objects.settings_box.x - sb_width * 0.5 + font_settings:getWidth(text) * 0.5,
+            ty = bsc_y - font_settings:getHeight() * 0.5,
             is_clickable = false, is_hoverable = false,
             alpha = 0,
         })
@@ -196,10 +197,10 @@ function Menu:load()
             sx = btn_control_sx, sy = btn_control_sy,
             color = left_color,
             text = "ON",
-            font = font,
+            font = font_settings,
             text_color = {1, 1, 1},
-            tx = left_x - font:getWidth("ON") * 0.5,
-            ty = self.objects[ref].y - font:getHeight() * 0.5,
+            tx = left_x - font_settings:getWidth("ON") * 0.5,
+            ty = self.objects[ref].y - font_settings:getHeight() * 0.5,
             sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
             is_clickable = false, is_hoverable = false,
             alpha = 0,
@@ -215,27 +216,24 @@ function Menu:load()
             color = right_color,
             text = "OFF",
             text_color = {1, 1, 1},
-            font = font,
-            tx = right_x - font:getWidth("OFF") * 0.5,
-            ty = self.objects[ref].y - font:getHeight() * 0.5,
+            font = font_settings,
+            tx = right_x - font_settings:getWidth("OFF") * 0.5,
+            ty = self.objects[ref].y - font_settings:getHeight() * 0.5,
             sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
             is_clickable = false, is_hoverable = false,
             alpha = 0,
         })
     end
 
-    local reset_sx, reset_sy = 0.5, 0.5
-    local reset_y = self.objects.settings_box.y + sb_height * 0.5 - bs_height * 0.5
-    self.objects.btn_reset = Button({
-        image = self.images.box_settings,
-        x = HALF_WW, y = reset_y,
-        ox = bs_width * 0.5, oy = bs_height * 0.5,
-        sx = reset_sx, sy = reset_sy,
-        text = "I-RESET",
-        text_color = text_color,
-        font = font,
-        tx = HALF_WW - font:getWidth("I-RESET") * 0.5,
-        ty = reset_y - font:getHeight() * 0.5,
+    local x_width, x_height = self.images.btn_x:getDimensions()
+    local x_scale = 0.2
+    self.objects.btn_x = Button({
+        image = self.images.btn_x,
+        x = self.objects.settings_box.x + sb_width * 0.5 - pad,
+        y = self.objects.settings_box.y - sb_height * 0.5 + pad,
+        ox = x_width * 0.5, oy = x_height * 0.5,
+        sx = x_scale, sy = x_scale,
+        sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
         is_clickable = false, is_hoverable = false,
         alpha = 0,
     })
@@ -263,9 +261,37 @@ function Menu:load()
         self.objects.btn_sound_right.alpha = 1
         self.objects.btn_sound_right.is_clickable = true
         self.objects.btn_sound_right.is_hoverable = true
-        self.objects.btn_reset.alpha = 1
-        self.objects.btn_reset.is_clickable = true
-        self.objects.btn_reset.is_hoverable = true
+        self.objects.btn_x.alpha = 1
+        self.objects.btn_x.is_clickable = true
+        self.objects.btn_x.is_hoverable = true
+    end
+
+    self.objects.btn_x.on_clicked = function()
+        for _, opt in ipairs(options) do
+            local key = "btn_" .. string.lower(opt)
+            self.objects[key].is_clickable = true
+            self.objects[key].is_hoverable = true
+        end
+
+        self.objects.settings_box.alpha = 0
+        self.objects.box_settings.alpha = 0
+        self.objects.box_settings_controls1.alpha = 0
+        self.objects.box_settings_controls2.alpha = 0
+        self.objects.btn_music_left.alpha = 0
+        self.objects.btn_music_left.is_clickable = false
+        self.objects.btn_music_left.is_hoverable = false
+        self.objects.btn_music_right.alpha = 0
+        self.objects.btn_music_right.is_clickable = false
+        self.objects.btn_music_right.is_hoverable = false
+        self.objects.btn_sound_left.alpha = 0
+        self.objects.btn_sound_left.is_clickable = false
+        self.objects.btn_sound_left.is_hoverable = false
+        self.objects.btn_sound_right.alpha = 0
+        self.objects.btn_sound_right.is_clickable = false
+        self.objects.btn_sound_right.is_hoverable = false
+        self.objects.btn_x.alpha = 0
+        self.objects.btn_x.is_clickable = false
+        self.objects.btn_x.is_hoverable = false
     end
 
     local btn_music_left = self.objects.btn_music_left
