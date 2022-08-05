@@ -5,6 +5,7 @@ local UserData = {
     data = {
         music = 1,
         sound = 1,
+        score = {0, 0, 0},
     },
 }
 
@@ -30,6 +31,10 @@ function UserData:save()
 end
 
 function UserData:reset_progress()
+    local score = UserData.data.score
+    for i = 1, #score do
+        score[i] = 0
+    end
 end
 
 return UserData

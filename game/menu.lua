@@ -3,6 +3,21 @@ local Menu = class({
 })
 
 local options = {"MAGUMPISA", "MAGPATULOY", "LUMISAN"}
+local pad = 16
+local btn_scale = 1.25
+local text_color = {0, 0, 0}
+local font_impact32
+
+local function update_group(tbl, alpha, interactive)
+    for i = 1, #tbl do
+        local obj = tbl[i]
+        if obj then
+            obj.alpha = alpha
+            obj.is_hoverable = interactive
+            obj.is_clickable = interactive
+        end
+    end
+end
 
 function Menu:new()
     local id = self:type()
@@ -12,15 +27,21 @@ function Menu:new()
     self.orders = {
         "box_title", "ibong_adarna", "title",
         "btn_gear", "btn_trophy", "btn_credits",
-        "settings_box", "box_settings", "box_settings_controls1",
-        "box_settings_controls2",
+        "menu_box", "box_settings",
+        "box_settings_controls1", "box_settings_controls2",
         "btn_music_left", "btn_music_right",
         "btn_sound_left", "btn_sound_right", "btn_x",
+        "box_leaderboards",
+        "box_score1", "box_score2", "box_score3",
+        "avatar1", "avatar2", "avatar3",
+        "btn_reset",
     }
 
     for _, opt in ipairs(options) do
         table.insert(self.orders, 6, "btn_" .. string.lower(opt))
     end
+
+    font_impact32 = Assets.fonts.impact32
 end
 
 function Menu:load()
@@ -33,6 +54,7 @@ function Menu:load()
         sx = box_title_sx, sy = box_title_sy,
         ox = box_title_w * 0.5, oy = box_title_h * 0.5,
         is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
     })
 
     local title_w, title_h = self.images.title:getDimensions()
@@ -44,6 +66,7 @@ function Menu:load()
         ox = title_w * 0.5, oy = title_h * 0.5,
         sx = title_sx, sy = title_sy,
         is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
     })
 
     local ia_w, ia_h = self.images.ibong_adarna:getDimensions()
@@ -56,10 +79,9 @@ function Menu:load()
         oy = ia_h * 0.5,
         sx = ia_scale, sy = ia_scale,
         is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
     })
 
-    local pad = 16
-    local btn_scale = 1.25
     local gear_w, gear_h = self.images.btn_gear:getDimensions()
     self.objects.btn_gear = Button({
         image = self.images.btn_gear,
@@ -80,7 +102,6 @@ function Menu:load()
 
     local bb_sx, bb_sy = 0.55, 0.5
     local bb_w, bb_h = self.images.box_button:getDimensions()
-    local text_color = {0, 0, 0, 1}
     local font = Assets.fonts.impact24
     for i, opt in ipairs(options) do
         local y = WH * 0.4 + (pad + bb_h * bb_sy) * i
@@ -98,7 +119,6 @@ function Menu:load()
         })
     end
 
-
     local credits_x = bb_w * bb_sx * 0.5 + pad
     local credits_y = WH - bb_h * bb_sy * 0.5 - pad
     self.objects.btn_credits = Button({
@@ -113,18 +133,36 @@ function Menu:load()
         ty = credits_y - font:getHeight() * 0.5,
     })
 
-    local font_settings = Assets.fonts.impact32
-    local sb_width, sb_height = self.images.settings_box:getDimensions()
-    self.objects.settings_box = Button({
-        image = self.images.settings_box,
+    self.group_main = {
+        self.objects.btn_credits,
+        self.objects.btn_gear,
+        self.objects.btn_trophy,
+        self.objects.box_title,
+        self.objects.title,
+        self.objects.ibong_adarna,
+    }
+    for _, opt in ipairs(options) do
+        local key = "btn_" .. string.lower(opt)
+        table.insert(self.group_main, self.objects[key])
+    end
+
+    self:setup_settings()
+    self:setup_leaderboards()
+end
+
+function Menu:setup_settings()
+    local mb_width, mb_height = self.images.menu_box:getDimensions()
+    self.objects.menu_box = Button({
+        image = self.images.menu_box,
         x = HALF_WW, y = HALF_WH,
-        ox = sb_width * 0.5, oy = sb_height * 0.5,
+        ox = mb_width * 0.5, oy = mb_height * 0.5,
         is_clickable = false, is_hoverable = false,
+        force_non_interactive = true,
         alpha = 0,
     })
 
     local bs_width, bs_height = self.images.box_settings:getDimensions()
-    local bs_y = self.objects.settings_box.y - sb_height * 0.5
+    local bs_y = self.objects.menu_box.y - mb_height * 0.5
     local bs_sx, bs_sy = 0.5, 0.75
     self.objects.box_settings = Button({
         image = self.images.box_settings,
@@ -133,10 +171,11 @@ function Menu:load()
         sx = bs_sx, sy = bs_sy,
         text = "SETTINGS",
         text_color = text_color,
-        font = font_settings,
-        tx = HALF_WW - font_settings:getWidth("SETTINGS") * 0.5,
-        ty = bs_y - font_settings:getHeight() * 0.5,
+        font = font_impact32,
+        tx = HALF_WW - font_impact32:getWidth("SETTINGS") * 0.5,
+        ty = bs_y - font_impact32:getHeight() * 0.5,
         is_clickable = false, is_hoverable = false,
+        force_non_interactive = true,
         alpha = 0,
     })
 
@@ -156,10 +195,11 @@ function Menu:load()
             sx = bsc_sx, sy = bsc_sy,
             text = text,
             text_color = text_color,
-            font = font_settings,
-            tx = self.objects.settings_box.x - sb_width * 0.5 + font_settings:getWidth(text) * 0.5,
-            ty = bsc_y - font_settings:getHeight() * 0.5,
+            font = font_impact32,
+            tx = self.objects.menu_box.x - mb_width * 0.5 + font_impact32:getWidth(text) * 0.5,
+            ty = bsc_y - font_impact32:getHeight() * 0.5,
             is_clickable = false, is_hoverable = false,
+            force_non_interactive = true,
             alpha = 0,
         })
     end
@@ -197,10 +237,11 @@ function Menu:load()
             sx = btn_control_sx, sy = btn_control_sy,
             color = left_color,
             text = "ON",
-            font = font_settings,
+            font = font_impact32,
             text_color = {1, 1, 1},
-            tx = left_x - font_settings:getWidth("ON") * 0.5,
-            ty = self.objects[ref].y - font_settings:getHeight() * 0.5,
+            tx = left_x, ty = self.objects[ref].y,
+            tox = font_impact32:getWidth("ON") * 0.5,
+            toy = font_impact32:getHeight() * 0.5,
             sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
             is_clickable = false, is_hoverable = false,
             alpha = 0,
@@ -216,9 +257,10 @@ function Menu:load()
             color = right_color,
             text = "OFF",
             text_color = {1, 1, 1},
-            font = font_settings,
-            tx = right_x - font_settings:getWidth("OFF") * 0.5,
-            ty = self.objects[ref].y - font_settings:getHeight() * 0.5,
+            font = font_impact32,
+            tx = right_x, ty = self.objects[ref].y,
+            tox = font_impact32:getWidth("OFF") * 0.5,
+            toy = font_impact32:getHeight() * 0.5,
             sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
             is_clickable = false, is_hoverable = false,
             alpha = 0,
@@ -229,8 +271,8 @@ function Menu:load()
     local x_scale = 0.2
     self.objects.btn_x = Button({
         image = self.images.btn_x,
-        x = self.objects.settings_box.x + sb_width * 0.5 - pad,
-        y = self.objects.settings_box.y - sb_height * 0.5 + pad,
+        x = self.objects.menu_box.x + mb_width * 0.5 - pad,
+        y = self.objects.menu_box.y - mb_height * 0.5 + pad,
         ox = x_width * 0.5, oy = x_height * 0.5,
         sx = x_scale, sy = x_scale,
         sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
@@ -238,60 +280,27 @@ function Menu:load()
         alpha = 0,
     })
 
-    self.objects.btn_gear.on_clicked = function()
-        for _, opt in ipairs(options) do
-            local key = "btn_" .. string.lower(opt)
-            self.objects[key].is_clickable = false
-            self.objects[key].is_hoverable = false
-        end
+    self.group_settings = {
+        self.objects.menu_box,
+        self.objects.box_settings,
+        self.objects.box_settings_controls1,
+        self.objects.box_settings_controls2,
+        self.objects.btn_music_left,
+        self.objects.btn_music_right,
+        self.objects.btn_sound_left,
+        self.objects.btn_sound_right,
+        self.objects.btn_x,
+    }
 
-        self.objects.settings_box.alpha = 1
-        self.objects.box_settings.alpha = 1
-        self.objects.box_settings_controls1.alpha = 1
-        self.objects.box_settings_controls2.alpha = 1
-        self.objects.btn_music_left.alpha = 1
-        self.objects.btn_music_left.is_clickable = true
-        self.objects.btn_music_left.is_hoverable = true
-        self.objects.btn_music_right.alpha = 1
-        self.objects.btn_music_right.is_clickable = true
-        self.objects.btn_music_right.is_hoverable = true
-        self.objects.btn_sound_left.alpha = 1
-        self.objects.btn_sound_left.is_clickable = true
-        self.objects.btn_sound_left.is_hoverable = true
-        self.objects.btn_sound_right.alpha = 1
-        self.objects.btn_sound_right.is_clickable = true
-        self.objects.btn_sound_right.is_hoverable = true
-        self.objects.btn_x.alpha = 1
-        self.objects.btn_x.is_clickable = true
-        self.objects.btn_x.is_hoverable = true
+    self.objects.btn_gear.on_clicked = function()
+        update_group(self.group_main, 0, false)
+        update_group(self.group_settings, 1, true)
     end
 
     self.objects.btn_x.on_clicked = function()
-        for _, opt in ipairs(options) do
-            local key = "btn_" .. string.lower(opt)
-            self.objects[key].is_clickable = true
-            self.objects[key].is_hoverable = true
-        end
-
-        self.objects.settings_box.alpha = 0
-        self.objects.box_settings.alpha = 0
-        self.objects.box_settings_controls1.alpha = 0
-        self.objects.box_settings_controls2.alpha = 0
-        self.objects.btn_music_left.alpha = 0
-        self.objects.btn_music_left.is_clickable = false
-        self.objects.btn_music_left.is_hoverable = false
-        self.objects.btn_music_right.alpha = 0
-        self.objects.btn_music_right.is_clickable = false
-        self.objects.btn_music_right.is_hoverable = false
-        self.objects.btn_sound_left.alpha = 0
-        self.objects.btn_sound_left.is_clickable = false
-        self.objects.btn_sound_left.is_hoverable = false
-        self.objects.btn_sound_right.alpha = 0
-        self.objects.btn_sound_right.is_clickable = false
-        self.objects.btn_sound_right.is_hoverable = false
-        self.objects.btn_x.alpha = 0
-        self.objects.btn_x.is_clickable = false
-        self.objects.btn_x.is_hoverable = false
+        update_group(self.group_main, 1, true)
+        update_group(self.group_settings, 0, false)
+        update_group(self.group_leaderboards, 0, false)
     end
 
     local btn_music_left = self.objects.btn_music_left
@@ -328,6 +337,112 @@ function Menu:toggle_control(btn)
         UserData.data.sound = 0
     end
     UserData:save()
+end
+
+function Menu:setup_leaderboards()
+    local mb_width, mb_height = self.images.menu_box:getDimensions()
+
+    local bs_width, bs_height = self.images.box_settings:getDimensions()
+    local bl_y = self.objects.menu_box.y - mb_height * 0.5
+    local bl_sx, bl_sy = 0.75, 0.75
+    self.objects.box_leaderboards = Button({
+        image = self.images.box_settings,
+        x = HALF_WW, y = bl_y,
+        ox = bs_width * 0.5, oy = bs_height * 0.5,
+        sx = bl_sx, sy = bl_sy,
+        text = "TALAAN NG ISKOR",
+        text_color = text_color,
+        font = font_impact32,
+        tx = HALF_WW - font_impact32:getWidth("TALAAN NG ISKOR") * 0.5,
+        ty = bl_y - font_impact32:getHeight() * 0.5,
+        is_clickable = false, is_hoverable = false,
+        force_non_interactive = true,
+        alpha = 0,
+    })
+
+    local reset_sx, reset_sy = 0.5, 0.4
+    local reset_y = self.objects.menu_box.y + mb_height * 0.5 - bs_height * 0.5 + pad * 0.5
+    self.objects.btn_reset = Button({
+        image = self.images.box_settings,
+        x = HALF_WW, y = reset_y,
+        ox = bs_width * 0.5, oy = bs_height * 0.5,
+        sx = reset_sx, sy = reset_sy,
+        text = "I-RESET",
+        text_color = text_color,
+        font = font_impact32,
+        tx = HALF_WW, ty = reset_y,
+        tox = font_impact32:getWidth("I-RESET") * 0.5,
+        toy = font_impact32:getHeight() * 0.5,
+        is_clickable = false, is_hoverable = false,
+        alpha = 0,
+    })
+
+    local avatar_width, avatar_height = self.images.avatar:getDimensions()
+    local avatar_scale = 0.25
+    local score_width, score_height = self.images.box_score:getDimensions()
+    local bs_sx = 0.6
+    local bs_sy = 0.5
+    local texts = {"Iskor ng Madali", "Iskor ng Normal", "Iskor ng Mahirap"}
+    local score = UserData.data.score
+    local spaces = string.rep(" ", 8)
+    for i = 1, 3 do
+        local key = "avatar" .. i
+        local avatar_y = self.objects.box_leaderboards.y + bs_height * bl_sy * 0.5 + pad * 2
+        avatar_y = avatar_y + avatar_height * avatar_scale * (i - 1) + (pad * (i - 1))
+        self.objects[key] = Button({
+            image = self.images.avatar,
+            x = self.objects.menu_box.x - mb_width * 0.5 + pad * 4,
+            y = avatar_y,
+            ox = avatar_width * 0.5, oy = avatar_height * 0.5,
+            sx = avatar_scale, sy = avatar_scale,
+            is_clickable = false, is_hoverable = false,
+            force_non_interactive = true,
+            alpha = 0,
+        })
+
+        local key2 = "box_score" .. i
+        local bs_x = self.objects[key].x + avatar_width * avatar_scale * 0.5 + pad * 2
+        bs_x = bs_x + score_width * bs_sx * 0.5
+        local text = string.format("%s:%s%d", texts[i], spaces, tostring(score[i]))
+        self.objects[key2] = Button({
+            image = self.images.box_score,
+            x = bs_x, y = avatar_y,
+            ox = score_width * 0.5, oy = score_height * 0.5,
+            sx = bs_sx, sy = bs_sy,
+            is_clickable = false, is_hoverable = false,
+            text = text,
+            text_color = text_color,
+            font = font_impact32,
+            tx = bs_x - score_width * bs_sx * 0.5 + pad,
+            ty = avatar_y,
+            toy = font_impact32:getHeight() * 0.5,
+            force_non_interactive = true,
+            alpha = 0,
+        })
+    end
+
+    self.group_leaderboards = {
+        self.objects.menu_box,
+        self.objects.box_leaderboards,
+        self.objects.btn_reset,
+        self.objects.btn_x,
+        self.objects.box_score1,
+        self.objects.box_score2,
+        self.objects.box_score3,
+        self.objects.avatar1,
+        self.objects.avatar2,
+        self.objects.avatar3,
+    }
+
+    self.objects.btn_trophy.on_clicked = function()
+        update_group(self.group_main, 0, false)
+        update_group(self.group_leaderboards, 1, true)
+    end
+
+    self.objects.btn_reset.on_clicked = function()
+        UserData:reset_progress()
+        UserData:save()
+    end
 end
 
 function Menu:update(dt)

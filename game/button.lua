@@ -67,6 +67,7 @@ function Button:new(opts)
     self.align = opts.align or "left"
 
     self.value = opts.value
+    self.force_non_interactive = opts.force_non_interactive
 end
 
 function Button:update_y(y)
@@ -85,6 +86,11 @@ function Button:update(dt)
 
     if self.anim8 then
         self.anim8:update(dt)
+    end
+
+    if self.force_non_interactive then
+        self.is_clickable = false
+        self.is_hoverable = false
     end
 end
 
@@ -148,6 +154,7 @@ function Button:mousepressed(mx, my, mb)
 end
 
 function Button:mousereleased(mx, my, mb)
+    if self.force_non_interactive then return end
     if not self.is_clickable then return end
     if mb == 1 and self.is_overlap and self.on_clicked then
         if self.on_click_sound then
