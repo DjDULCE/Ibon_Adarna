@@ -2,7 +2,10 @@ local Menu = class({
     name = "menu"
 })
 
-local options = {"MAGUMPISA", "MAGPATULOY", "LUMISAN"}
+local options = {
+    "MAGUMPISA", "MAGPATULOY", "LUMISAN",
+    "MADALI", "NORMAL", "MAHIRAP"
+}
 local pad = 16
 local btn_scale = 1.25
 local text_color = {0, 0, 0}
@@ -27,7 +30,7 @@ function Menu:new()
     self.orders = {
         "box_title", "ibong_adarna", "title",
         "btn_gear", "btn_trophy", "btn_credits",
-        "menu_box", "box_settings",
+        "menu_box", "box_settings", "btn_start", "btn_back",
         "box_settings_controls1", "box_settings_controls2",
         "btn_music_left", "btn_music_right",
         "btn_sound_left", "btn_sound_right", "btn_x",
@@ -47,10 +50,12 @@ end
 function Menu:load()
     local box_title_sx, box_title_sy = 1.75, 1
     local box_title_w, box_title_h = self.images.box_title:getDimensions()
+
     self.objects.box_title = Button({
         image = self.images.box_title,
         x = HALF_WW,
-        y = WH * 0.25,
+        y = WH * 0.4,
+        target_y = WH * 0.25,
         sx = box_title_sx, sy = box_title_sy,
         ox = box_title_w * 0.5, oy = box_title_h * 0.5,
         is_hoverable = false, is_clickable = false,
@@ -63,6 +68,7 @@ function Menu:load()
         image = self.images.title,
         x = HALF_WW,
         y = self.objects.box_title.y,
+        target_y = self.objects.box_title.y,
         ox = title_w * 0.5, oy = title_h * 0.5,
         sx = title_sx, sy = title_sy,
         is_hoverable = false, is_clickable = false,
@@ -73,8 +79,10 @@ function Menu:load()
     local ia_scale = 0.65
     self.objects.ibong_adarna = Button({
         image = self.images.ibong_adarna,
-        x = self.objects.title.x - box_title_w * box_title_sx * 0.5,
-        y = self.objects.title.y,
+        x = self.objects.title.x - box_title_w * box_title_sx * 0.6,
+        y = WH * 0.6,
+        target_x = self.objects.title.x - box_title_w * box_title_sx * 0.5,
+        target_y = self.objects.title.y,
         ox = ia_w * 0.5,
         oy = ia_h * 0.5,
         sx = ia_scale, sy = ia_scale,
@@ -89,6 +97,7 @@ function Menu:load()
         y = gear_h * 0.5 + pad,
         sx = btn_scale, sy = btn_scale,
         ox = gear_w * 0.5, oy = gear_h * 0.5,
+        alpha = 0,
     })
 
     local trophy_w, trophy_h = self.images.btn_trophy:getDimensions()
@@ -98,13 +107,15 @@ function Menu:load()
         y = WH - trophy_h * 0.5 - pad,
         sx = btn_scale, sy = btn_scale,
         ox = trophy_w * 0.5, oy = trophy_h * 0.5,
+        alpha = 0,
     })
 
     local bb_sx, bb_sy = 0.55, 0.5
     local bb_w, bb_h = self.images.box_button:getDimensions()
     local font = Assets.fonts.impact24
-    for i, opt in ipairs(options) do
-        local y = WH * 0.4 + (pad + bb_h * bb_sy) * i
+    for i = 1, #options do
+        local opt = options[i]
+        local y = WH * 0.4 + (pad + bb_h * bb_sy) * (((i - 1) % 3) + 1)
         self.objects["btn_" .. string.lower(opt)] = Button({
             image = self.images.box_button,
             x = HALF_WW, y = y,
@@ -114,10 +125,27 @@ function Menu:load()
             text = opt,
             text_color = text_color,
             font = font,
-            tx = HALF_WW - font:getWidth(opt) * 0.5,
-            ty = y - font:getHeight() * 0.5,
+            tx = HALF_WW, ty = y,
+            tox = font:getWidth(opt) * 0.5,
+            toy = font:getHeight() * 0.5,
+            is_clickable = false, is_hoverable = false,
+            alpha = 0,
         })
     end
+
+    self.objects.btn_start = Button({
+        image = self.images.box_button,
+        x = HALF_WW, y = WH * 0.75,
+        ox = bb_w * 0.5,
+        oy = bb_h * 0.5,
+        sx = bb_sx, sy = bb_sy,
+        text = "MAGSIMULA",
+        text_color = text_color,
+        font = font,
+        tx = HALF_WW, ty = WH * 0.75,
+        tox = font:getWidth("MAGSIMULA") * 0.5,
+        toy = font:getHeight() * 0.5,
+    })
 
     local credits_x = bb_w * bb_sx * 0.5 + pad
     local credits_y = WH - bb_h * bb_sy * 0.5 - pad
@@ -129,21 +157,93 @@ function Menu:load()
         text = "CREDITS",
         text_color = text_color,
         font = font,
-        tx = credits_x - font:getWidth("CREDITS") * 0.5,
-        ty = credits_y - font:getHeight() * 0.5,
+        tx = credits_x, ty = credits_y,
+        tox = font:getWidth("CREDITS") * 0.5,
+        toy = font:getHeight() * 0.5,
+        alpha = 0,
+        is_hoverable = false, is_clickable = false,
+    })
+
+    local back_y = bb_h * bb_sy * 0.5 + pad
+    self.objects.btn_back = Button({
+        image = self.images.box_button,
+        x = credits_x, y = back_y,
+        sx = bb_sx, sy = bb_sy,
+        ox = bb_w * 0.5, oy = bb_h * 0.5,
+        text = "BUMALIK",
+        text_color = text_color,
+        font = font,
+        tx = credits_x, ty = back_y,
+        tox = font:getWidth("BUMALIK") * 0.5,
+        toy = font:getHeight() * 0.5,
+        alpha = 0,
+        is_hoverable = false, is_clickable = false,
     })
 
     self.group_main = {
-        self.objects.btn_credits,
-        self.objects.btn_gear,
-        self.objects.btn_trophy,
         self.objects.box_title,
         self.objects.title,
         self.objects.ibong_adarna,
+        self.objects.btn_credits,
+        self.objects.btn_gear,
+        self.objects.btn_trophy,
     }
-    for _, opt in ipairs(options) do
+    self.group_start = {
+        self.objects.box_title,
+        self.objects.title,
+        self.objects.ibong_adarna,
+        self.objects.btn_back,
+    }
+    for i, opt in ipairs(options) do
         local key = "btn_" .. string.lower(opt)
-        table.insert(self.group_main, self.objects[key])
+        if i <= 3 then
+            table.insert(self.group_main, self.objects[key])
+        else
+            table.insert(self.group_start, self.objects[key])
+        end
+    end
+
+    self.objects.btn_start.on_clicked = function()
+        self.objects.btn_start.alpha = 0
+        self.objects.btn_start.is_clickable = false
+        self.objects.btn_start.is_hoverable = false
+
+        self.timer = timer(1.25,
+            function(progress)
+                local bird = self.objects.ibong_adarna
+                local box_title = self.objects.box_title
+                local title = self.objects.title
+                bird.x = mathx.lerp(bird.x, bird.target_x, progress)
+                bird.y = mathx.lerp(bird.y, bird.target_y, progress)
+                box_title.y = mathx.lerp(box_title.y, box_title.target_y, progress)
+                title.y = box_title.y
+            end,
+            function()
+                self.timer = timer(1,
+                    function(progress)
+                        for _, opt in ipairs(options) do
+                            local key = "btn_" .. string.lower(opt)
+                            self.objects[key].alpha = progress
+                        end
+                        self.objects.btn_credits.alpha = progress
+                        self.objects.btn_gear.alpha = progress
+                        self.objects.btn_trophy.alpha = progress
+                    end,
+                    function()
+                        update_group(self.group_main, 1, true)
+                        self.timer = nil
+                    end)
+            end)
+    end
+
+    self.objects.btn_magumpisa.on_clicked = function()
+        update_group(self.group_main, 0, false)
+        update_group(self.group_start, 1, true)
+    end
+
+    self.objects.btn_back.on_clicked = function()
+        update_group(self.group_main, 1, true)
+        update_group(self.group_start, 0, false)
     end
 
     self:setup_settings()
@@ -446,6 +546,7 @@ function Menu:setup_leaderboards()
 end
 
 function Menu:update(dt)
+    if self.timer then self.timer:update(dt) end
     iter_objects(self.orders, self.objects, "update", dt)
 end
 

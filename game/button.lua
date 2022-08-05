@@ -68,6 +68,8 @@ function Button:new(opts)
 
     self.value = opts.value
     self.force_non_interactive = opts.force_non_interactive
+    self.target_x = opts.target_x
+    self.target_y = opts.target_y
 end
 
 function Button:update_y(y)
