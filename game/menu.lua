@@ -82,7 +82,7 @@ function Menu:load()
         x = self.objects.title.x - box_title_w * box_title_sx * 0.6,
         y = WH * 0.6,
         target_x = self.objects.title.x - box_title_w * box_title_sx * 0.5,
-        target_y = self.objects.title.y,
+        target_y = self.objects.box_title.target_y,
         ox = ia_w * 0.5,
         oy = ia_h * 0.5,
         sx = ia_scale, sy = ia_scale,
@@ -242,8 +242,8 @@ function Menu:load()
     end
 
     self.objects.btn_back.on_clicked = function()
-        update_group(self.group_main, 1, true)
         update_group(self.group_start, 0, false)
+        update_group(self.group_main, 1, true)
     end
 
     self:setup_settings()
@@ -394,6 +394,7 @@ function Menu:setup_settings()
 
     self.objects.btn_gear.on_clicked = function()
         update_group(self.group_main, 0, false)
+        update_group(self.group_start, 0, false)
         update_group(self.group_settings, 1, true)
     end
 
@@ -536,6 +537,7 @@ function Menu:setup_leaderboards()
 
     self.objects.btn_trophy.on_clicked = function()
         update_group(self.group_main, 0, false)
+        update_group(self.group_start, 0, false)
         update_group(self.group_leaderboards, 1, true)
     end
 
