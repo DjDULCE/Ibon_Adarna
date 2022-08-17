@@ -9,7 +9,9 @@ local options = {
 local pad = 16
 local btn_scale = 1.25
 local text_color = {0, 0, 0}
-local font_impact32
+local font_impact32, font_impact28
+local ctrl_text1 = "MGA PANGUNAHING KONTROL"
+local ctrl_text2 = "Mga Kontrol Para Sa Instraksyon"
 
 local function update_group(tbl, alpha, interactive)
     for i = 1, #tbl do
@@ -25,6 +27,7 @@ end
 function Menu:new()
     local id = self:type()
     self.images = Assets.load_images(id)
+    self.images_control = Assets.load_images("controls")
 
     self.objects = {}
     self.orders = {
@@ -37,7 +40,8 @@ function Menu:new()
         "box_leaderboards",
         "box_score1", "box_score2", "box_score3",
         "avatar1", "avatar2", "avatar3",
-        "btn_reset",
+        "btn_reset", "ctrl_avatar",
+        "btn_a", "btn_b", "btn_left", "btn_right",
     }
 
     for _, opt in ipairs(options) do
@@ -45,6 +49,8 @@ function Menu:new()
     end
 
     font_impact32 = Assets.fonts.impact32
+    font_impact28 = Assets.fonts.impact24
+    self.in_controls = false
 end
 
 function Menu:load()
@@ -116,7 +122,8 @@ function Menu:load()
     for i = 1, #options do
         local opt = options[i]
         local y = WH * 0.4 + (pad + bb_h * bb_sy) * (((i - 1) % 3) + 1)
-        self.objects["btn_" .. string.lower(opt)] = Button({
+        local key = "btn_" .. string.lower(opt)
+        self.objects[key] = Button({
             image = self.images.box_button,
             x = HALF_WW, y = y,
             ox = bb_w * 0.5,
@@ -131,6 +138,17 @@ function Menu:load()
             is_clickable = false, is_hoverable = false,
             alpha = 0,
         })
+
+        if i >= 4 then
+            self.objects[key].on_clicked = function()
+                update_group(self.group_main, 0, false)
+                update_group(self.group_start, 0, false)
+                update_group(self.group_settings, 0, false)
+                update_group(self.group_leaderboards, 0, false)
+                update_group(self.group_controls, 1, false)
+                self.in_controls = true
+            end
+        end
     end
 
     self.objects.btn_start = Button({
@@ -248,6 +266,7 @@ function Menu:load()
 
     self:setup_settings()
     self:setup_leaderboards()
+    self:setup_controls()
 end
 
 function Menu:setup_settings()
@@ -547,6 +566,93 @@ function Menu:setup_leaderboards()
     end
 end
 
+function Menu:setup_controls()
+    local btn_ctrl_scale = 0.25
+    local gap = 16
+
+    local a_width, a_height = self.images_control.btn_a:getDimensions()
+    local a_text = "Tanggapin/Kausapin"
+    self.objects.btn_a = Button({
+        image = self.images_control.btn_a,
+        x = HALF_WW, y = WH * 0.4,
+        sx = btn_ctrl_scale, sy = btn_ctrl_scale,
+        ox = a_width * 0.5, oy = a_height * 0.5,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+        text = a_text,
+        font = font_impact28,
+        tx = HALF_WW + gap * 4,
+        toy = font_impact28:getHeight() * 0.5,
+        alpha = 0,
+    })
+
+    local b_width, b_height = self.images_control.btn_b:getDimensions()
+    local b_text = "Ipagliban/Huwag Ipagpatuloy"
+    self.objects.btn_b = Button({
+        image = self.images_control.btn_b,
+        x = HALF_WW,
+        y = self.objects.btn_a.y + a_height * btn_ctrl_scale + gap,
+        sx = btn_ctrl_scale, sy = btn_ctrl_scale,
+        ox = b_width * 0.5, oy = b_height * 0.5,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+        text = b_text,
+        tx = HALF_WW + gap * 4,
+        toy = font_impact28:getHeight() * 0.5,
+        font = font_impact28,
+        alpha = 0,
+    })
+
+    local l_width, l_height = self.images_control.btn_left:getDimensions()
+    self.objects.btn_left = Button({
+        image = self.images_control.btn_left,
+        x = HALF_WW - l_width * btn_ctrl_scale,
+        y = self.objects.btn_b.y + b_height * btn_ctrl_scale + gap,
+        sx = btn_ctrl_scale, sy = btn_ctrl_scale,
+        ox = l_width * 0.5, oy = l_height * 0.5,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+        alpha = 0,
+    })
+
+    local dir_text = "Kontrol Para sa Paggalaw"
+    local r_width, r_height = self.images_control.btn_right:getDimensions()
+    self.objects.btn_right = Button({
+        image = self.images_control.btn_right,
+        x = HALF_WW + r_width * btn_ctrl_scale,
+        y = self.objects.btn_left.y,
+        sx = btn_ctrl_scale, sy = btn_ctrl_scale,
+        ox = r_width * 0.5, oy = r_height * 0.5,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+        text = dir_text,
+        tx = HALF_WW + r_width * btn_ctrl_scale + gap * 4,
+        toy = font_impact28:getHeight() * 0.5,
+        font = font_impact28,
+        alpha = 0,
+    })
+
+    local ca_width, ca_height = self.images_control.avatar:getDimensions()
+    self.objects.ctrl_avatar = Button({
+        image = self.images_control.avatar,
+        x = self.objects.btn_left.x - l_width * btn_ctrl_scale * 2,
+        y = self.objects.btn_left.y - gap * 2,
+        sx = 1, sy = 1,
+        ox = ca_width * 0.5, oy = ca_height * 0.5,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+        alpha = 0,
+    })
+
+    self.group_controls = {
+        self.objects.btn_a,
+        self.objects.btn_b,
+        self.objects.btn_left,
+        self.objects.btn_right,
+        self.objects.ctrl_avatar,
+    }
+end
+
 function Menu:update(dt)
     if self.timer then self.timer:update(dt) end
     iter_objects(self.orders, self.objects, "update", dt)
@@ -557,6 +663,26 @@ function Menu:draw()
     local bg_w, bg_h = self.images.bg:getDimensions()
     local bg_sx, bg_sy = WW/bg_w, WH/bg_h
     love.graphics.draw(self.images.bg, 0, 0, 0, bg_sx, bg_sy)
+
+    if self.in_controls then
+        love.graphics.setColor(0, 0, 0, 1)
+        love.graphics.rectangle("fill", 0, 0, WW, WH)
+
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.setFont(font_impact32)
+        love.graphics.print(ctrl_text1,
+            HALF_WW, 64, 0, 1, 1,
+            font_impact32:getWidth(ctrl_text1) * 0.5,
+            font_impact32:getHeight()
+        )
+        love.graphics.setFont(font_impact28)
+        love.graphics.print(ctrl_text2,
+            HALF_WW,
+            64 + font_impact32:getHeight() * 1.1, 0, 1, 1,
+            font_impact28:getWidth(ctrl_text2) * 0.5,
+            font_impact28:getHeight()
+        )
+    end
 
     iter_objects(self.orders, self.objects, "draw")
     love.graphics.setColor(1, 1, 1, 1)

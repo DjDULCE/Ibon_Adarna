@@ -4,7 +4,7 @@ local Assets = {
 
 local ASSETS_PATH = "assets/"
 local IMPACT_PATH = ASSETS_PATH .. "impact.ttf"
-local font_sizes = {24, 32}
+local font_sizes = {24, 28, 32}
 
 function Assets.init()
     for _, size in ipairs(font_sizes) do
