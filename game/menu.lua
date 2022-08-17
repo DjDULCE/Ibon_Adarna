@@ -147,6 +147,16 @@ function Menu:load()
                 update_group(self.group_leaderboards, 0, false)
                 update_group(self.group_controls, 1, false)
                 self.in_controls = true
+                self.controls_timer = timer(2, nil, function()
+                    self.controls_timer = timer(3,
+                        function(progress)
+                            update_group(self.group_controls, 1 - progress, false)
+                        end,
+                        function()
+                            update_group(self.group_controls, 0, false)
+                            --play scenario1
+                        end)
+                end)
             end
         end
     end
@@ -655,6 +665,7 @@ end
 
 function Menu:update(dt)
     if self.timer then self.timer:update(dt) end
+    if self.controls_timer then self.controls_timer:update(dt) end
     iter_objects(self.orders, self.objects, "update", dt)
 end
 
@@ -668,7 +679,7 @@ function Menu:draw()
         love.graphics.setColor(0, 0, 0, 1)
         love.graphics.rectangle("fill", 0, 0, WW, WH)
 
-        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.setColor(1, 1, 1, self.objects.ctrl_avatar.alpha)
         love.graphics.setFont(font_impact32)
         love.graphics.print(ctrl_text1,
             HALF_WW, 64, 0, 1, 1,
