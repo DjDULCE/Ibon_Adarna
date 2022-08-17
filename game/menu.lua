@@ -167,11 +167,12 @@ function Menu:load()
         ox = bb_w * 0.5,
         oy = bb_h * 0.5,
         sx = bb_sx, sy = bb_sy,
-        text = "MAGSIMULA",
+        alpha = 0, text_alpha = 1,
+        text = "I-Tap ang Laro",
         text_color = text_color,
         font = font,
         tx = HALF_WW, ty = WH * 0.75,
-        tox = font:getWidth("MAGSIMULA") * 0.5,
+        tox = font:getWidth("I-Tap ang Laro") * 0.5,
         toy = font:getHeight() * 0.5,
     })
 
