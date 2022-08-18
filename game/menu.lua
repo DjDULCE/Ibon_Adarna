@@ -154,7 +154,8 @@ function Menu:load()
                         end,
                         function()
                             update_group(self.group_controls, 0, false)
-                            --play scenario1
+                            local Scenario = require("scenario")
+                            StateManager:switch(Scenario, 1)
                         end)
                 end)
             end
@@ -234,6 +235,7 @@ function Menu:load()
 
     self.objects.btn_start.on_clicked = function()
         self.objects.btn_start.alpha = 0
+        self.objects.btn_start.text_alpha = 0
         self.objects.btn_start.is_clickable = false
         self.objects.btn_start.is_hoverable = false
 
