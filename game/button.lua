@@ -106,10 +106,12 @@ function Button:draw()
     local r, g, b = unpack(self.color)
     love.graphics.setColor(r, g, b, self.alpha)
 
-    if self.anim8 then
-        self.anim8:draw(self.image, self.x, self.y, self.r, self.sx, self.sy, self.ox, self.oy)
-    else
-        love.graphics.draw(self.image, self.x, self.y, self.r, sx, sy, self.ox, self.oy)
+    if self.image then
+        if self.anim8 then
+            self.anim8:draw(self.image, self.x, self.y, self.r, self.sx, self.sy, self.ox, self.oy)
+        else
+            love.graphics.draw(self.image, self.x, self.y, self.r, sx, sy, self.ox, self.oy)
+        end
     end
 
     if self.text then

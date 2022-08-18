@@ -13,7 +13,6 @@ Button = require("button")
 StateManager = require("state_manager")
 UserData = require("user_data")
 
-local Menu = require("menu")
 local canvas
 
 function iter_objects(tbl_orders, tbl_objects, fn, ...)
@@ -30,7 +29,8 @@ function love.load()
 	Assets.init()
 	canvas = love.graphics.newCanvas(WW, WH)
 
-    StateManager.current = Menu()
+    -- StateManager.current = require("menu")()
+    StateManager.current = require("scenario")(1)
     StateManager:load()
 end
 
@@ -41,6 +41,7 @@ end
 function love.draw()
 	love.graphics.setColor(1, 1, 1, 1)
 	love.graphics.setCanvas(canvas)
+		love.graphics.clear()
 		love.graphics.push()
 			StateManager:draw()
 		love.graphics.pop()

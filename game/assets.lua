@@ -3,6 +3,7 @@ local Assets = {
 }
 
 local ASSETS_PATH = "assets/"
+local SOURCES_PATH = ASSETS_PATH .. "sources/"
 local IMPACT_PATH = ASSETS_PATH .. "impact.ttf"
 local font_sizes = {24, 28, 32}
 
@@ -18,10 +19,22 @@ function Assets.load_images(id)
     local files = love.filesystem.getDirectoryItems(path)
     for _, filename in ipairs(files) do
         local key = filename:sub(0, -5)
-        print("loading " .. filename)
+        print("loading", filename)
         images[key] = love.graphics.newImage(path .. filename)
     end
     return images
+end
+
+function Assets.load_sources(id)
+    local sources = {}
+    local path = SOURCES_PATH .. id .. "/"
+    local files = love.filesystem.getDirectoryItems(path)
+    for _, filename in ipairs(files) do
+        local key = filename:sub(0, -5)
+        print("loading", filename)
+        sources[key] = love.audio.newSource(path .. filename, "stream")
+    end
+    return sources
 end
 
 return Assets
