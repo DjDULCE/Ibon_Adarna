@@ -5,19 +5,15 @@ local Scenario = class({
 local target_w = 576
 local target_h = 324
 
-local texts = {
-    "slide 1 texts",
-    "slide 2 texts",
-    "slide 3 texts",
-    "slide 4 texts",
-    "slide 5 texts",
-    "slide 6 texts",
-    "slide 7 texts",
-    "slide 8 texts",
-    "slide 9 texts",
-    "slide 10 texts",
-    "Pagkalipas ng tatlong taon"
-}
+local function get_longest_str(texts)
+    local current = ""
+    for _, str in ipairs(texts) do
+        if #str > #current then
+            current = str
+        end
+    end
+    return current
+end
 
 function Scenario:new(index)
     assert(index and type(index) == "number" and index > 0)
@@ -25,11 +21,13 @@ function Scenario:new(index)
     local idn = id .. tostring(index)
     self.images = Assets.load_images(idn)
     self.sources = Assets.load_sources(idn)
+    self.texts = require("data." .. idn)
 
     self.objects = {}
     self.orders = {"pic"}
     self.current_index = 1
-    self.max_index = #texts
+    self.subtext_index = 1
+    self.max_index = #self.texts
     self.font24 = Assets.fonts.impact24
     self.font32 = Assets.fonts.impact32
 end
@@ -40,9 +38,10 @@ function Scenario:load()
     local gap = 32
     local scale = 0.3
     local pic_width, pic_height = self.images.pic1:getDimensions()
-
     local pic = "pic" .. self.current_index
-    local text = texts[self.current_index]
+    local texts = self.texts[self.current_index]
+    local text = texts[1]
+    local longest = get_longest_str(texts)
 
     self.objects.pic = Button({
         image = self.images[pic],
@@ -54,18 +53,31 @@ function Scenario:load()
         text = text,
         font = self.font24,
         tx = HALF_WW, ty = gap * 2 + pic_height * scale,
-        tox = self.font24:getWidth(text) * 0.5, toy = 0,
+        tox = self.font24:getWidth(longest) * 0.5, toy = 0,
     })
 end
 
 function Scenario:next_slide()
-    self.current_index = self.current_index + 1
-    if self.current_index > self.max_index then
-        return false
+    self.subtext_index = self.subtext_index + 1
+    if not self.texts[self.current_index] then return end
+
+    if self.subtext_index > #self.texts[self.current_index] then
+        self.current_index = self.current_index + 1
+        self.subtext_index = 1
+        if self.current_index > self.max_index then
+            return false
+        end
     end
 
     local pic = self.images["pic" .. self.current_index]
-    local text = texts[self.current_index]
+    local texts = self.texts[self.current_index]
+    local longest = get_longest_str(texts)
+    local text
+    if (self.subtext_index - 1) > 0 then
+        text = texts[self.subtext_index - 1] .. "\n" .. texts[self.subtext_index]
+    else
+        text = texts[self.subtext_index]
+    end
     local obj_pic = self.objects.pic
     local font = pic and self.font24 or self.font32
 
@@ -83,7 +95,7 @@ function Scenario:next_slide()
     end
 
     obj_pic.text = text
-    obj_pic.tox = font:getWidth(text) * 0.5
+    obj_pic.tox = font:getWidth(longest) * 0.5
     return true
 end
 
