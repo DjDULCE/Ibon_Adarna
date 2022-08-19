@@ -10,6 +10,8 @@ HALF_WH = WH * 0.5
 Anim8 = require("libs.anim8.anim8")
 Assets= require("assets")
 Button = require("button")
+Controls = require("controls")
+Player = require("player")
 StateManager = require("state_manager")
 UserData = require("user_data")
 
@@ -30,7 +32,8 @@ function love.load()
 	canvas = love.graphics.newCanvas(WW, WH)
 
     -- StateManager.current = require("menu")()
-    StateManager.current = require("scenario")(1)
+    -- StateManager.current = require("scenario")(1)
+    StateManager.current = require("scene")(1)
     StateManager:load()
 end
 

@@ -86,6 +86,10 @@ function Button:update(dt)
     self.mouse.x, self.mouse.y = mx, my
     self.is_overlap = intersect.point_aabb_overlap(self.mouse, self.center_pos, self.half_size)
 
+    if self.on_down and self.is_overlap and love.mouse.isDown(1) then
+        self.on_down()
+    end
+
     if self.anim8 then
         self.anim8:update(dt)
     end
