@@ -7,6 +7,7 @@ function Scene:new(index)
     local id = self:type()
     local idn = id .. tostring(index)
     self.images = Assets.load_images(idn)
+    self.controls = Controls(self)
 
     self.objects = {}
     self.orders = {"platform"}
@@ -22,10 +23,10 @@ function Scene:load()
     }
 
     self.player = Player(HALF_WW, self.platform.y)
-    self.player:load()
 end
 
 function Scene:update(dt)
+    self.controls:update(dt)
     iter_objects(self.orders, self.objects, "update", dt)
     self.player:update(dt, self.platform.height)
 end
@@ -43,17 +44,20 @@ function Scene:draw()
     self.player:draw()
 
     iter_objects(self.orders, self.objects, "draw")
+
+    self.controls:draw()
 end
 
 function Scene:mousepressed(mx, my, mb)
-    self.player:mousepressed(mx, my, mb)
+    self.controls:mousepressed(mx, my, mb)
 end
 
 function Scene:mousereleased(mx, my, mb)
-    self.player:mousereleased(mx, my, mb)
+    self.controls:mousereleased(mx, my, mb)
 end
 
 function Scene:exit()
+    Events.clear()
 end
 
 return Scene

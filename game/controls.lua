@@ -5,12 +5,12 @@ local Controls = class({
 local btn_ctrl_scale = 0.25
 local gap = 32
 
-function Controls:new(reference)
+function Controls:new()
     self.enabled = true
     self.images = Assets.load_images("controls")
     self.objects = {}
     self.orders = {"btn_a", "btn_b", "btn_left", "btn_right"}
-    self.reference = reference
+    self:load()
 end
 
 function Controls:load()
@@ -55,11 +55,11 @@ function Controls:load()
     })
 
     self.objects.btn_left.on_down = function()
-        self.reference:on_down_left()
+        Events.emit("on_down_left")
     end
 
     self.objects.btn_right.on_down = function()
-        self.reference:on_down_right()
+        Events.emit("on_down_right")
     end
 end
 
