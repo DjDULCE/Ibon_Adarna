@@ -4,7 +4,7 @@ local Controls = class({
 
 local btn_ctrl_scale = 0.25
 local gap = 32
-local alpha = 0.75
+local alpha = 0.5
 
 function Controls:new()
     self.enabled = true

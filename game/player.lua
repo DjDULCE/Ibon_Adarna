@@ -22,6 +22,8 @@ function Player:new(x, y)
 
     Events.register(self, "on_down_left")
     Events.register(self, "on_down_right")
+    Events.register(self, "on_clicked_a")
+    Events.register(self, "on_clicked_b")
 end
 
 function Player:on_down_left()
@@ -36,6 +38,14 @@ function Player:on_down_right()
     self.x = self.x + self.speed * dt
     self.dir = -1
     self.anim:update(dt)
+end
+
+function Player:on_clicked_a()
+    error()
+end
+
+function Player:on_clicked_b()
+    error()
 end
 
 function Player:update(dt, ground_height)

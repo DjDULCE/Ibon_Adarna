@@ -12,7 +12,10 @@ end
 function Events.emit(name)
     if not events[name] then error("no event name " .. name .. " registered") end
     for _, obj in ipairs(events[name]) do
-        obj[name](obj)
+        local res = obj[name](obj)
+        if res and type(res) == "boolean" and res == true then
+            break
+        end
     end
 end
 

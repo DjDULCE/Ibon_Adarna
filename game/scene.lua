@@ -12,13 +12,10 @@ function Scene:new(index)
     self.objects = {}
     self.orders = {"platform", "bed", "fernando", "val"}
 
-    local text = string.rep("test", 128, " ")
     self.dialog = Dialog({
-        w = WW * 0.8,
-        auto = true,
         font = Assets.fonts.impact24,
-        text = text,
-        speed = 0.1,
+        data = require("data.scene1"),
+        enabled = true,
     })
 end
 
