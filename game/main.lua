@@ -12,7 +12,7 @@ Reflowprint = require("libs.reflowprint")
 
 Assets= require("assets")
 Controls = require("controls")
-Dialog = require("dialog")
+Dialogue = require("dialogue")
 Events = require("events")
 Player = require("player")
 Sprite = require("sprite")

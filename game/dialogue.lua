@@ -1,11 +1,11 @@
-local Dialog = class({
-    name = "Dialog"
+local Dialogue = class({
+    name = "Dialogue"
 })
 
 local padding = 32
 
-function Dialog:new(opt)
-    self.images = Assets.load_images("dialog")
+function Dialogue:new(opt)
+    self.images = Assets.load_images("dialogue")
     self.faces = Assets.load_images("faces")
 
     self.enabled = not not opt.enabled
@@ -42,7 +42,7 @@ function Dialog:new(opt)
     self:show()
 end
 
-function Dialog:show()
+function Dialogue:show()
     if not self.enabled then return end
     local data = self.data[self.current]
     if not data then
@@ -80,13 +80,13 @@ function Dialog:show()
     self.x = self.fx + fw + padding
 end
 
-function Dialog:update(dt)
+function Dialogue:update(dt)
     if not self.enabled then return end
     if self.skipped then return end
     self.dt = math.min(self.t, self.dt + dt * self.speed)
 end
 
-function Dialog:draw()
+function Dialogue:draw()
     if not self.enabled then return end
     local r, g, b = unpack(self.color)
     love.graphics.setColor(r, g, b, self.alpha)
@@ -110,7 +110,7 @@ function Dialog:draw()
     love.graphics.setColor(1, 1, 1, 1)
 end
 
-function Dialog:on_clicked_a()
+function Dialogue:on_clicked_a()
     if not self.enabled then return end
     if self.dt >= self.t then
         self:show()
@@ -124,7 +124,7 @@ function Dialog:on_clicked_a()
     return true
 end
 
-function Dialog:on_down_left() if self.enabled then return true end end
-function Dialog:on_down_right() if self.enabled then return true end end
+function Dialogue:on_down_left() if self.enabled then return true end end
+function Dialogue:on_down_right() if self.enabled then return true end end
 
-return Dialog
+return Dialogue
