@@ -1,8 +1,8 @@
-local Button = class({
-    name = "Button"
+local Sprite = class({
+    name = "Sprite"
 })
 
-function Button:new(opts)
+function Sprite:new(opts)
     self.image = opts.image
     self.x, self.y = opts.x, opts.y
     self.r = opts.r or 0
@@ -72,7 +72,7 @@ function Button:new(opts)
     self.target_y = opts.target_y
 end
 
-function Button:update_y(y)
+function Sprite:update_y(y)
     self.y = y
     self.pos.y = y
 
@@ -81,7 +81,7 @@ function Button:update_y(y)
     self.center_pos.y = ry + (h * 0.5)
 end
 
-function Button:update(dt)
+function Sprite:update(dt)
     local mx, my = love.mouse.getPosition()
     self.mouse.x, self.mouse.y = mx, my
     self.is_overlap = intersect.point_aabb_overlap(self.mouse, self.center_pos, self.half_size)
@@ -100,7 +100,7 @@ function Button:update(dt)
     end
 end
 
-function Button:draw()
+function Sprite:draw()
     local sx, sy = self.sx, self.sy
     if (self.is_hoverable and self.is_overlap) or self.is_hovered then
         sx = sx + self.sx_dt
@@ -149,7 +149,7 @@ function Button:draw()
     love.graphics.setColor(1, 1, 1, 1)
 end
 
-function Button:mousepressed(mx, my, mb)
+function Sprite:mousepressed(mx, my, mb)
     if not self.is_clickable then return end
     -- if mb == 1 and self.is_overlap and self.on_clicked then
     --     if self.on_click_sound then
@@ -161,7 +161,7 @@ function Button:mousepressed(mx, my, mb)
     -- end
 end
 
-function Button:mousereleased(mx, my, mb)
+function Sprite:mousereleased(mx, my, mb)
     if self.force_non_interactive then return end
     if not self.is_clickable then return end
     if mb == 1 and self.is_overlap and self.on_clicked then
@@ -175,4 +175,4 @@ function Button:mousereleased(mx, my, mb)
     end
 end
 
-return Button
+return Sprite

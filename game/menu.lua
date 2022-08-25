@@ -57,7 +57,7 @@ function Menu:load()
     local box_title_sx, box_title_sy = 1.75, 1
     local box_title_w, box_title_h = self.images.box_title:getDimensions()
 
-    self.objects.box_title = Button({
+    self.objects.box_title = Sprite({
         image = self.images.box_title,
         x = HALF_WW,
         y = WH * 0.4,
@@ -70,7 +70,7 @@ function Menu:load()
 
     local title_w, title_h = self.images.title:getDimensions()
     local title_sx, title_sy = 1.65, 1.5
-    self.objects.title = Button({
+    self.objects.title = Sprite({
         image = self.images.title,
         x = HALF_WW,
         y = self.objects.box_title.y,
@@ -83,7 +83,7 @@ function Menu:load()
 
     local ia_w, ia_h = self.images.ibong_adarna:getDimensions()
     local ia_scale = 0.65
-    self.objects.ibong_adarna = Button({
+    self.objects.ibong_adarna = Sprite({
         image = self.images.ibong_adarna,
         x = self.objects.title.x - box_title_w * box_title_sx * 0.6,
         y = WH * 0.6,
@@ -97,7 +97,7 @@ function Menu:load()
     })
 
     local gear_w, gear_h = self.images.btn_gear:getDimensions()
-    self.objects.btn_gear = Button({
+    self.objects.btn_gear = Sprite({
         image = self.images.btn_gear,
         x = WW - gear_w * 0.5 - pad,
         y = gear_h * 0.5 + pad,
@@ -107,7 +107,7 @@ function Menu:load()
     })
 
     local trophy_w, trophy_h = self.images.btn_trophy:getDimensions()
-    self.objects.btn_trophy = Button({
+    self.objects.btn_trophy = Sprite({
         image = self.images.btn_trophy,
         x = WW - trophy_w * 0.5 - pad,
         y = WH - trophy_h * 0.5 - pad,
@@ -123,7 +123,7 @@ function Menu:load()
         local opt = options[i]
         local y = WH * 0.4 + (pad + bb_h * bb_sy) * (((i - 1) % 3) + 1)
         local key = "btn_" .. string.lower(opt)
-        self.objects[key] = Button({
+        self.objects[key] = Sprite({
             image = self.images.box_button,
             x = HALF_WW, y = y,
             ox = bb_w * 0.5,
@@ -162,7 +162,7 @@ function Menu:load()
         end
     end
 
-    self.objects.btn_start = Button({
+    self.objects.btn_start = Sprite({
         image = self.images.box_button,
         x = HALF_WW, y = WH * 0.75,
         ox = bb_w * 0.5,
@@ -179,7 +179,7 @@ function Menu:load()
 
     local credits_x = bb_w * bb_sx * 0.5 + pad
     local credits_y = WH - bb_h * bb_sy * 0.5 - pad
-    self.objects.btn_credits = Button({
+    self.objects.btn_credits = Sprite({
         image = self.images.box_button,
         x = credits_x, y = credits_y,
         sx = bb_sx, sy = bb_sy,
@@ -195,7 +195,7 @@ function Menu:load()
     })
 
     local back_y = bb_h * bb_sy * 0.5 + pad
-    self.objects.btn_back = Button({
+    self.objects.btn_back = Sprite({
         image = self.images.box_button,
         x = credits_x, y = back_y,
         sx = bb_sx, sy = bb_sy,
@@ -284,7 +284,7 @@ end
 
 function Menu:setup_settings()
     local mb_width, mb_height = self.images.menu_box:getDimensions()
-    self.objects.menu_box = Button({
+    self.objects.menu_box = Sprite({
         image = self.images.menu_box,
         x = HALF_WW, y = HALF_WH,
         ox = mb_width * 0.5, oy = mb_height * 0.5,
@@ -296,7 +296,7 @@ function Menu:setup_settings()
     local bs_width, bs_height = self.images.box_settings:getDimensions()
     local bs_y = self.objects.menu_box.y - mb_height * 0.5
     local bs_sx, bs_sy = 0.5, 0.75
-    self.objects.box_settings = Button({
+    self.objects.box_settings = Sprite({
         image = self.images.box_settings,
         x = HALF_WW, y = bs_y,
         ox = bs_width * 0.5, oy = bs_height * 0.5,
@@ -320,7 +320,7 @@ function Menu:setup_settings()
         local bsc_x = HALF_WW + pad * 2
         local bsc_y = self.objects.box_settings.y + bs_height * bs_sy + pad
         bsc_y = bsc_y + (bsc_height * bsc_sy * (i - 1)) + pad * (i - 1)
-        self.objects[key] = Button({
+        self.objects[key] = Sprite({
             image= self.images.box_settings_controls,
             x = bsc_x, y = bsc_y,
             ox = bsc_width * 0.5, oy = bsc_height * 0.5,
@@ -362,7 +362,7 @@ function Menu:setup_settings()
         local ref = "box_settings_controls" .. i
 
         local left_x = self.objects[ref].x - total_width * 0.25 - pad * 0.5
-        self.objects[key] = Button({
+        self.objects[key] = Sprite({
             image = self.images.btn_control,
             x = left_x, y = self.objects[ref].y,
             ox = btn_control_width * 0.5, oy = btn_control_height * 0.5,
@@ -380,7 +380,7 @@ function Menu:setup_settings()
         })
 
         local right_x = self.objects[key].x + btn_control_width * btn_control_sx + pad * 0.5
-        self.objects[key2] = Button({
+        self.objects[key2] = Sprite({
             image = self.images.btn_control,
             x = right_x,
             y = self.objects[ref].y,
@@ -401,7 +401,7 @@ function Menu:setup_settings()
 
     local x_width, x_height = self.images.btn_x:getDimensions()
     local x_scale = 0.2
-    self.objects.btn_x = Button({
+    self.objects.btn_x = Sprite({
         image = self.images.btn_x,
         x = self.objects.menu_box.x + mb_width * 0.5 - pad,
         y = self.objects.menu_box.y - mb_height * 0.5 + pad,
@@ -478,7 +478,7 @@ function Menu:setup_leaderboards()
     local bs_width, bs_height = self.images.box_settings:getDimensions()
     local bl_y = self.objects.menu_box.y - mb_height * 0.5
     local bl_sx, bl_sy = 0.75, 0.75
-    self.objects.box_leaderboards = Button({
+    self.objects.box_leaderboards = Sprite({
         image = self.images.box_settings,
         x = HALF_WW, y = bl_y,
         ox = bs_width * 0.5, oy = bs_height * 0.5,
@@ -495,7 +495,7 @@ function Menu:setup_leaderboards()
 
     local reset_sx, reset_sy = 0.5, 0.4
     local reset_y = self.objects.menu_box.y + mb_height * 0.5 - bs_height * 0.5 + pad * 0.5
-    self.objects.btn_reset = Button({
+    self.objects.btn_reset = Sprite({
         image = self.images.box_settings,
         x = HALF_WW, y = reset_y,
         ox = bs_width * 0.5, oy = bs_height * 0.5,
@@ -522,7 +522,7 @@ function Menu:setup_leaderboards()
         local key = "avatar" .. i
         local avatar_y = self.objects.box_leaderboards.y + bs_height * bl_sy * 0.5 + pad * 2
         avatar_y = avatar_y + avatar_height * avatar_scale * (i - 1) + (pad * (i - 1))
-        self.objects[key] = Button({
+        self.objects[key] = Sprite({
             image = self.images.avatar,
             x = self.objects.menu_box.x - mb_width * 0.5 + pad * 4,
             y = avatar_y,
@@ -537,7 +537,7 @@ function Menu:setup_leaderboards()
         local bs_x = self.objects[key].x + avatar_width * avatar_scale * 0.5 + pad * 2
         bs_x = bs_x + score_width * bs_sx * 0.5
         local text = string.format("%s:%s%d", texts[i], spaces, tostring(score[i]))
-        self.objects[key2] = Button({
+        self.objects[key2] = Sprite({
             image = self.images.box_score,
             x = bs_x, y = avatar_y,
             ox = score_width * 0.5, oy = score_height * 0.5,
@@ -585,7 +585,7 @@ function Menu:setup_controls()
 
     local a_width, a_height = self.images_control.btn_a:getDimensions()
     local a_text = "Tanggapin/Kausapin"
-    self.objects.btn_a = Button({
+    self.objects.btn_a = Sprite({
         image = self.images_control.btn_a,
         x = HALF_WW, y = WH * 0.4,
         sx = btn_ctrl_scale, sy = btn_ctrl_scale,
@@ -601,7 +601,7 @@ function Menu:setup_controls()
 
     local b_width, b_height = self.images_control.btn_b:getDimensions()
     local b_text = "Ipagliban/Huwag Ipagpatuloy"
-    self.objects.btn_b = Button({
+    self.objects.btn_b = Sprite({
         image = self.images_control.btn_b,
         x = HALF_WW,
         y = self.objects.btn_a.y + a_height * btn_ctrl_scale + gap,
@@ -617,7 +617,7 @@ function Menu:setup_controls()
     })
 
     local l_width, l_height = self.images_control.btn_left:getDimensions()
-    self.objects.btn_left = Button({
+    self.objects.btn_left = Sprite({
         image = self.images_control.btn_left,
         x = HALF_WW - l_width * btn_ctrl_scale,
         y = self.objects.btn_b.y + b_height * btn_ctrl_scale + gap,
@@ -630,7 +630,7 @@ function Menu:setup_controls()
 
     local dir_text = "Kontrol Para sa Paggalaw"
     local r_width, r_height = self.images_control.btn_right:getDimensions()
-    self.objects.btn_right = Button({
+    self.objects.btn_right = Sprite({
         image = self.images_control.btn_right,
         x = HALF_WW + r_width * btn_ctrl_scale,
         y = self.objects.btn_left.y,
@@ -646,7 +646,7 @@ function Menu:setup_controls()
     })
 
     local ca_width, ca_height = self.images_control.avatar:getDimensions()
-    self.objects.ctrl_avatar = Button({
+    self.objects.ctrl_avatar = Sprite({
         image = self.images_control.avatar,
         x = self.objects.btn_left.x - l_width * btn_ctrl_scale * 2,
         y = self.objects.btn_left.y - gap * 2,

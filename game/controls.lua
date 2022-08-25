@@ -4,6 +4,7 @@ local Controls = class({
 
 local btn_ctrl_scale = 0.25
 local gap = 32
+local alpha = 0.75
 
 function Controls:new()
     self.enabled = true
@@ -15,43 +16,47 @@ end
 
 function Controls:load()
     local b_width, b_height = self.images.btn_b:getDimensions()
-    self.objects.btn_b = Button({
+    self.objects.btn_b = Sprite({
         image = self.images.btn_b,
         x = WW - b_width * btn_ctrl_scale * 0.5 - gap,
-        y = WH - b_height * btn_ctrl_scale * 0.5 - gap,
+        y = WH - b_height * btn_ctrl_scale * 0.5 - gap * 0.5,
         sx = btn_ctrl_scale, sy = btn_ctrl_scale,
         ox = b_width * 0.5, oy = b_height * 0.5,
         is_hoverable = true, is_clickable = true,
+        alpha = alpha,
     })
 
     local a_width, a_height = self.images.btn_a:getDimensions()
-    self.objects.btn_a = Button({
+    self.objects.btn_a = Sprite({
         image = self.images.btn_a,
         x = self.objects.btn_b.x - a_width * btn_ctrl_scale * 0.5 - gap * 2,
         y = self.objects.btn_b.y,
         sx = btn_ctrl_scale, sy = btn_ctrl_scale,
         ox = a_width * 0.5, oy = a_height * 0.5,
         is_hoverable = true, is_clickable = true,
+        alpha = alpha,
     })
 
     local l_width, l_height = self.images.btn_left:getDimensions()
-    self.objects.btn_left = Button({
+    self.objects.btn_left = Sprite({
         image = self.images.btn_left,
         x = l_width * btn_ctrl_scale * 0.5 + gap,
         y = self.objects.btn_b.y,
         sx = btn_ctrl_scale, sy = btn_ctrl_scale,
         ox = l_width * 0.5, oy = l_height * 0.5,
         is_hoverable = true, is_clickable = true,
+        alpha = alpha,
     })
 
     local r_width, r_height = self.images.btn_right:getDimensions()
-    self.objects.btn_right = Button({
+    self.objects.btn_right = Sprite({
         image = self.images.btn_right,
         x = self.objects.btn_left.x + r_width * btn_ctrl_scale * 0.5 + gap * 2,
         y = self.objects.btn_left.y,
         sx = btn_ctrl_scale, sy = btn_ctrl_scale,
         ox = r_width * 0.5, oy = r_height * 0.5,
         is_hoverable = true, is_clickable = true,
+        alpha = alpha,
     })
 
     self.objects.btn_left.on_down = function()

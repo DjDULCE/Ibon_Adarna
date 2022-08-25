@@ -3,12 +3,22 @@ local Player = class({
 })
 
 function Player:new(x, y)
+    self.images = Assets.load_images("player")
     self.x = x
     self.y = y
+    self.dir = 1
 
-    self.width, self.height = 32, 32
+    self.width, self.height = 49, 53
     self.speed = 256
     self.gravity = 256
+
+    local walk_width, walk_height = self.images.walk:getDimensions()
+    local grid_walk = Anim8.newGrid(self.width, self.height, walk_width, walk_height)
+    self.anim_walk = Anim8.newAnimation(grid_walk("1-9", 1), 0.1)
+
+    self.anim = self.anim_walk
+
+    self.ox = self.width * 0.5
 
     Events.register(self, "on_down_left")
     Events.register(self, "on_down_right")
@@ -17,11 +27,15 @@ end
 function Player:on_down_left()
     local dt = love.timer.getDelta()
     self.x = self.x - self.speed * dt
+    self.dir = 1
+    self.anim:update(dt)
 end
 
 function Player:on_down_right()
     local dt = love.timer.getDelta()
     self.x = self.x + self.speed * dt
+    self.dir = -1
+    self.anim:update(dt)
 end
 
 function Player:update(dt, ground_height)
@@ -33,8 +47,7 @@ end
 
 function Player:draw()
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.setColor(1, 0, 0, 1)
-    love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+    self.anim:draw(self.images.walk, self.x, self.y, 0, self.dir, 1, self.ox, 0)
     love.graphics.setColor(1, 1, 1, 1)
 end
 

@@ -36,6 +36,7 @@ end
 
 function Scenario:load()
     self.sources.bgm:play()
+    self.sources.bgm:setLooping(true)
 
     local gap = 32
     local scale = 0.3
@@ -45,7 +46,7 @@ function Scenario:load()
     local text = texts[1]
     local longest = get_longest_str(texts)
 
-    self.objects.pic = Button({
+    self.objects.pic = Sprite({
         image = self.images[pic],
         x = HALF_WW, y = gap,
         ox = pic_width * 0.5, oy = 0,

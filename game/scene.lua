@@ -10,7 +10,7 @@ function Scene:new(index)
     self.controls = Controls(self)
 
     self.objects = {}
-    self.orders = {"platform"}
+    self.orders = {"platform", "bed", "fernando"}
 end
 
 function Scene:load()
@@ -21,6 +21,27 @@ function Scene:load()
         sx = WW/p_width,
         height = p_height,
     }
+
+    local bed_width, bed_height = self.images.bed:getDimensions()
+    self.objects.bed = Sprite({
+        image = self.images.bed,
+        x = WW * 0.15, y = WH - p_height - bed_height,
+        ox = bed_width * 0.5,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+    })
+
+    local f_width, f_height = self.images.fernando:getDimensions()
+    self.objects.fernando = Sprite({
+        image = self.images.fernando,
+        x = self.objects.bed.x,
+        y = self.objects.bed.y + 8,
+        sx = -1,
+        r = math.pi/2,
+        ox = f_width * 0.5, oy = f_height * 0.5,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+    })
 
     self.player = Player(HALF_WW, self.platform.y)
 end
@@ -34,17 +55,16 @@ end
 function Scene:draw()
     love.graphics.setColor(1, 1, 1, 1)
     local w, h = self.images.bg:getDimensions()
-    local sx = w/WW
-    local sy = h/WH
+    local sx = WW/w
+    local sy = WH/h
     love.graphics.draw(self.images.bg, 0, 0, 0, sx, sy)
 
     local platform = self.platform
     love.graphics.draw(platform.image, platform.x, platform.y, 0, platform.sx)
 
-    self.player:draw()
-
     iter_objects(self.orders, self.objects, "draw")
 
+    self.player:draw()
     self.controls:draw()
 end
 

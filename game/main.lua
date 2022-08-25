@@ -9,7 +9,7 @@ HALF_WH = WH * 0.5
 
 Anim8 = require("libs.anim8.anim8")
 Assets= require("assets")
-Button = require("button")
+Sprite = require("sprite")
 Controls = require("controls")
 Events = require("events")
 Player = require("player")
