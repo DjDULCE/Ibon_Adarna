@@ -10,7 +10,7 @@ function Scene:new(index)
     self.controls = Controls(self)
 
     self.objects = {}
-    self.orders = {"platform", "bed", "fernando"}
+    self.orders = {"platform", "bed", "fernando", "val"}
 end
 
 function Scene:load()
@@ -43,13 +43,26 @@ function Scene:load()
         force_non_interactive = true,
     })
 
-    self.player = Player(HALF_WW, self.platform.y)
+    local v_width, v_height = self.images.valeriana:getDimensions()
+    self.objects.val = Sprite({
+        image = self.images.valeriana,
+        x = WW * 0.4,
+        y = WH - p_height - v_height,
+        ox = v_width * 0.5,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+    })
+
+    self.player = Player(WW * 0.7, self.platform.y)
 end
 
 function Scene:update(dt)
     self.controls:update(dt)
     iter_objects(self.orders, self.objects, "update", dt)
     self.player:update(dt, self.platform.height)
+
+    local val = self.objects.val
+    val.sx = (self.player.x < val.x) and -1 or 1
 end
 
 function Scene:draw()
