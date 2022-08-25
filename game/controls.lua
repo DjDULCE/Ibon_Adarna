@@ -59,6 +59,14 @@ function Controls:load()
         alpha = alpha,
     })
 
+    self.objects.btn_a.on_clicked = function()
+        Events.emit("on_clicked_a")
+    end
+
+    self.objects.btn_b.on_clicked = function()
+        Events.emit("on_clicked_b")
+    end
+
     self.objects.btn_left.on_down = function()
         Events.emit("on_down_left")
     end

@@ -11,6 +11,15 @@ function Scene:new(index)
 
     self.objects = {}
     self.orders = {"platform", "bed", "fernando", "val"}
+
+    local text = string.rep("test", 128, " ")
+    self.dialog = Dialog({
+        w = WW * 0.8,
+        auto = true,
+        font = Assets.fonts.impact24,
+        text = text,
+        speed = 0.1,
+    })
 end
 
 function Scene:load()
@@ -63,6 +72,8 @@ function Scene:update(dt)
 
     local val = self.objects.val
     val.sx = (self.player.x < val.x) and -1 or 1
+
+    self.dialog:update(dt)
 end
 
 function Scene:draw()
@@ -78,6 +89,7 @@ function Scene:draw()
     iter_objects(self.orders, self.objects, "draw")
 
     self.player:draw()
+    self.dialog:draw()
     self.controls:draw()
 end
 

@@ -8,11 +8,14 @@ HALF_WW = WW * 0.5
 HALF_WH = WH * 0.5
 
 Anim8 = require("libs.anim8.anim8")
+Reflowprint = require("libs.reflowprint")
+
 Assets= require("assets")
-Sprite = require("sprite")
 Controls = require("controls")
+Dialog = require("dialog")
 Events = require("events")
 Player = require("player")
+Sprite = require("sprite")
 StateManager = require("state_manager")
 UserData = require("user_data")
 
