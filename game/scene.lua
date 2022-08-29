@@ -17,7 +17,7 @@ function Scene:new(index)
         data = require("data.scene1"),
         -- enabled = true,
         align = "left",
-        repeating = true,
+        repeating = false,
     })
 
     Events.register(self, "on_dialogue_end")
@@ -72,6 +72,7 @@ function Scene:load()
 end
 
 function Scene:on_dialogue_end()
+    Events.emit("fadeout", 3)
 end
 
 function Scene:update(dt)

@@ -14,12 +14,13 @@ Assets= require("assets")
 Controls = require("controls")
 Dialogue = require("dialogue")
 Events = require("events")
+Fade = require("fade")
 Player = require("player")
 Sprite = require("sprite")
 StateManager = require("state_manager")
 UserData = require("user_data")
 
-local canvas
+local canvas, fade
 
 function iter_objects(tbl_orders, tbl_objects, fn, ...)
 	for _, key in ipairs(tbl_orders) do
@@ -31,6 +32,7 @@ function iter_objects(tbl_orders, tbl_objects, fn, ...)
 end
 
 function love.load()
+	fade = Fade()
 	UserData:init()
 	Assets.init()
 	canvas = love.graphics.newCanvas(WW, WH)
@@ -42,6 +44,7 @@ function love.load()
 end
 
 function love.update(dt)
+	fade:update(dt)
     StateManager:update(dt)
 end
 
@@ -51,6 +54,7 @@ function love.draw()
 		love.graphics.clear()
 		love.graphics.push()
 			StateManager:draw()
+			fade:draw()
 		love.graphics.pop()
 	love.graphics.setCanvas()
 

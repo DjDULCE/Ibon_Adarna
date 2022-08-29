@@ -30,8 +30,6 @@ function Scenario:new(index)
     self.max_index = #self.texts
     self.font24 = Assets.fonts.impact24
     self.font32 = Assets.fonts.impact32
-
-    self.alpha = 0
 end
 
 function Scenario:load()
@@ -68,14 +66,10 @@ function Scenario:next_slide()
         self.current_index = self.current_index + 1
         self.subtext_index = 1
         if self.current_index > self.max_index then
-            self.fadeout_timer = timer(3,
-                function(progress)
-                    self.alpha = progress
-                end,
-                function()
-                    -- Go to next scene
-                    self.fadeout_timer = nil
-                end)
+            Events.emit("fadeout", 3, function()
+                -- Go to next scene
+                print(1)
+            end)
             return
         end
     end
@@ -110,17 +104,12 @@ function Scenario:next_slide()
 end
 
 function Scenario:update(dt)
-    if self.fadeout_timer then self.fadeout_timer:update(dt) end
     iter_objects(self.orders, self.objects, "update", dt)
 end
 
 function Scenario:draw()
     love.graphics.setColor(1, 1, 1, 1)
     iter_objects(self.orders, self.objects, "draw")
-
-    love.graphics.setColor(0, 0, 0, self.alpha)
-    love.graphics.rectangle("fill", 0, 0, WW, WH)
-    love.graphics.setColor(1, 1, 1, 1)
 end
 
 function Scenario:mousepressed(mx, my, mb)
