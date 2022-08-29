@@ -70,6 +70,14 @@ function Sprite:new(opts)
     self.force_non_interactive = opts.force_non_interactive
     self.target_x = opts.target_x
     self.target_y = opts.target_y
+
+    self.collider = opts.collider
+    if self.collider then
+        local x = self.collider.x or self.x
+        local y = self.collider.y or self.y
+        self.vpos = vec2(x, y)
+        self.vsize = vec2(self.collider.w * 0.5, self.collider.h * 0.5)
+    end
 end
 
 function Sprite:update_y(y)
@@ -80,6 +88,20 @@ function Sprite:update_y(y)
     local ry = self.y - self.oy * self.sy
     self.center_pos.y = ry + (h * 0.5)
 end
+
+function Sprite:check_collision(player)
+    local col = self.collider
+    if not col then return end
+    local res = intersect.aabb_aabb_overlap(self.vpos, self.vsize, player.vpos, player.vsize)
+    if res then
+        self.in_collision = true
+        Events.emit("on_collide", self)
+    elseif self.in_collision then
+        self.in_collision = false
+        Events.emit("on_remove_collide", self)
+    end
+end
+
 
 function Sprite:update(dt)
     local mx, my = love.mouse.getPosition()
@@ -146,19 +168,28 @@ function Sprite:draw()
         end
     end
 
+    -- local col = self.collider
+    -- if col then
+    --     love.graphics.setColor(1, 0, 0, 1)
+    --
+    --     local x = col.x or self.x
+    --     local y = col.y or self.y
+    --     if col.origin == "center" then
+    --         x = x - col.w * 0.5
+    --         y = y - col.h * 0.5
+    --     end
+    --
+    --     love.graphics.rectangle("line",
+    --         x, y,
+    --         col.w, col.h
+    --     )
+    -- end
+
     love.graphics.setColor(1, 1, 1, 1)
 end
 
 function Sprite:mousepressed(mx, my, mb)
     if not self.is_clickable then return end
-    -- if mb == 1 and self.is_overlap and self.on_clicked then
-    --     if self.on_click_sound then
-    --         self.on_click_sound:play()
-    --         self.on_click_sound:setLooping(false)
-    --     end
-    --     self:on_clicked()
-    --     return true
-    -- end
 end
 
 function Sprite:mousereleased(mx, my, mb)

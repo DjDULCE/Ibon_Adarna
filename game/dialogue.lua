@@ -9,6 +9,7 @@ function Dialogue:new(opt)
     self.faces = Assets.load_images("faces")
 
     self.enabled = not not opt.enabled
+    self.repeating = opt.repeating
 
     self.data = opt.data
     self.current = 1
@@ -39,6 +40,15 @@ function Dialogue:new(opt)
     Events.register(self, "on_down_right")
     Events.register(self, "on_clicked_a")
     Events.register(self, "on_clicked_b")
+    Events.register(self, "on_dialogue_show")
+
+    if self.enabled then
+        self:show()
+    end
+end
+
+function Dialogue:on_dialogue_show()
+    self.enabled = true
     self:show()
 end
 
@@ -47,6 +57,12 @@ function Dialogue:show()
     local data = self.data[self.current]
     if not data then
         self.enabled = false
+        Events.emit("on_dialogue_end")
+
+        if self.repeating then
+            self.current = 1
+            self.text_index = 0
+        end
         return
     end
 
@@ -73,11 +89,22 @@ function Dialogue:show()
         face = "fernando"
     end
 
-    self.face = self.faces[face]
-    local fw, fh = self.face:getDimensions()
-    self.fx = self.bg.x - self.bg.ox + fw * 0.5 + padding
-    self.fy = self.y
-    self.x = self.fx + fw + padding
+    local face_image = self.faces[face]
+    local fw, fh = face_image:getDimensions()
+    self.face = face_image
+    self.fy = self.y + fh * 0.5
+    self.fox = fw * 0.5
+    self.foy = fh * 0.5
+
+    if data.side == "left" then
+        self.fx = self.bg.x - self.bg.ox + fw + padding
+        self.x = self.fx + fw * 0.5 + padding
+        self.fsx = 1
+    elseif data.side == "right" then
+        self.x = self.bg.x - self.bg.ox + fw * 0.5 + padding
+        self.fx = self.x + self.w + fw * 0.5 + padding
+        self.fsx = -1
+    end
 end
 
 function Dialogue:update(dt)
@@ -98,7 +125,7 @@ function Dialogue:draw()
         self.bg.ox, self.bg.oy
     )
 
-    love.graphics.draw(self.face, self.fx, self.fy)
+    love.graphics.draw(self.face, self.fx, self.fy, 0, self.fsx, 1, self.fox, self.foy)
 
     love.graphics.setFont(self.font)
     reflowprint(self.dt/self.t, self.text, self.x, self.y, self.w, self.align)

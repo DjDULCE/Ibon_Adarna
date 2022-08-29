@@ -15,8 +15,12 @@ function Scene:new(index)
     self.dialogue = Dialogue({
         font = Assets.fonts.impact24,
         data = require("data.scene1"),
-        enabled = true,
+        -- enabled = true,
+        align = "left",
+        repeating = true,
     })
+
+    Events.register(self, "on_dialogue_end")
 end
 
 function Scene:load()
@@ -47,6 +51,11 @@ function Scene:load()
         ox = f_width * 0.5, oy = f_height * 0.5,
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
+        collider = {
+            w = 164,
+            h = 64,
+            origin = "center"
+        }
     })
 
     local v_width, v_height = self.images.valeriana:getDimensions()
@@ -62,9 +71,13 @@ function Scene:load()
     self.player = Player(WW * 0.7, self.platform.y)
 end
 
+function Scene:on_dialogue_end()
+end
+
 function Scene:update(dt)
     self.controls:update(dt)
     iter_objects(self.orders, self.objects, "update", dt)
+    iter_objects(self.orders, self.objects, "check_collision", self.player)
     self.player:update(dt, self.platform.height)
 
     local val = self.objects.val
