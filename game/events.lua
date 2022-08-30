@@ -19,6 +19,19 @@ function Events.emit(name, ...)
     end
 end
 
+function Events.remove(obj, name)
+    local ev = events[name]
+    if ev then
+        for i, obj2 in ipairs(ev) do
+            if obj == obj2 then
+                table.remove(ev, i)
+                return
+            end
+        end
+    end
+    error("no event name " .. name .. " registered")
+end
+
 function Events.clear()
     tablex.clear(events)
 end

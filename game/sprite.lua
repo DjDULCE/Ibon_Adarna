@@ -4,6 +4,7 @@ local Sprite = class({
 
 function Sprite:new(opts)
     self.image = opts.image
+    self.height = opts.height
     self.x, self.y = opts.x, opts.y
     self.r = opts.r or 0
     self.sx, self.sy = opts.sx or 1, opts.sy or 1

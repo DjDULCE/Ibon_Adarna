@@ -24,6 +24,8 @@ function Player:new(x, y)
     self.vpos = vec2(self.x, self.y)
     self.vsize = vec2(self.width * 0.5, self.height * 0.5)
 
+    self.can_move = true
+
     Events.register(self, "on_down_left")
     Events.register(self, "on_down_right")
     Events.register(self, "on_clicked_a")
@@ -33,6 +35,7 @@ function Player:new(x, y)
 end
 
 function Player:on_down_left()
+    if not self.can_move then return end
     local dt = love.timer.getDelta()
     self.x = self.x - self.speed * dt
     self.vpos.x = self.x
@@ -41,6 +44,7 @@ function Player:on_down_left()
 end
 
 function Player:on_down_right()
+    if not self.can_move then return end
     local dt = love.timer.getDelta()
     self.x = self.x + self.speed * dt
     self.vpos.x = self.x
@@ -83,6 +87,15 @@ end
 function Player:update(dt, ground_height)
     self.y = self.y + self.gravity * dt
     self.vpos.y = self.y
+
+    while (self.x - self.vsize.x) < 0 do
+        self.x = self.x + dt
+    end
+
+    while (self.x + self.vsize.x) > WW do
+        self.x = self.x - dt
+    end
+
     while (self.y + self.height) > (WH - ground_height) do
         self.y = self.y - dt
     end

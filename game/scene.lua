@@ -7,7 +7,7 @@ function Scene:new(index)
     local id = self:type()
     local idn = id .. tostring(index)
     self.images = Assets.load_images(idn)
-    self.controls = Controls(self)
+    self.controls = Controls()
 
     self.objects = {}
     self.orders = {"platform", "bed", "fernando", "val"}
@@ -15,7 +15,6 @@ function Scene:new(index)
     self.dialogue = Dialogue({
         font = Assets.fonts.impact24,
         data = require("data.scene1"),
-        -- enabled = true,
         align = "left",
         repeating = false,
     })
@@ -25,12 +24,14 @@ end
 
 function Scene:load()
     local p_width, p_height = self.images.platform:getDimensions()
-    self.platform = {
+    self.objects.platform = Sprite({
         image = self.images.platform,
         x = 0, y = WH - p_height,
         sx = WW/p_width,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
         height = p_height,
-    }
+    })
 
     local bed_width, bed_height = self.images.bed:getDimensions()
     self.objects.bed = Sprite({
@@ -68,18 +69,21 @@ function Scene:load()
         force_non_interactive = true,
     })
 
-    self.player = Player(WW * 0.7, self.platform.y)
+    self.player = Player(WW * 0.7, self.objects.platform.y)
 end
 
 function Scene:on_dialogue_end()
-    Events.emit("fadeout", 3)
+    Events.emit("fadeout", 3, function()
+        local game = require("game")
+        StateManager:switch(game, 1)
+    end)
 end
 
 function Scene:update(dt)
     self.controls:update(dt)
     iter_objects(self.orders, self.objects, "update", dt)
     iter_objects(self.orders, self.objects, "check_collision", self.player)
-    self.player:update(dt, self.platform.height)
+    self.player:update(dt, self.objects.platform.height)
 
     local val = self.objects.val
     val.sx = (self.player.x < val.x) and -1 or 1
@@ -93,9 +97,6 @@ function Scene:draw()
     local sx = WW/w
     local sy = WH/h
     love.graphics.draw(self.images.bg, 0, 0, 0, sx, sy)
-
-    local platform = self.platform
-    love.graphics.draw(platform.image, platform.x, platform.y, 0, platform.sx)
 
     iter_objects(self.orders, self.objects, "draw")
 
