@@ -2,6 +2,8 @@ local Game = class({
     name = "Game"
 })
 
+local enemies = {"wolf", "snake", "boar", "spider"}
+
 function Game:new(index)
     local id = self:type()
     local idn = string.lower(id) .. tostring(index)
@@ -12,8 +14,13 @@ function Game:new(index)
     self.objects = {}
     self.orders = {
         "bg", "platform", "btn_pause",
+        "bar",
         "box_bg", "box1", "box2"
     }
+
+    for _, str in ipairs(enemies) do
+        table.insert(self.orders, 5, "icon_" .. str)
+    end
 
     Events.register(self, "on_clicked_a")
 end
@@ -26,6 +33,8 @@ function Game:load()
         sx = WW/bgw, sy = WH/bgh,
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
+        parallax_x = true,
+        speed = 64,
     })
 
     local padding = 64
@@ -87,6 +96,8 @@ function Game:load()
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
         height = p_height,
+        parallax_x = true,
+        speed = 128,
     })
 
     local pause_w, pause_h = self.ui.pause:getDimensions()
@@ -99,9 +110,40 @@ function Game:load()
         alpha = 0,
     })
 
+    local bar_w, bar_h = self.ui.bar:getDimensions()
+    local bar_sx = (WW * 0.7)/bar_w
+    local bar_sy = 0.3
+    self.objects.bar = Sprite({
+        image = self.ui.bar,
+        x = HALF_WW, y = WH - (bar_h * bar_sy * 0.5) - padding * 0.2,
+        ox = bar_w * 0.5, oy = bar_h * 0.5,
+        sx = bar_sx, sy = bar_sy,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+    })
+
+    local obj_bar = self.objects.bar
+    local spacing = (bar_w * bar_sx)/(#enemies + 2)
+    local offset = bar_w * bar_sx * 0.25
+    for i, str in ipairs(enemies) do
+        local key = "icon_" .. str
+        local w, h = self.ui[key]:getDimensions()
+        local scale = 0.03
+        self.objects[key] = Sprite({
+            image = self.ui[key],
+            x = obj_bar.x - bar_w * bar_sx * 0.5 + spacing * (i - 1) + offset,
+            y = obj_bar.y,
+            ox = w * 0.5, oy = h * 0.5,
+            sx = scale, sy = scale,
+            is_hoverable = false, is_clickable = false,
+            force_non_interactive = true,
+        })
+    end
+
     self.player = Player(WW * 0.15, self.objects.platform.y)
     self.player.dir = -1
     self.player.can_move = false
+    self.player.fake_move = true
 end
 
 function Game:on_clicked_a()

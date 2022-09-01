@@ -37,19 +37,25 @@ end
 function Player:on_down_left()
     if not self.can_move then return end
     local dt = love.timer.getDelta()
-    self.x = self.x - self.speed * dt
-    self.vpos.x = self.x
+    if not self.fake_move then
+        self.x = self.x - self.speed * dt
+        self.vpos.x = self.x
+    end
     self.dir = 1
     self.anim:update(dt)
+    Events.emit("on_player_move_x", -1, dt)
 end
 
 function Player:on_down_right()
     if not self.can_move then return end
     local dt = love.timer.getDelta()
-    self.x = self.x + self.speed * dt
-    self.vpos.x = self.x
+    if not self.fake_move then
+        self.x = self.x + self.speed * dt
+        self.vpos.x = self.x
+    end
     self.dir = -1
     self.anim:update(dt)
+    Events.emit("on_player_move_x", 1, dt)
 end
 
 function Player:on_clicked_a()

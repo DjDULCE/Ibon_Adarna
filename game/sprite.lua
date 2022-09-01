@@ -79,6 +79,21 @@ function Sprite:new(opts)
         self.vpos = vec2(x, y)
         self.vsize = vec2(self.collider.w * 0.5, self.collider.h * 0.5)
     end
+
+    self.parallax_x = opts.parallax_x
+    self.speed = opts.speed or 64
+    if self.parallax_x then
+        Events.register(self, "on_player_move_x")
+        local iw, ih = self.image:getDimensions()
+        self.quad = love.graphics.newQuad(0, 0, iw, ih, iw, ih)
+        self.image:setWrap("repeat")
+    end
+end
+
+function Sprite:on_player_move_x(dir, dt)
+    local x, y, w, h = self.quad:getViewport()
+    local rw, rh = self.quad:getTextureDimensions()
+    self.quad:setViewport(x + self.speed * dt * dir, y, w, h, rw, rh)
 end
 
 function Sprite:update_y(y)
@@ -136,6 +151,8 @@ function Sprite:draw()
     if self.image then
         if self.anim8 then
             self.anim8:draw(self.image, self.x, self.y, self.r, self.sx, self.sy, self.ox, self.oy)
+        elseif self.quad then
+            love.graphics.draw(self.image, self.quad, self.x, self.y, self.r, sx, sy, self.ox, self.oy)
         else
             love.graphics.draw(self.image, self.x, self.y, self.r, sx, sy, self.ox, self.oy)
         end
