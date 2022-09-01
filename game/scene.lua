@@ -7,6 +7,7 @@ function Scene:new(index)
     local id = self:type()
     local idn = id .. tostring(index)
     self.images = Assets.load_images(idn)
+    self.sources = Assets.load_sources(idn)
     self.controls = Controls()
 
     self.objects = {}
@@ -23,6 +24,9 @@ function Scene:new(index)
 end
 
 function Scene:load()
+    self.sources.bgm:play()
+    self.sources.bgm:setLooping(true)
+
     local p_width, p_height = self.images.platform:getDimensions()
     self.objects.platform = Sprite({
         image = self.images.platform,
@@ -115,6 +119,7 @@ end
 
 function Scene:exit()
     Events.clear()
+    self.sources.bgm:stop()
 end
 
 return Scene
