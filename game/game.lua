@@ -3,6 +3,7 @@ local Game = class({
 })
 
 local enemies = {"wolf", "snake", "boar", "spider"}
+local icon_scale = 0.2
 
 function Game:new(index)
     local id = self:type()
@@ -11,15 +12,21 @@ function Game:new(index)
     self.ui = Assets.load_images("ui")
     self.controls = Controls()
 
+    self.total_meters = 1000
+    self.current_meter = 0
+    self.pacing = 64
+    self.current_enemy = 1
+
     self.objects = {}
     self.orders = {
         "bg", "platform", "btn_pause",
-        "bar",
+        "bar", "icon_player",
         "box_bg", "box1", "box2"
     }
 
+    local i = tablex.index_of(self.orders, "icon_player")
     for _, str in ipairs(enemies) do
-        table.insert(self.orders, 5, "icon_" .. str)
+        table.insert(self.orders, i, "icon_" .. str)
     end
 
     Events.register(self, "on_clicked_a")
@@ -91,11 +98,11 @@ function Game:load()
     local p_width, p_height = self.images.platform:getDimensions()
     self.objects.platform = Sprite({
         image = self.images.platform,
-        x = 0, y = WH - p_height,
-        sx = WW/p_width,
+        x = 0, y = WH - p_height * 2,
+        sx = WW/p_width, sy = 2,
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
-        height = p_height,
+        height = p_height * 2,
         parallax_x = true,
         speed = 128,
     })
@@ -112,10 +119,11 @@ function Game:load()
 
     local bar_w, bar_h = self.ui.bar:getDimensions()
     local bar_sx = (WW * 0.7)/bar_w
-    local bar_sy = 0.3
+    local bar_sy = 0.7
     self.objects.bar = Sprite({
         image = self.ui.bar,
-        x = HALF_WW, y = WH - (bar_h * bar_sy * 0.5) - padding * 0.2,
+        x = HALF_WW,
+        y = self.objects.platform.y + p_height * 2 * 0.5 - 4,
         ox = bar_w * 0.5, oy = bar_h * 0.5,
         sx = bar_sx, sy = bar_sy,
         is_hoverable = false, is_clickable = false,
@@ -128,37 +136,73 @@ function Game:load()
     for i, str in ipairs(enemies) do
         local key = "icon_" .. str
         local w, h = self.ui[key]:getDimensions()
-        local scale = 0.03
         self.objects[key] = Sprite({
             image = self.ui[key],
             x = obj_bar.x - bar_w * bar_sx * 0.5 + spacing * (i - 1) + offset,
             y = obj_bar.y,
             ox = w * 0.5, oy = h * 0.5,
-            sx = scale, sy = scale,
+            sx = icon_scale, sy = icon_scale,
             is_hoverable = false, is_clickable = false,
             force_non_interactive = true,
         })
     end
 
+    local ipw, iph = self.ui.icon_player:getDimensions()
+    self.objects.icon_player = Sprite({
+        image = self.ui.icon_player,
+        x = obj_bar.x - bar_w * bar_sx * 0.5 + ipw * icon_scale,
+        y = obj_bar.y,
+        ox = ipw * 0.5, oy = iph * 0.5,
+        sx = icon_scale, sy = icon_scale,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+    })
+
     self.player = Player(WW * 0.15, self.objects.platform.y)
     self.player.dir = -1
     self.player.can_move = false
     self.player.fake_move = true
+
+    Events.register(self, "on_player_move_x")
+end
+
+function Game:on_player_move_x(dir, dt)
+    if not self.player.can_move then return end
+    self.current_meter = self.current_meter + self.pacing * dt * dir
+    if self.current_meter < 0 then
+        self.current_meter = 0
+    elseif self.current_meter > self.total_meters then
+        self.current_meter = self.total_meters
+    end
+
+    local obj_bar = self.objects.bar
+    local progress = self.current_meter/self.total_meters
+    local w = (obj_bar.width - 128) * obj_bar.sx
+    local n = progress * w
+    local obj_ip = self.objects.icon_player
+    obj_ip.x = obj_ip.orig_x + n
+
+    local allowance = 36
+    local e = 256 * icon_scale * 0.5
+    local target = (math.floor(self.total_meters/#enemies) * self.current_enemy) - e
+    if self.current_meter >= (target - allowance) then
+        self.player.can_move = false
+        Events.emit("show_enemy", enemies[self.current_enemy])
+    end
 end
 
 function Game:on_clicked_a()
-    if self.objects.box_bg.alpha ~= 0 then
-        for _, obj in ipairs(self.group_guide) do
-            obj.alpha = 0
-        end
-        local btn_pause = self.objects.btn_pause
-        btn_pause.alpha = 1
-        btn_pause.is_hoverable = true
-        btn_pause.is_clickable = true
-        self.player.can_move = true
-        Events.remove(self, "on_clicked_a")
-        return true
+    if self.objects.box_bg.alpha == 0 then return end
+    for _, obj in ipairs(self.group_guide) do
+        obj.alpha = 0
     end
+    local btn_pause = self.objects.btn_pause
+    btn_pause.alpha = 1
+    btn_pause.is_hoverable = true
+    btn_pause.is_clickable = true
+    self.player.can_move = true
+    Events.remove(self, "on_clicked_a")
+    return true
 end
 
 function Game:update(dt)
