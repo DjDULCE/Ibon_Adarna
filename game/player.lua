@@ -12,6 +12,7 @@ function Player:new(x, y)
     self.width, self.height = 49, 53
     self.speed = 256
     self.gravity = 256
+    self.current_meter = 0
 
     local walk_width, walk_height = self.images.walk:getDimensions()
     local grid_walk = Anim8.newGrid(self.width, self.height, walk_width, walk_height)
@@ -36,6 +37,8 @@ end
 
 function Player:on_down_left()
     if not self.can_move then return end
+    if self.current_meter <= 0 then return end
+
     local dt = love.timer.getDelta()
     if not self.fake_move then
         self.x = self.x - self.speed * dt

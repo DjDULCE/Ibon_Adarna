@@ -17,6 +17,8 @@ function Game:new(index)
     self.pacing = 64
     self.current_enemy = 1
 
+    self.in_battle = false
+
     self.objects = {}
     self.orders = {
         "bg", "platform", "btn_pause",
@@ -30,6 +32,8 @@ function Game:new(index)
     end
 
     Events.register(self, "on_clicked_a")
+    Events.register(self, "start_battle")
+    Events.register(self, "end_battle")
 end
 
 function Game:load()
@@ -158,7 +162,7 @@ function Game:load()
         force_non_interactive = true,
     })
 
-    self.player = Player(WW * 0.15, self.objects.platform.y)
+    self.player = Player(WW * 0.2, self.objects.platform.y)
     self.player.dir = -1
     self.player.can_move = false
     self.player.fake_move = true
@@ -167,8 +171,10 @@ function Game:load()
 end
 
 function Game:on_player_move_x(dir, dt)
+    if self.in_battle then return end
     if not self.player.can_move then return end
     self.current_meter = self.current_meter + self.pacing * dt * dir
+    self.player.current_meter = self.current_meter
     if self.current_meter < 0 then
         self.current_meter = 0
     elseif self.current_meter > self.total_meters then
@@ -185,9 +191,13 @@ function Game:on_player_move_x(dir, dt)
     local allowance = 36
     local e = 256 * icon_scale * 0.5
     local target = (math.floor(self.total_meters/#enemies) * self.current_enemy) - e
+
     if self.current_meter >= (target - allowance) then
+        self:show_enemy(enemies[self.current_enemy])
+    end
+
+    if self.current_meter >= (target - allowance * 0.5) then
         self.player.can_move = false
-        Events.emit("show_enemy", enemies[self.current_enemy])
     end
 end
 
@@ -205,16 +215,42 @@ function Game:on_clicked_a()
     return true
 end
 
+function Game:show_enemy(enemy_name)
+    local ew, eh = self.images[enemy_name]:getDimensions()
+    local esx, esy = 1, 1
+    self.enemy = Enemy(enemy_name, {
+        image = self.images[enemy_name],
+        x = WW + ew * esx,
+        y = WH - self.objects.platform.height - eh * esy * 0.5,
+        ox = ew * 0.5, oy = eh * 0.5,
+        sx = esx, sy = esy,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+    })
+end
+
+function Game:start_battle(obj_enemy)
+    self.in_battle = true
+end
+
+function Game:end_battle()
+    self.in_battle = false
+    self.current_enemy = self.current_enemy + 1
+    self.player.can_move = true
+end
+
 function Game:update(dt)
     self.controls:update(dt)
     iter_objects(self.orders, self.objects, "update", dt)
     self.player:update(dt, self.objects.platform.height)
+    if self.enemy then self.enemy:update(dt) end
 end
 
 function Game:draw()
     love.graphics.setColor(1, 1, 1, 1)
     iter_objects(self.orders, self.objects, "draw")
     self.player:draw()
+    if self.enemy then self.enemy:draw() end
     self.controls:draw()
     love.graphics.setColor(1, 1, 1, 1)
 end
