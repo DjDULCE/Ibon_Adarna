@@ -23,7 +23,8 @@ function Game:new(index)
     self.orders = {
         "bg", "platform", "btn_pause",
         "bar", "icon_player",
-        "box_bg", "box1", "box2"
+        "question_bg", "choice_a", "choice_b", "choice_c",
+        "box_bg", "box1", "box2",
     }
 
     local i = tablex.index_of(self.orders, "icon_player")
@@ -100,13 +101,14 @@ function Game:load()
     self.group_guide = {self.objects.box_bg, self.objects.box1, self.objects.box2}
 
     local p_width, p_height = self.images.platform:getDimensions()
+    local p_scale = 3
     self.objects.platform = Sprite({
         image = self.images.platform,
-        x = 0, y = WH - p_height * 2,
-        sx = WW/p_width, sy = 2,
+        x = 0, y = WH - p_height * p_scale,
+        sx = WW/p_width, sy = p_scale,
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
-        height = p_height * 2,
+        height = p_height * p_scale,
         parallax_x = true,
         speed = 128,
     })
@@ -123,11 +125,11 @@ function Game:load()
 
     local bar_w, bar_h = self.ui.bar:getDimensions()
     local bar_sx = (WW * 0.7)/bar_w
-    local bar_sy = 0.7
+    local bar_sy = 1
     self.objects.bar = Sprite({
         image = self.ui.bar,
         x = HALF_WW,
-        y = self.objects.platform.y + p_height * 2 * 0.5 - 4,
+        y = self.objects.platform.y + p_height * p_scale * 0.5 - 4,
         ox = bar_w * 0.5, oy = bar_h * 0.5,
         sx = bar_sx, sy = bar_sy,
         is_hoverable = false, is_clickable = false,
@@ -160,6 +162,24 @@ function Game:load()
         sx = icon_scale, sy = icon_scale,
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
+    })
+
+    local qbg_w, qbg_h = self.ui.question_bg:getDimensions()
+    local bg_sx = (WW * 0.85)/qbg_w
+    local bg_sy = (p_height * p_scale)/qbg_h
+    self.objects.question_bg = Sprite({
+        image = self.ui.question_bg,
+        x = HALF_WW,
+        y = self.objects.platform.y + p_height * p_scale * 0.5,
+        ox = qbg_w * 0.5, oy = qbg_h * 0.5,
+        sx = bg_sx, sy = bg_sy,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+        alpha = 0,
+        font = Assets.fonts.impact20,
+        text_color = {0, 0, 0},
+        is_printf = true, align = "center",
+        limit = qbg_w * 0.8,
     })
 
     self.player = Player(WW * 0.2, self.objects.platform.y)
@@ -231,12 +251,21 @@ end
 
 function Game:start_battle(obj_enemy)
     self.in_battle = true
+
+    local obj_question = self.objects.question_bg
+    obj_question.alpha = 1
+
+    local data = require("data." .. obj_enemy.name)
+    local question = tablex.pick_random(data)
+    local w, h = obj_question.image:getDimensions()
+    obj_question.text = question.question
+    obj_question.tx = obj_question.x - w * obj_question.sx * 0.5
+    obj_question.ty = obj_question.y - h * obj_question.sy * 0.5 + 8
 end
 
 function Game:end_battle()
     self.in_battle = false
     self.current_enemy = self.current_enemy + 1
-    self.player.can_move = true
 end
 
 function Game:update(dt)

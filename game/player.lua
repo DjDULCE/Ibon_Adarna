@@ -33,6 +33,17 @@ function Player:new(x, y)
     Events.register(self, "on_clicked_b")
     Events.register(self, "on_collide")
     Events.register(self, "on_remove_collide")
+    Events.register(self, "start_battle")
+    Events.register(self, "end_battle")
+end
+
+function Player:start_battle()
+    self.anim:gotoFrame(1)
+end
+
+function Player:end_battle()
+    self.anim:gotoFrame(1)
+    self.can_move = true
 end
 
 function Player:on_down_left()
