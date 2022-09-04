@@ -3,6 +3,7 @@ local Game = class({
 })
 
 local enemies = {"wolf", "snake", "boar", "spider"}
+local choices = {"a", "b", "c"}
 local icon_scale = 0.2
 
 function Game:new(index)
@@ -14,7 +15,7 @@ function Game:new(index)
 
     self.total_meters = 1000
     self.current_meter = 0
-    self.pacing = 64
+    self.pacing = 256
     self.current_enemy = 1
 
     self.in_battle = false
@@ -125,7 +126,7 @@ function Game:load()
 
     local bar_w, bar_h = self.ui.bar:getDimensions()
     local bar_sx = (WW * 0.7)/bar_w
-    local bar_sy = 1
+    local bar_sy = 0.9
     self.objects.bar = Sprite({
         image = self.ui.bar,
         x = HALF_WW,
@@ -260,7 +261,40 @@ function Game:start_battle(obj_enemy)
     local w, h = obj_question.image:getDimensions()
     obj_question.text = question.question
     obj_question.tx = obj_question.x - w * obj_question.sx * 0.5
-    obj_question.ty = obj_question.y - h * obj_question.sy * 0.5 + 8
+    obj_question.ty = obj_question.y - h * obj_question.sy * 0.5 + 16
+
+    local font = Assets.fonts.impact20
+    local offset = font:getWidth(" ") * 0.5
+    local img_choice = self.ui.btn_choice
+    local icw, ich = img_choice:getDimensions()
+    local choice_scale = 0.5
+    local bx = obj_question.x - w * obj_question.sx * 0.5 + 48 + icw * choice_scale * 0.5
+    local last_str = ""
+    for i, letter in ipairs(choices) do
+        local key = "choice_" .. letter
+        local str2 = string.format("%s     %s", string.upper(letter), question[letter])
+        local ii = i - 1
+        local x = bx + (font:getWidth(last_str) * ii) + (64 * ii)
+        self.objects[key] = Sprite({
+            image = img_choice,
+            x = x, y = obj_question.y + h * obj_question.sy * 0.5 - 48,
+            ox = icw * 0.5, oy = ich * 0.5,
+            sx = choice_scale, sy = choice_scale,
+            font = font,
+            text = str2,
+            tx = x - offset * 2,
+            toy = font:getHeight() * 0.5,
+            text_color = {0, 0, 0},
+        })
+        last_str = str2
+
+        self.objects[key].on_clicked = function()
+            print("Answered", letter)
+            if question.answer == letter then
+            else
+            end
+        end
+    end
 end
 
 function Game:end_battle()
@@ -286,10 +320,12 @@ end
 
 function Game:mousepressed(mx, my, mb)
     self.controls:mousepressed(mx, my, mb)
+    iter_objects(self.orders, self.objects, "mousepressed", mx, my, mb)
 end
 
 function Game:mousereleased(mx, my, mb)
     self.controls:mousereleased(mx, my, mb)
+    iter_objects(self.orders, self.objects, "mousereleased", mx, my, mb)
 end
 
 function Game:exit()

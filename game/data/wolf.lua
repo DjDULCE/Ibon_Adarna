@@ -14,7 +14,7 @@ return {
 		c = "Don Juan",
 	},
 	{
-		question = "Sino ang pumunta sa kaharian upang sabihin ang lunas sa sakit ni Haring Fernando? dasdasdas dasdasdas dasdasdasd dasdasdas sdasdas",
+		question = "Sino ang pumunta sa kaharian upang sabihin ang lunas sa sakit ni Haring Fernando?",
 		answer = "b",
 		a = "Doktor",
 		b = "Matandang Ermitanyo",
@@ -31,7 +31,7 @@ return {
 		question = "Ano ang kailangan sa ibong upang mapagaling si Haring Fernando?",
 		answer = "a",
 		a = "Awit ng Ibong Adarna",
-		b = "Dugo ng Ibong Adarna ",
+		b = "Dugo ng Ibong Adarna",
 		c = "Tuka ng Ibong Adarna",
 	},
 }

@@ -11,7 +11,11 @@ function Controls:new()
     self.images = Assets.load_images("controls")
     self.objects = {}
     self.orders = {"btn_a", "btn_b", "btn_left", "btn_right"}
+    self.alpha = 1
     self:load()
+
+    Events.register(self, "start_battle")
+    Events.register(self, "end_battle")
 end
 
 function Controls:load()
@@ -76,6 +80,18 @@ function Controls:load()
     end
 end
 
+function Controls:start_battle()
+    self.enabled = false
+    self.alpha = 0
+    for _, obj in pairs(self.objects) do obj.alpha = self.alpha end
+end
+
+function Controls:end_battle()
+    self.enabled = true
+    self.alpha = 1
+    for _, obj in pairs(self.objects) do obj.alpha = self.alpha end
+end
+
 function Controls:update(dt)
     if not self.enabled then return end
     iter_objects(self.orders, self.objects, "update", dt)
@@ -88,6 +104,7 @@ function Controls:draw()
 end
 
 function Controls:mousepressed(mx, my, mb)
+    if not self.enabled then return end
     for _, key in ipairs(self.orders) do
         local btn = self.objects[key]
         if btn then
@@ -98,6 +115,7 @@ function Controls:mousepressed(mx, my, mb)
 end
 
 function Controls:mousereleased(mx, my, mb)
+    if not self.enabled then return end
     for _, key in ipairs(self.orders) do
         local btn = self.objects[key]
         if btn then
