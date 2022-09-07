@@ -16,7 +16,8 @@ function Game:new(index, difficulty)
 
     self.total_meters = 1000
     self.current_meter = 0
-    self.pacing = 256
+    self.pacing = 256 --debug
+    -- self.pacing = 64 --original
     self.current_enemy = 1
     self.hurt_alpha = 0
 
@@ -318,13 +319,13 @@ function Game:start_battle(obj_enemy)
 end
 
 function Game:finished_turn()
+    if self.enemy.health <= 0 then return end
     for _, letter in ipairs(choices) do
         local key = "choice_" .. letter
-        if self.objects[key] then
-            self.objects[key].is_hoverable = true
-            self.objects[key].is_clickable = true
-        end
+        self.objects[key].is_hoverable = true
+        self.objects[key].is_clickable = true
     end
+    self:start_battle(self.enemy)
 end
 
 function Game:end_battle()

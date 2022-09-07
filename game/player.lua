@@ -18,7 +18,6 @@ function Player:new(x, y, difficulty)
     self.dir = 1
     self.health = healths[difficulty]
     self.damage = damages[difficulty]
-    self.damage = 100
 
     self.cur_anim = "walk"
 
@@ -89,6 +88,7 @@ end
 function Player:start_attack()
     self.cur_anim = "attack"
     self.anim = self.anim_attack
+    self.anim:resume()
     self.dir = -self.dir
     self.width, self.height = unpack(data[self.cur_anim])
     self.target_x = self.x + 128
