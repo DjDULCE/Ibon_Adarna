@@ -1,7 +1,7 @@
 require("libs.batteries"):export()
 io.stdout:setvbuf("no")
 
-DEV = false
+DEV = true
 WW = 960
 WH = 540
 HALF_WW = WW * 0.5
@@ -21,13 +21,6 @@ Sprite = require("sprite")
 StateManager = require("state_manager")
 UserData = require("user_data")
 
---VALIDATE data/*.lua FILES. REMOVE UPON RELEASE
-local files = love.filesystem.getDirectoryItems("data/")
-for _, filename in ipairs(files) do
-	print(filename, require("data." .. filename:sub(0, -5)))
-end
---END VALIDATION
-
 local canvas, fade
 
 function iter_objects(tbl_orders, tbl_objects, fn, ...)
@@ -40,6 +33,13 @@ function iter_objects(tbl_orders, tbl_objects, fn, ...)
 end
 
 function love.load()
+	if DEV then
+		local files = love.filesystem.getDirectoryItems("data/")
+		for _, filename in ipairs(files) do
+			print(filename, require("data." .. filename:sub(0, -5)))
+		end
+	end
+
 	fade = Fade()
 	UserData:init()
 	Assets.init()
@@ -69,12 +69,12 @@ function love.draw()
 
 	love.graphics.draw(canvas)
 
-	if DEV then
-		love.graphics.setColor(1, 0, 0, 1)
-		love.graphics.line(HALF_WW, 0, HALF_WW, WH)
-		love.graphics.line(0, HALF_WH, WW, HALF_WH)
-		love.graphics.setColor(1, 1, 1, 1)
-	end
+	-- if DEV then
+	-- 	love.graphics.setColor(1, 0, 0, 1)
+	-- 	love.graphics.line(HALF_WW, 0, HALF_WW, WH)
+	-- 	love.graphics.line(0, HALF_WH, WW, HALF_WH)
+	-- 	love.graphics.setColor(1, 1, 1, 1)
+	-- end
 end
 
 function love.mousepressed(mx, my, mb)

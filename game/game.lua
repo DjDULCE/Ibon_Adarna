@@ -16,8 +16,7 @@ function Game:new(index, difficulty)
 
     self.total_meters = 1000
     self.current_meter = 0
-    self.pacing = 256 --debug
-    -- self.pacing = 64 --original
+    self.pacing = DEV and 256 or 64
     self.current_enemy = 1
     self.hurt_alpha = 0
 
