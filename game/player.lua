@@ -7,12 +7,18 @@ local data = {
     attack = {92, 49}
 }
 
-function Player:new(x, y)
+local healths = {10, 8, 5}
+local damages = {3, 2, 1}
+
+function Player:new(x, y, difficulty)
     self.images = Assets.load_images("player")
     self.ui = Assets.load_images("ui")
     self.x = x
     self.y = y
     self.dir = 1
+    self.health = healths[difficulty]
+    self.damage = damages[difficulty]
+    self.damage = 100
 
     self.cur_anim = "walk"
 
@@ -59,6 +65,16 @@ function Player:new(x, y)
     Events.register(self, "end_battle")
     Events.register(self, "start_attack")
     Events.register(self, "end_attack")
+    Events.register(self, "damage_player")
+end
+
+function Player:damage_player(damage)
+    Events.emit("display_damage", self, damage)
+    self.health = self.health - damage
+
+    if self.health <= 0 then
+        error("Game Over")
+    end
 end
 
 function Player:start_battle()
@@ -84,6 +100,7 @@ function Player:start_attack()
 end
 
 function Player:end_attack()
+    Events.emit("damage_enemy", self.damage)
     self.anim_attack:pauseAtStart()
     self.target_x = self.x - 128
     self.timer_attack = timer(1,
@@ -98,6 +115,7 @@ function Player:end_attack()
             self.dir = -self.dir
             self.width, self.height = unpack(data[self.cur_anim])
             self.target_x = nil
+            Events.emit("finished_turn")
         end)
 end
 

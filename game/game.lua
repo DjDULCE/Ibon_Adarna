@@ -6,12 +6,13 @@ local enemies = {"wolf", "snake", "boar", "spider"}
 local choices = {"a", "b", "c"}
 local icon_scale = 0.2
 
-function Game:new(index)
+function Game:new(index, difficulty)
     local id = self:type()
     local idn = string.lower(id) .. tostring(index)
     self.images = Assets.load_images(idn)
     self.ui = Assets.load_images("ui")
     self.controls = Controls()
+    self.difficulty = difficulty
 
     self.total_meters = 1000
     self.current_meter = 0
@@ -34,10 +35,18 @@ function Game:new(index)
         table.insert(self.orders, i, "icon_" .. str)
     end
 
+    self.damage_text = {
+        font = Assets.fonts.impact24,
+        color = {1, 0, 0, 1},
+        x = -100, y = -100,
+        text = "0"
+    }
+
     Events.register(self, "on_clicked_a")
     Events.register(self, "start_battle")
     Events.register(self, "end_battle")
-    Events.register(self, "on_hurt")
+    Events.register(self, "display_damage")
+    Events.register(self, "finished_turn")
 end
 
 function Game:load()
@@ -185,7 +194,7 @@ function Game:load()
         limit = qbg_w * 0.8,
     })
 
-    self.player = Player(WW * 0.2, self.objects.platform.y)
+    self.player = Player(WW * 0.2, self.objects.platform.y, self.difficulty)
     self.player.dir = -1
     self.player.can_move = false
     self.player.fake_move = true
@@ -241,7 +250,7 @@ end
 function Game:show_enemy(enemy_name)
     local ew, eh = self.images[enemy_name]:getDimensions()
     local esx, esy = 1, 1
-    self.enemy = Enemy(enemy_name, {
+    self.enemy = Enemy(enemy_name, self.difficulty, {
         image = self.images[enemy_name],
         x = WW + ew * esx,
         y = WH - self.objects.platform.height - eh * esy * 0.5,
@@ -298,6 +307,22 @@ function Game:start_battle(obj_enemy)
             else
                 Events.emit("enemy_start_attack")
             end
+
+            for _, letter2 in ipairs(choices) do
+                local key2 = "choice_" .. letter2
+                self.objects[key2].is_hoverable = false
+                self.objects[key2].is_clickable = false
+            end
+        end
+    end
+end
+
+function Game:finished_turn()
+    for _, letter in ipairs(choices) do
+        local key = "choice_" .. letter
+        if self.objects[key] then
+            self.objects[key].is_hoverable = true
+            self.objects[key].is_clickable = true
         end
     end
 end
@@ -305,21 +330,31 @@ end
 function Game:end_battle()
     self.in_battle = false
     self.current_enemy = self.current_enemy + 1
+
+    local obj_question = self.objects.question_bg
+    obj_question.alpha = 0
+    obj_question.text = ""
+    for _, letter in ipairs(choices) do
+        local key = "choice_" .. letter
+        self.objects[key] = nil
+    end
 end
 
-function Game:on_hurt()
-    self.hurt_timer = timer(0.25,
+function Game:display_damage(obj, damage)
+    local d = self.damage_text
+    d.text = tostring(damage)
+    d.x = obj.x
+    d.y = obj.y - 16
+    d.ty = d.y - 64
+
+    self.hurt_timer = timer(0.5,
         function(progress)
-            self.hurt_alpha = progress
+            d.y = mathx.lerp(d.y, d.ty, progress)
         end,
         function()
-            self.hurt_timer = timer(0.25,
-                function(progress)
-                    self.hurt_alpha = 1 - progress
-                end,
-                function()
-                    self.hurt_timer = nil
-                end)
+            self.hurt_timer = nil
+            d.x = -100
+            d.y = -100
         end)
 end
 
@@ -337,6 +372,11 @@ function Game:draw()
     self.player:draw()
     if self.enemy then self.enemy:draw() end
     self.controls:draw()
+    love.graphics.setColor(1, 1, 1, 1)
+
+    love.graphics.setColor(self.damage_text.color)
+    love.graphics.setFont(self.damage_text.font)
+    love.graphics.print(self.damage_text.text, self.damage_text.x, self.damage_text.y)
     love.graphics.setColor(1, 1, 1, 1)
 
     love.graphics.setColor(1, 0, 0, self.hurt_alpha)
