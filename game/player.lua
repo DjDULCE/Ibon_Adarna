@@ -2,6 +2,11 @@ local Player = class({
     name = "player"
 })
 
+local data = {
+    walk = { 49,  53},
+    attack = {92, 49}
+}
+
 function Player:new(x, y)
     self.images = Assets.load_images("player")
     self.ui = Assets.load_images("ui")
@@ -9,16 +14,33 @@ function Player:new(x, y)
     self.y = y
     self.dir = 1
 
-    self.width, self.height = 49, 53
+    self.cur_anim = "walk"
+
     self.speed = 256
     self.gravity = 256
     self.current_meter = 0
+    self.anim_loop = 0
 
     local walk_width, walk_height = self.images.walk:getDimensions()
-    local grid_walk = Anim8.newGrid(self.width, self.height, walk_width, walk_height)
+    local walk_w, walk_h = unpack(data.walk)
+    local grid_walk = Anim8.newGrid(walk_w, walk_h, walk_width, walk_height)
     self.anim_walk = Anim8.newAnimation(grid_walk("1-9", 1), 0.1)
 
+    local aw, ah = self.images.attack:getDimensions()
+    local atw, ath = unpack(data.attack)
+    local grid_attack = Anim8.newGrid(atw, ath, aw, ah)
+    self.anim_attack = Anim8.newAnimation(grid_attack("1-4", 1), 0.1,
+        function(anim)
+            self.anim_loop = self.anim_loop + 1
+            if self.anim_loop >= 2 then
+                anim:gotoFrame(1)
+                self:end_attack()
+                self.anim_loop = 0
+            end
+        end)
+
     self.anim = self.anim_walk
+    self.width, self.height = unpack(data[self.cur_anim])
 
     self.ox = self.width * 0.5
 
@@ -35,6 +57,8 @@ function Player:new(x, y)
     Events.register(self, "on_remove_collide")
     Events.register(self, "start_battle")
     Events.register(self, "end_battle")
+    Events.register(self, "start_attack")
+    Events.register(self, "end_attack")
 end
 
 function Player:start_battle()
@@ -44,6 +68,37 @@ end
 function Player:end_battle()
     self.anim:gotoFrame(1)
     self.can_move = true
+end
+
+function Player:start_attack()
+    self.cur_anim = "attack"
+    self.anim = self.anim_attack
+    self.dir = -self.dir
+    self.width, self.height = unpack(data[self.cur_anim])
+    self.target_x = self.x + 128
+    self.timer_attack = timer(1,
+        function(progress)
+            self.x = mathx.lerp(self.x, self.target_x, progress)
+            self.anim:update(love.timer.getDelta())
+        end)
+end
+
+function Player:end_attack()
+    self.anim_attack:pauseAtStart()
+    self.target_x = self.x - 128
+    self.timer_attack = timer(1,
+        function(progress)
+            self.x = mathx.lerp(self.x, self.target_x, progress)
+            self.anim:update(love.timer.getDelta())
+        end,
+        function()
+            self.timer_attack = nil
+            self.cur_anim = "walk"
+            self.anim = self.anim_walk
+            self.dir = -self.dir
+            self.width, self.height = unpack(data[self.cur_anim])
+            self.target_x = nil
+        end)
 end
 
 function Player:on_down_left()
@@ -105,6 +160,7 @@ function Player:on_remove_collide()
 end
 
 function Player:update(dt, ground_height)
+    if self.timer_attack then self.timer_attack:update(dt) end
     self.y = self.y + self.gravity * dt
     self.vpos.y = self.y
 
@@ -123,7 +179,7 @@ end
 
 function Player:draw()
     love.graphics.setColor(1, 1, 1, 1)
-    self.anim:draw(self.images.walk, self.x, self.y, 0, self.dir, 1, self.ox, 0)
+    self.anim:draw(self.images[self.cur_anim], self.x, self.y, 0, self.dir, 1, self.ox, 0)
     if self.notif then self.notif:draw() end
     love.graphics.setColor(1, 1, 1, 1)
 end

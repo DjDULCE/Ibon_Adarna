@@ -17,6 +17,7 @@ function Game:new(index)
     self.current_meter = 0
     self.pacing = 256
     self.current_enemy = 1
+    self.hurt_alpha = 0
 
     self.in_battle = false
 
@@ -36,6 +37,7 @@ function Game:new(index)
     Events.register(self, "on_clicked_a")
     Events.register(self, "start_battle")
     Events.register(self, "end_battle")
+    Events.register(self, "on_hurt")
 end
 
 function Game:load()
@@ -285,13 +287,16 @@ function Game:start_battle(obj_enemy)
             tx = x - offset * 2,
             toy = font:getHeight() * 0.5,
             text_color = {0, 0, 0},
+            collision_include_text = true,
         })
         last_str = str2
 
         self.objects[key].on_clicked = function()
-            print("Answered", letter)
+            print("Answered", letter, question.answer == letter)
             if question.answer == letter then
+                Events.emit("start_attack")
             else
+                Events.emit("enemy_start_attack")
             end
         end
     end
@@ -302,7 +307,24 @@ function Game:end_battle()
     self.current_enemy = self.current_enemy + 1
 end
 
+function Game:on_hurt()
+    self.hurt_timer = timer(0.25,
+        function(progress)
+            self.hurt_alpha = progress
+        end,
+        function()
+            self.hurt_timer = timer(0.25,
+                function(progress)
+                    self.hurt_alpha = 1 - progress
+                end,
+                function()
+                    self.hurt_timer = nil
+                end)
+        end)
+end
+
 function Game:update(dt)
+    if self.hurt_timer then self.hurt_timer:update(dt) end
     self.controls:update(dt)
     iter_objects(self.orders, self.objects, "update", dt)
     self.player:update(dt, self.objects.platform.height)
@@ -315,6 +337,10 @@ function Game:draw()
     self.player:draw()
     if self.enemy then self.enemy:draw() end
     self.controls:draw()
+    love.graphics.setColor(1, 1, 1, 1)
+
+    love.graphics.setColor(1, 0, 0, self.hurt_alpha)
+    love.graphics.rectangle("fill", 0, 0, WW, WH)
     love.graphics.setColor(1, 1, 1, 1)
 end
 

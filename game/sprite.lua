@@ -68,6 +68,7 @@ function Sprite:new(opts)
     self.is_printf = opts.is_printf
     self.limit = opts.limit
     self.align = opts.align or "left"
+    self.collision_include_text = opts.collision_include_text
 
     self.value = opts.value
     self.force_non_interactive = opts.force_non_interactive
@@ -124,7 +125,17 @@ end
 function Sprite:update(dt)
     local mx, my = love.mouse.getPosition()
     self.mouse.x, self.mouse.y = mx, my
-    self.is_overlap = intersect.point_aabb_overlap(self.mouse, self.center_pos, self.half_size)
+
+    local cp = self.center_pos
+    local hs = self.half_size
+
+    if self.collision_include_text then
+        local fw = self.font:getWidth(self.text) * 0.5
+        cp = cp:sadd(fw, 0)
+        hs = hs:sadd(fw, 0)
+    end
+
+    self.is_overlap = intersect.point_aabb_overlap(self.mouse, cp, hs)
 
     if self.on_down and self.is_overlap and love.mouse.isDown(1) then
         self.on_down()
