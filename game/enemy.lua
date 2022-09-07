@@ -7,6 +7,18 @@ local data = {
         health = {5, 8, 10},
         damage = {1, 2, 3},
     },
+    snake = {
+        health = {5, 8, 10},
+        damage = {1, 2, 3},
+    },
+    boar = {
+        health = {5, 8, 10},
+        damage = {1, 2, 3},
+    },
+    spider = {
+        health = {5, 8, 10},
+        damage = {1, 2, 3},
+    }
 }
 
 function Enemy:new(name, difficulty, opts)

@@ -221,15 +221,14 @@ function Game:on_player_move_x(dir, dt)
     local obj_ip = self.objects.icon_player
     obj_ip.x = obj_ip.orig_x + n
 
-    local allowance = 36
-    local e = 256 * icon_scale * 0.5
-    local target = (math.floor(self.total_meters/#enemies) * self.current_enemy) - e
+    local key_enemy = enemies[self.current_enemy]
+    local ip = self.objects.icon_player
+    local ep = self.objects["icon_" .. key_enemy]
 
-    if self.current_meter >= (target - allowance) then
+    if (not self.enemy) and (ip.x >= (ep.x - 36)) then
         self:show_enemy(enemies[self.current_enemy])
     end
-
-    if self.current_meter >= (target - allowance * 0.5) then
+    if ip.x >= ep.x then
         self.player.can_move = false
     end
 end
@@ -249,6 +248,7 @@ function Game:on_clicked_a()
 end
 
 function Game:show_enemy(enemy_name)
+    print("showing enemy:", enemy_name)
     local ew, eh = self.images[enemy_name]:getDimensions()
     local esx, esy = 1, 1
     self.enemy = Enemy(enemy_name, self.difficulty, {
@@ -319,6 +319,7 @@ function Game:start_battle(obj_enemy)
 end
 
 function Game:finished_turn()
+    if not self.enemy then return end
     if self.enemy.health <= 0 then return end
     for _, letter in ipairs(choices) do
         local key = "choice_" .. letter
@@ -331,7 +332,6 @@ end
 function Game:end_battle()
     self.in_battle = false
     self.current_enemy = self.current_enemy + 1
-
     local obj_question = self.objects.question_bg
     obj_question.alpha = 0
     obj_question.text = ""
@@ -339,15 +339,14 @@ function Game:end_battle()
         local key = "choice_" .. letter
         self.objects[key] = nil
     end
+    self.enemy = nil
 end
 
 function Game:display_damage(obj, damage)
     local d = self.damage_text
     d.text = tostring(damage)
-    d.x = obj.x
-    d.y = obj.y - 16
+    d.x, d.y = obj.x, obj.y - 16
     d.ty = d.y - 64
-
     self.hurt_timer = timer(0.5,
         function(progress)
             d.y = mathx.lerp(d.y, d.ty, progress)

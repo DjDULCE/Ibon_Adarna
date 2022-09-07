@@ -21,6 +21,13 @@ Sprite = require("sprite")
 StateManager = require("state_manager")
 UserData = require("user_data")
 
+--VALIDATE data/*.lua FILES. REMOVE UPON RELEASE
+local files = love.filesystem.getDirectoryItems("data/")
+for _, filename in ipairs(files) do
+	print(filename, require("data." .. filename:sub(0, -5)))
+end
+--END VALIDATION
+
 local canvas, fade
 
 function iter_objects(tbl_orders, tbl_objects, fn, ...)
