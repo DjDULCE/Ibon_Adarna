@@ -17,6 +17,7 @@ function Player:new(x, y, difficulty)
     self.y = y
     self.dir = 1
     self.health = healths[difficulty]
+    self.max_health = self.health
     self.damage = DEV and 100 or damages[difficulty]
 
     self.cur_anim = "walk"
@@ -199,6 +200,23 @@ function Player:draw()
     love.graphics.setColor(1, 1, 1, 1)
     self.anim:draw(self.images[self.cur_anim], self.x, self.y, 0, self.dir, 1, self.ox, 0)
     if self.notif then self.notif:draw() end
+
+    local hw, hh = self.ui.heart:getDimensions()
+    local hscale = 0.25
+    local gap = 8
+    local bx = gap + hw * hscale * 0.5
+    local y = gap + hh * hscale * 0.5
+    for i = 1, self.max_health do
+        if i <= self.health then
+            love.graphics.setColor(0, 1, 0, 1)
+        else
+            love.graphics.setColor(0, 0, 0, 1)
+        end
+
+        local x = bx + (i - 1) * hw * hscale + gap * (i - 1)
+        love.graphics.draw(self.ui.heart, x, y, 0, hscale, hscale, hw * 0.5, hh * 0.5)
+    end
+
     love.graphics.setColor(1, 1, 1, 1)
 end
 

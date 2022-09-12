@@ -247,6 +247,10 @@ function Game:on_clicked_a()
 end
 
 function Game:show_enemy(enemy_name)
+    local obj_pause = self.objects.btn_pause
+    obj_pause.alpha = 0
+    obj_pause.is_hoverable = false
+    obj_pause.is_clickable = false
     print("showing enemy:", enemy_name)
     local ew, eh = self.images[enemy_name]:getDimensions()
     local esx, esy = 1, 1
@@ -258,7 +262,7 @@ function Game:show_enemy(enemy_name)
         sx = esx, sy = esy,
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
-    })
+    }, self.ui.heart)
 end
 
 function Game:start_battle(obj_enemy)
@@ -339,6 +343,10 @@ function Game:end_battle()
         self.objects[key] = nil
     end
     self.enemy = nil
+    local obj_pause = self.objects.btn_pause
+    obj_pause.alpha = 1
+    obj_pause.is_hoverable = true
+    obj_pause.is_clickable = true
 end
 
 function Game:display_damage(obj, damage)

@@ -21,12 +21,14 @@ local data = {
     }
 }
 
-function Enemy:new(name, difficulty, opts)
+function Enemy:new(name, difficulty, opts, img_heart)
     self.name = name
     self.health = data[name].health[difficulty]
+    self.max_health = self.health
     self.damage = data[name].damage[difficulty]
 
     self.sprite = Sprite(opts)
+    self.img_heart = img_heart
 
     self.target_x = WW * 0.7
 
@@ -97,6 +99,22 @@ end
 
 function Enemy:draw()
     self.sprite:draw()
+
+    local hw, hh = self.img_heart:getDimensions()
+    local hscale = 0.25
+    local gap = 8
+    local bx = WW - gap - hw * hscale * 0.5
+    local y = gap + hh * hscale * 0.5
+    for i = 1, self.max_health do
+        if i <= self.health then
+            love.graphics.setColor(1, 0, 0, 1)
+        else
+            love.graphics.setColor(0, 0, 0, 1)
+        end
+        local x = bx - (i - 1) * hw * hscale - gap * (i - 1)
+        love.graphics.draw(self.img_heart, x, y, 0, hscale, hscale, hw * 0.5, hh * 0.5)
+    end
+    love.graphics.setColor(1, 1, 1, 1)
 end
 
 return Enemy
