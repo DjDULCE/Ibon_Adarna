@@ -4,31 +4,36 @@ local Enemy = class({
 
 local data = {
     wolf = {
-        health = {5, 8, 10},
-        damage = {1, 2, 3},
+        filipino = "lobo",
+        health = { 5, 8, 10 },
+        damage = { 1, 2, 3 },
     },
     snake = {
-        health = {5, 8, 10},
-        damage = {1, 2, 3},
+        filipino = "ahas",
+        health = { 5, 8, 10 },
+        damage = { 1, 2, 3 },
     },
     boar = {
-        health = {5, 8, 10},
-        damage = {1, 2, 3},
+        filipino = "baboy damo",
+        health = { 5, 8, 10 },
+        damage = { 1, 2, 3 },
     },
     spider = {
-        health = {5, 8, 10},
-        damage = {1, 2, 3},
+        filipino = "gagamba",
+        health = { 5, 8, 10 },
+        damage = { 1, 2, 3 },
     }
 }
 
-function Enemy:new(name, difficulty, opts, img_heart)
+function Enemy:new(name, difficulty, opts, images)
     self.name = name
+    self.name_filipino = data[name].filipino
     self.health = data[name].health[difficulty]
     self.max_health = self.health
     self.damage = data[name].damage[difficulty]
 
     self.sprite = Sprite(opts)
-    self.img_heart = img_heart
+    self.images = images
 
     self.target_x = WW * 0.7
 
@@ -51,7 +56,7 @@ function Enemy:damage_enemy(damage)
     self.health = self.health - damage
 
     if self.health <= 0 then
-        self.sprite.color = {1, 0, 0}
+        self.sprite.color = { 1, 0, 0 }
         self.timer_death = timer(1,
             function(progress)
                 self.sprite.alpha = 1 - progress
@@ -100,11 +105,17 @@ end
 function Enemy:draw()
     self.sprite:draw()
 
-    local hw, hh = self.img_heart:getDimensions()
-    local hscale = 0.25
     local gap = 8
-    local bx = WW - gap - hw * hscale * 0.5
-    local y = gap + hh * hscale * 0.5
+    local scale = 0.25
+    local iw = self.images.icon:getWidth()
+    local font = Assets.fonts.impact20
+    local ix = WW - iw * scale
+    love.graphics.draw(self.images.icon, ix - iw * scale, gap, 0, scale, scale)
+
+    local hw, hh = self.images.heart:getDimensions()
+    local hscale = 0.15
+    local bx = ix - gap * 2 - iw * scale - hw * hscale * 0.5
+    local by = gap * 3 + hh * hscale * 0.5
     for i = 1, self.max_health do
         if i <= self.health then
             love.graphics.setColor(1, 0, 0, 1)
@@ -112,9 +123,17 @@ function Enemy:draw()
             love.graphics.setColor(0, 0, 0, 1)
         end
         local x = bx - (i - 1) * hw * hscale - gap * (i - 1)
-        love.graphics.draw(self.img_heart, x, y, 0, hscale, hscale, hw * 0.5, hh * 0.5)
+        love.graphics.draw(self.images.heart, x, by, 0, hscale, hscale, hw * 0.5, hh * 0.5)
     end
     love.graphics.setColor(1, 1, 1, 1)
+
+    love.graphics.setFont(font)
+    love.graphics.print(self.name_filipino,
+        ix - gap * 2 - iw * scale,
+        by + hh * scale * 0.5 + gap,
+        0, 1, 1,
+        font:getWidth(self.name_filipino), font:getHeight() * 0.5
+    )
 end
 
 return Enemy

@@ -2,8 +2,8 @@ local Game = class({
     name = "Game"
 })
 
-local enemies = {"wolf", "snake", "boar", "spider"}
-local choices = {"a", "b", "c"}
+local enemies = { "wolf", "snake", "boar", "spider" }
+local choices = { "a", "b", "c" }
 local icon_scale = 0.2
 
 function Game:new(index, difficulty)
@@ -37,7 +37,7 @@ function Game:new(index, difficulty)
 
     self.damage_text = {
         font = Assets.fonts.impact24,
-        color = {1, 0, 0, 1},
+        color = { 1, 0, 0, 1 },
         x = -100, y = -100,
         text = "0"
     }
@@ -54,7 +54,7 @@ function Game:load()
     self.objects.bg = Sprite({
         image = self.images.bg,
         x = 0, y = 0,
-        sx = WW/bgw, sy = WH/bgh,
+        sx = WW / bgw, sy = WH / bgh,
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
         parallax_x = true,
@@ -63,8 +63,8 @@ function Game:load()
 
     local padding = 64
     local bbw, bbh = self.ui.box_bg:getDimensions()
-    local bbsx = (WW * 0.5)/bbw
-    local bbsy = (WH - padding)/bbh
+    local bbsx = (WW * 0.5) / bbw
+    local bbsy = (WH - padding) / bbh
     local text = "PAGHAHANAP AT GAWAIN"
     local font = Assets.fonts.impact32
     self.objects.box_bg = Sprite({
@@ -77,7 +77,7 @@ function Game:load()
         font = font, text = text,
         tox = font:getWidth(text) * 0.5,
         ty = HALF_WH - bbh * bbsy * 0.5 + padding,
-        text_color = {0, 0, 0},
+        text_color = { 0, 0, 0 },
     })
 
     local bw, bh = self.ui.box:getDimensions()
@@ -93,7 +93,7 @@ function Game:load()
         font = font2, text = text2,
         tx = self.objects.box_bg.x - padding * 2,
         toy = font2:getHeight() * 0.5,
-        text_color = {0, 0, 0},
+        text_color = { 0, 0, 0 },
     })
 
     local text3 = "Tagpuin ang matandang ermitanyo"
@@ -107,17 +107,17 @@ function Game:load()
         font = font2, text = text3,
         tx = self.objects.box1.tx,
         toy = font2:getHeight() * 0.5,
-        text_color = {0, 0, 0},
+        text_color = { 0, 0, 0 },
     })
 
-    self.group_guide = {self.objects.box_bg, self.objects.box1, self.objects.box2}
+    self.group_guide = { self.objects.box_bg, self.objects.box1, self.objects.box2 }
 
     local p_width, p_height = self.images.platform:getDimensions()
     local p_scale = 3
     self.objects.platform = Sprite({
         image = self.images.platform,
         x = 0, y = WH - p_height * p_scale,
-        sx = WW/p_width, sy = p_scale,
+        sx = WW / p_width, sy = p_scale,
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
         height = p_height * p_scale,
@@ -136,7 +136,7 @@ function Game:load()
     })
 
     local bar_w, bar_h = self.ui.bar:getDimensions()
-    local bar_sx = (WW * 0.7)/bar_w
+    local bar_sx = (WW * 0.7) / bar_w
     local bar_sy = 0.9
     self.objects.bar = Sprite({
         image = self.ui.bar,
@@ -149,7 +149,7 @@ function Game:load()
     })
 
     local obj_bar = self.objects.bar
-    local spacing = (bar_w * bar_sx)/(#enemies + 2)
+    local spacing = (bar_w * bar_sx) / (#enemies + 2)
     local offset = bar_w * bar_sx * 0.25
     for i, str in ipairs(enemies) do
         local key = "icon_" .. str
@@ -177,8 +177,8 @@ function Game:load()
     })
 
     local qbg_w, qbg_h = self.ui.question_bg:getDimensions()
-    local bg_sx = (WW * 0.85)/qbg_w
-    local bg_sy = (p_height * p_scale)/qbg_h
+    local bg_sx = (WW * 0.85) / qbg_w
+    local bg_sy = (p_height * p_scale) / qbg_h
     self.objects.question_bg = Sprite({
         image = self.ui.question_bg,
         x = HALF_WW,
@@ -189,7 +189,7 @@ function Game:load()
         force_non_interactive = true,
         alpha = 0,
         font = Assets.fonts.impact20,
-        text_color = {0, 0, 0},
+        text_color = { 0, 0, 0 },
         is_printf = true, align = "center",
         limit = qbg_w * 0.8,
     })
@@ -214,7 +214,7 @@ function Game:on_player_move_x(dir, dt)
     end
 
     local obj_bar = self.objects.bar
-    local progress = self.current_meter/self.total_meters
+    local progress = self.current_meter / self.total_meters
     local w = (obj_bar.width - 128) * obj_bar.sx
     local n = progress * w
     local obj_ip = self.objects.icon_player
@@ -247,10 +247,6 @@ function Game:on_clicked_a()
 end
 
 function Game:show_enemy(enemy_name)
-    local obj_pause = self.objects.btn_pause
-    obj_pause.alpha = 0
-    obj_pause.is_hoverable = false
-    obj_pause.is_clickable = false
     print("showing enemy:", enemy_name)
     local ew, eh = self.images[enemy_name]:getDimensions()
     local esx, esy = 1, 1
@@ -262,7 +258,10 @@ function Game:show_enemy(enemy_name)
         sx = esx, sy = esy,
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
-    }, self.ui.heart)
+    }, {
+        heart = self.ui.heart,
+        icon = self.ui["icon_" .. enemy_name],
+    })
 end
 
 function Game:start_battle(obj_enemy)
@@ -299,7 +298,7 @@ function Game:start_battle(obj_enemy)
             text = str2,
             tx = x - offset * 2,
             toy = font:getHeight() * 0.5,
-            text_color = {0, 0, 0},
+            text_color = { 0, 0, 0 },
             collision_include_text = true,
         })
         last_str = str2
@@ -343,10 +342,6 @@ function Game:end_battle()
         self.objects[key] = nil
     end
     self.enemy = nil
-    local obj_pause = self.objects.btn_pause
-    obj_pause.alpha = 1
-    obj_pause.is_hoverable = true
-    obj_pause.is_clickable = true
 end
 
 function Game:display_damage(obj, damage)
