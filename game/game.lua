@@ -221,14 +221,18 @@ function Game:on_player_move_x(dir, dt)
     obj_ip.x = obj_ip.orig_x + n
 
     local key_enemy = enemies[self.current_enemy]
-    local ip = self.objects.icon_player
-    local ep = self.objects["icon_" .. key_enemy]
+    if key_enemy then
+        local ip = self.objects.icon_player
+        local ep = self.objects["icon_" .. key_enemy]
 
-    if (not self.enemy) and (ip.x >= (ep.x - 36)) then
-        self:show_enemy(enemies[self.current_enemy])
-    end
-    if ip.x >= ep.x then
-        self.player.can_move = false
+        if (not self.enemy) and (ip.x >= (ep.x - 36)) then
+            self:show_enemy(enemies[self.current_enemy])
+        end
+        if ip.x >= ep.x then
+            self.player.can_move = false
+        end
+    elseif self.current_meter >= self.total_meters then
+        -- display last dialogue
     end
 end
 

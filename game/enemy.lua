@@ -5,23 +5,23 @@ local Enemy = class({
 local data = {
     wolf = {
         filipino = "lobo",
-        health = { 5, 8, 10 },
-        damage = { 1, 2, 3 },
+        health = {10, 10, 10},
+        damage = {1, 2, 4},
     },
     snake = {
         filipino = "ahas",
-        health = { 5, 8, 10 },
-        damage = { 1, 2, 3 },
+        health = {10, 10, 10},
+        damage = {1, 2, 4},
     },
     boar = {
         filipino = "baboy damo",
-        health = { 5, 8, 10 },
-        damage = { 1, 2, 3 },
+        health = {10, 10, 10},
+        damage = {1, 2, 4},
     },
     spider = {
         filipino = "gagamba",
-        health = { 5, 8, 10 },
-        damage = { 1, 2, 3 },
+        health = {10, 10, 10},
+        damage = {1, 2, 4},
     }
 }
 

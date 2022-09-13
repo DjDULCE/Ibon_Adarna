@@ -7,8 +7,8 @@ local data = {
     attack = { 92, 49 }
 }
 
-local healths = { 10, 8, 5 }
-local damages = { 3, 2, 1 }
+local healths = { 10, 10, 10 }
+local damages = { 4, 2, 2 }
 
 function Player:new(x, y, difficulty)
     self.images = Assets.load_images("player")
