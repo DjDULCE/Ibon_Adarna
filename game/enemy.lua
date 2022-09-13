@@ -5,27 +5,28 @@ local Enemy = class({
 local data = {
     wolf = {
         filipino = "lobo",
-        health = {10, 10, 10},
-        damage = {1, 2, 4},
+        health = { 10, 10, 10 },
+        damage = { 1, 2, 4 },
     },
     snake = {
         filipino = "ahas",
-        health = {10, 10, 10},
-        damage = {1, 2, 4},
+        health = { 10, 10, 10 },
+        damage = { 1, 2, 4 },
     },
     boar = {
         filipino = "baboy damo",
-        health = {10, 10, 10},
-        damage = {1, 2, 4},
+        health = { 10, 10, 10 },
+        damage = { 1, 2, 4 },
     },
     spider = {
         filipino = "gagamba",
-        health = {10, 10, 10},
-        damage = {1, 2, 4},
+        health = { 10, 10, 10 },
+        damage = { 1, 2, 4 },
     }
 }
 
-function Enemy:new(name, difficulty, opts, images)
+function Enemy:new(name, opts, images)
+    local difficulty = UserData.data.difficulty
     self.name = name
     self.name_filipino = data[name].filipino
     self.health = data[name].health[difficulty]

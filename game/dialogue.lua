@@ -87,6 +87,8 @@ function Dialogue:show()
         face = "player"
     elseif data.name == "Don Fernando" then
         face = "fernando"
+    elseif data.name == "Ermitanyo" then
+        face = "ermitanyo"
     end
 
     local face_image = self.faces[face]

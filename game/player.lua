@@ -10,7 +10,8 @@ local data = {
 local healths = { 10, 10, 10 }
 local damages = { 4, 2, 2 }
 
-function Player:new(x, y, difficulty)
+function Player:new(x, y)
+    local difficulty = UserData.data.difficulty
     self.images = Assets.load_images("player")
     self.ui = Assets.load_images("ui")
     self.x = x

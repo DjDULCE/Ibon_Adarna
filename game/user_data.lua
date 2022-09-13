@@ -5,7 +5,8 @@ local UserData = {
     data = {
         music = 1,
         sound = 1,
-        score = {0, 0, 0},
+        score = { 0, 0, 0 },
+        difficulty = 1,
     },
 }
 

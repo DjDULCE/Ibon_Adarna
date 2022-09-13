@@ -8,7 +8,7 @@ local options = {
 }
 local pad = 16
 local btn_scale = 1.25
-local text_color = {0, 0, 0}
+local text_color = { 0, 0, 0 }
 local font_impact32, font_impact28
 local ctrl_text1 = "MGA PANGUNAHING KONTROL"
 local ctrl_text2 = "Mga Kontrol Para Sa Instraksyon"
@@ -153,6 +153,15 @@ function Menu:load()
                             update_group(self.group_controls, 1 - progress, false)
                         end,
                         function()
+                            if key == "btn_madali" then
+                                UserData.data.difficulty = 1
+                            elseif key == "btn_normal" then
+                                UserData.data.difficulty = 2
+                            elseif key == "btn_mahirap" then
+                                UserData.data.difficulty = 3
+                            end
+                            UserData:save()
+
                             update_group(self.group_controls, 0, false)
                             local Scenario = require("scenario")
                             StateManager:switch(Scenario, 1)
@@ -313,7 +322,7 @@ function Menu:setup_settings()
 
     local bsc_width, bsc_height = self.images.box_settings_controls:getDimensions()
     local bsc_sx, bsc_sy = 0.4, 0.4
-    local settings_texts = {"MUSIKA", "TUNOG"}
+    local settings_texts = { "MUSIKA", "TUNOG" }
     for i = 1, 2 do
         local key = "box_settings_controls" .. i
         local text = settings_texts[i]
@@ -321,7 +330,7 @@ function Menu:setup_settings()
         local bsc_y = self.objects.box_settings.y + bs_height * bs_sy + pad
         bsc_y = bsc_y + (bsc_height * bsc_sy * (i - 1)) + pad * (i - 1)
         self.objects[key] = Sprite({
-            image= self.images.box_settings_controls,
+            image = self.images.box_settings_controls,
             x = bsc_x, y = bsc_y,
             ox = bsc_width * 0.5, oy = bsc_height * 0.5,
             sx = bsc_sx, sy = bsc_sy,
@@ -340,18 +349,18 @@ function Menu:setup_settings()
     local total_width = (bsc_width * bsc_sx) - pad * 2
     local total_height = (bsc_height * bsc_sy) - pad
     local btn_control_width, btn_control_height = self.images.btn_control:getDimensions()
-    local btn_control_sx = (total_width * 0.5)/btn_control_width
-    local btn_control_sy = total_height/btn_control_height
+    local btn_control_sx = (total_width * 0.5) / btn_control_width
+    local btn_control_sy = total_height / btn_control_height
     local ctrl_data = {
         {
             "music",
-            UserData.data.music == 1 and {1, 1, 1} or {0, 0, 0},
-            UserData.data.music == 1 and {0, 0, 0} or {1, 1, 1},
+            UserData.data.music == 1 and { 1, 1, 1 } or { 0, 0, 0 },
+            UserData.data.music == 1 and { 0, 0, 0 } or { 1, 1, 1 },
         },
         {
             "sound",
-            UserData.data.sound == 1 and {1, 1, 1} or {0, 0, 0},
-            UserData.data.sound == 1 and {0, 0, 0} or {1, 1, 1},
+            UserData.data.sound == 1 and { 1, 1, 1 } or { 0, 0, 0 },
+            UserData.data.sound == 1 and { 0, 0, 0 } or { 1, 1, 1 },
         },
     }
 
@@ -370,7 +379,7 @@ function Menu:setup_settings()
             color = left_color,
             text = "ON",
             font = font_impact32,
-            text_color = {1, 1, 1},
+            text_color = { 1, 1, 1 },
             tx = left_x, ty = self.objects[ref].y,
             tox = font_impact32:getWidth("ON") * 0.5,
             toy = font_impact32:getHeight() * 0.5,
@@ -388,7 +397,7 @@ function Menu:setup_settings()
             sx = btn_control_sx, sy = btn_control_sy,
             color = right_color,
             text = "OFF",
-            text_color = {1, 1, 1},
+            text_color = { 1, 1, 1 },
             font = font_impact32,
             tx = right_x, ty = self.objects[ref].y,
             tox = font_impact32:getWidth("OFF") * 0.5,
@@ -453,20 +462,20 @@ function Menu:toggle_control(btn)
     local btn_sound_right = self.objects.btn_sound_right
 
     if btn == btn_music_left then
-        btn_music_left.color = {1, 1, 1}
-        btn_music_right.color = {0, 0, 0}
+        btn_music_left.color = { 1, 1, 1 }
+        btn_music_right.color = { 0, 0, 0 }
         UserData.data.music = 1
     elseif btn == btn_music_right then
-        btn_music_left.color = {0, 0, 0}
-        btn_music_right.color = {1, 1, 1}
+        btn_music_left.color = { 0, 0, 0 }
+        btn_music_right.color = { 1, 1, 1 }
         UserData.data.music = 0
     elseif btn == btn_sound_left then
-        btn_sound_left.color = {1, 1, 1}
-        btn_sound_right.color = {0, 0, 0}
+        btn_sound_left.color = { 1, 1, 1 }
+        btn_sound_right.color = { 0, 0, 0 }
         UserData.data.sound = 1
     elseif btn == btn_sound_right then
-        btn_sound_left.color = {0, 0, 0}
-        btn_sound_right.color = {1, 1, 1}
+        btn_sound_left.color = { 0, 0, 0 }
+        btn_sound_right.color = { 1, 1, 1 }
         UserData.data.sound = 0
     end
     UserData:save()
@@ -515,7 +524,7 @@ function Menu:setup_leaderboards()
     local score_width, score_height = self.images.box_score:getDimensions()
     local bs_sx = 0.6
     local bs_sy = 0.5
-    local texts = {"Iskor ng Madali", "Iskor ng Normal", "Iskor ng Mahirap"}
+    local texts = { "Iskor ng Madali", "Iskor ng Normal", "Iskor ng Mahirap" }
     local score = UserData.data.score
     local spaces = string.rep(" ", 8)
     for i = 1, 3 do
@@ -675,7 +684,7 @@ end
 function Menu:draw()
     love.graphics.setColor(1, 1, 1, 1)
     local bg_w, bg_h = self.images.bg:getDimensions()
-    local bg_sx, bg_sy = WW/bg_w, WH/bg_h
+    local bg_sx, bg_sy = WW / bg_w, WH / bg_h
     love.graphics.draw(self.images.bg, 0, 0, 0, bg_sx, bg_sy)
 
     if self.in_controls then

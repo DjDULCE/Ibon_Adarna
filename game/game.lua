@@ -6,13 +6,14 @@ local enemies = { "wolf", "snake", "boar", "spider" }
 local choices = { "a", "b", "c" }
 local icon_scale = 0.2
 
-function Game:new(index, difficulty)
+function Game:new(index)
     local id = self:type()
     local idn = string.lower(id) .. tostring(index)
     self.images = Assets.load_images(idn)
     self.ui = Assets.load_images("ui")
     self.controls = Controls()
-    self.difficulty = difficulty
+    self.difficulty = UserData.data.difficulty
+    self.index = index
 
     self.total_meters = 1000
     self.current_meter = 0
@@ -42,11 +43,20 @@ function Game:new(index, difficulty)
         text = "0"
     }
 
+    self.dialogue = Dialogue({
+        font = Assets.fonts.impact24,
+        data = require("data.end_dialogue" .. self.index),
+        align = "left",
+        repeating = false,
+        enabled = false,
+    })
+
     Events.register(self, "on_clicked_a")
     Events.register(self, "start_battle")
     Events.register(self, "end_battle")
     Events.register(self, "display_damage")
     Events.register(self, "finished_turn")
+    Events.register(self, "on_dialogue_end")
 end
 
 function Game:load()
@@ -194,7 +204,7 @@ function Game:load()
         limit = qbg_w * 0.8,
     })
 
-    self.player = Player(WW * 0.2, self.objects.platform.y, self.difficulty)
+    self.player = Player(WW * 0.2, self.objects.platform.y)
     self.player.dir = -1
     self.player.can_move = false
     self.player.fake_move = true
@@ -232,15 +242,25 @@ function Game:on_player_move_x(dir, dt)
             self.player.can_move = false
         end
     elseif self.current_meter >= self.total_meters then
-        -- display last dialogue
+        self.player.can_move = false
+        self.dialogue_timer = timer(2, nil, function()
+            Events.emit("on_dialogue_show")
+            self.dialogue_timer = nil
+        end)
     end
+end
+
+function Game:on_dialogue_end()
+    self.controls.enabled = false
+    Events.emit("fadeout", 3, function()
+        local game = require("game")
+        StateManager:switch(game, self.index + 1)
+    end)
 end
 
 function Game:on_clicked_a()
     if self.objects.box_bg.alpha == 0 then return end
-    for _, obj in ipairs(self.group_guide) do
-        obj.alpha = 0
-    end
+    for _, obj in ipairs(self.group_guide) do obj.alpha = 0 end
     local btn_pause = self.objects.btn_pause
     btn_pause.alpha = 1
     btn_pause.is_hoverable = true
@@ -254,7 +274,7 @@ function Game:show_enemy(enemy_name)
     print("showing enemy:", enemy_name)
     local ew, eh = self.images[enemy_name]:getDimensions()
     local esx, esy = 1, 1
-    self.enemy = Enemy(enemy_name, self.difficulty, {
+    self.enemy = Enemy(enemy_name, {
         image = self.images[enemy_name],
         x = WW + ew * esx,
         y = WH - self.objects.platform.height - eh * esy * 0.5,
@@ -370,6 +390,8 @@ function Game:update(dt)
     iter_objects(self.orders, self.objects, "update", dt)
     self.player:update(dt, self.objects.platform.height)
     if self.enemy then self.enemy:update(dt) end
+    if self.dialogue then self.dialogue:update(dt) end
+    if self.dialogue_timer then self.dialogue_timer:update(dt) end
 end
 
 function Game:draw()
@@ -377,6 +399,7 @@ function Game:draw()
     iter_objects(self.orders, self.objects, "draw")
     self.player:draw()
     if self.enemy then self.enemy:draw() end
+    if self.dialogue then self.dialogue:draw() end
     self.controls:draw()
     love.graphics.setColor(1, 1, 1, 1)
 
