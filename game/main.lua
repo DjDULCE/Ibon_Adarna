@@ -10,7 +10,7 @@ HALF_WH = WH * 0.5
 Anim8 = require("libs.anim8.anim8")
 Reflowprint = require("libs.reflowprint")
 
-Assets= require("assets")
+Assets = require("assets")
 Controls = require("controls")
 Dialogue = require("dialogue")
 Enemy = require("enemy")
@@ -45,26 +45,26 @@ function love.load()
 	Assets.init()
 	canvas = love.graphics.newCanvas(WW, WH)
 
-    -- StateManager.current = require("menu")()
-    -- StateManager.current = require("scenario")(1)
-    -- StateManager.current = require("scene")(1)
-    StateManager.current = require("game")(1)
-    StateManager:load()
+	-- StateManager.current = require("menu")()
+	-- StateManager.current = require("scenario")(1)
+	StateManager.current = require("scene")(2)
+	-- StateManager.current = require("game")(1)
+	StateManager:load()
 end
 
 function love.update(dt)
 	fade:update(dt)
-    StateManager:update(dt)
+	StateManager:update(dt)
 end
 
 function love.draw()
 	love.graphics.setColor(1, 1, 1, 1)
 	love.graphics.setCanvas(canvas)
-		love.graphics.clear()
-		love.graphics.push()
-			StateManager:draw()
-			fade:draw()
-		love.graphics.pop()
+	love.graphics.clear()
+	love.graphics.push()
+	StateManager:draw()
+	fade:draw()
+	love.graphics.pop()
 	love.graphics.setCanvas()
 
 	love.graphics.draw(canvas)
@@ -78,15 +78,15 @@ function love.draw()
 end
 
 function love.mousepressed(mx, my, mb)
-    StateManager:mousepressed(mx, my, mb)
+	StateManager:mousepressed(mx, my, mb)
 end
 
 function love.mousereleased(mx, my, mb)
-    StateManager:mousereleased(mx, my, mb)
+	StateManager:mousereleased(mx, my, mb)
 end
 
 function love.mousemoved(mx, my, dmx, dmy, istouch)
-    StateManager:mousemoved(mx, my, dmx, dmy, istouch)
+	StateManager:mousemoved(mx, my, dmx, dmy, istouch)
 end
 
 function love.keypressed(key)
@@ -94,13 +94,13 @@ function love.keypressed(key)
 		DEV = not DEV
 		return
 	end
-    StateManager:keypressed(key)
+	StateManager:keypressed(key)
 end
 
 function love.textinput(text)
-    StateManager:textinput(text)
+	StateManager:textinput(text)
 end
 
 function love.mousefocus(focus)
-    StateManager:mousefocus(focus)
+	StateManager:mousefocus(focus)
 end

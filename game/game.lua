@@ -7,6 +7,8 @@ local choices = { "a", "b", "c" }
 local icon_scale = 0.2
 
 function Game:new(index)
+    UserData.data.stage = index
+    UserData:save()
     local id = self:type()
     local idn = string.lower(id) .. tostring(index)
     self.images = Assets.load_images(idn)
@@ -253,8 +255,10 @@ end
 function Game:on_dialogue_end()
     self.controls.enabled = false
     Events.emit("fadeout", 3, function()
-        local game = require("game")
-        StateManager:switch(game, self.index + 1)
+        -- local game = require("game")
+        -- StateManager:switch(game, self.index + 1)
+        local scene = require("scene")
+        StateManager:switch(scene, self.index + 1)
     end)
 end
 
