@@ -255,8 +255,6 @@ end
 function Game:on_dialogue_end()
     self.controls.enabled = false
     Events.emit("fadeout", 3, function()
-        -- local game = require("game")
-        -- StateManager:switch(game, self.index + 1)
         local scene = require("scene")
         StateManager:switch(scene, self.index + 1)
     end)

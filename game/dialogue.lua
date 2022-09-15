@@ -153,6 +153,8 @@ function Dialogue:on_clicked_a()
     return true
 end
 
+function Dialogue:on_clicked_b() return end
+
 function Dialogue:on_down_left() if self.enabled then return true end end
 function Dialogue:on_down_right() if self.enabled then return true end end
 

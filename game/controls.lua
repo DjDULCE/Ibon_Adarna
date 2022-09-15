@@ -16,6 +16,11 @@ function Controls:new()
 
     Events.register(self, "start_battle")
     Events.register(self, "end_battle")
+    Events.register(self, "on_dialogue_end")
+end
+
+function Controls:on_dialogue_end()
+    self.enabled = false
 end
 
 function Controls:load()

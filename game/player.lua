@@ -55,6 +55,7 @@ function Player:new(x, y)
     self.vsize = vec2(self.width * 0.5, self.height * 0.5)
 
     self.can_move = true
+    self.show_health = true
 
     Events.register(self, "on_down_left")
     Events.register(self, "on_down_right")
@@ -123,7 +124,7 @@ end
 
 function Player:on_down_left()
     if not self.can_move then return end
-    if self.current_meter <= 0 then return end
+    if self.fake_move and self.current_meter <= 0 then return end
 
     local dt = love.timer.getDelta()
     if not self.fake_move then
@@ -202,34 +203,36 @@ function Player:draw()
     self.anim:draw(self.images[self.cur_anim], self.x, self.y, 0, self.dir, 1, self.ox, 0)
     if self.notif then self.notif:draw() end
 
-    local gap = 8
-    local scale = 0.25
-    local ipw = self.ui.icon_player:getWidth()
-    local font = Assets.fonts.impact20
-    love.graphics.draw(self.ui.icon_player, gap, gap, 0, scale, scale)
+    if self.show_health then
+        local gap = 8
+        local scale = 0.25
+        local ipw = self.ui.icon_player:getWidth()
+        local font = Assets.fonts.impact20
+        love.graphics.draw(self.ui.icon_player, gap, gap, 0, scale, scale)
 
-    local hw, hh = self.ui.heart:getDimensions()
-    local hscale = 0.15
-    local bx = gap * 2 + ipw * scale + hw * hscale * 0.5
-    local by = gap * 3 + hh * hscale * 0.5
-    for i = 1, self.max_health do
-        if i <= self.health then
-            love.graphics.setColor(0, 1, 0, 1)
-        else
-            love.graphics.setColor(0, 0, 0, 1)
+        local hw, hh = self.ui.heart:getDimensions()
+        local hscale = 0.15
+        local bx = gap * 2 + ipw * scale + hw * hscale * 0.5
+        local by = gap * 3 + hh * hscale * 0.5
+        for i = 1, self.max_health do
+            if i <= self.health then
+                love.graphics.setColor(0, 1, 0, 1)
+            else
+                love.graphics.setColor(0, 0, 0, 1)
+            end
+            local x = bx + (i - 1) * hw * hscale + gap * (i - 1)
+            love.graphics.draw(self.ui.heart, x, by, 0, hscale, hscale, hw * 0.5, hh * 0.5)
         end
-        local x = bx + (i - 1) * hw * hscale + gap * (i - 1)
-        love.graphics.draw(self.ui.heart, x, by, 0, hscale, hscale, hw * 0.5, hh * 0.5)
-    end
-    love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.setColor(1, 1, 1, 1)
 
-    love.graphics.setFont(font)
-    love.graphics.print("prinsipe juan",
-        gap * 2 + ipw * scale,
-        by + hh * scale * 0.5 + gap,
-        0, 1, 1,
-        0, font:getHeight() * 0.5
-    )
+        love.graphics.setFont(font)
+        love.graphics.print("prinsipe juan",
+            gap * 2 + ipw * scale,
+            by + hh * scale * 0.5 + gap,
+            0, 1, 1,
+            0, font:getHeight() * 0.5
+        )
+    end
 
     love.graphics.setColor(1, 1, 1, 1)
 end

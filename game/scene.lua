@@ -7,13 +7,15 @@ local objects = {
     { "ermitanyo", "" },
 }
 
+local player_initial_pos
+
 function Scene:new(index)
     assert(index and type(index) == "number" and index > 0)
     local id = self:type()
     local idn = id .. tostring(index)
     self.index = index
     self.images = Assets.load_images(idn)
-    self.sources = Assets.load_sources(idn)
+    self.sources = Assets.load_sources(id)
     self.controls = Controls()
 
     self.objects = {}
@@ -27,8 +29,17 @@ function Scene:new(index)
         repeating = false,
     })
 
+    Events.register(self, "on_dialogue_show")
     Events.register(self, "on_dialogue_end")
+    Events.register(self, "on_player_move_x")
+
+    player_initial_pos = {
+        {WW * 0.7, 1},
+        {WW * 0.3, -1},
+    }
 end
+
+function Scene:on_player_move_x() end
 
 function Scene:load()
     self.sources.bgm:play()
@@ -84,6 +95,7 @@ function Scene:load()
             is_hoverable = false, is_clickable = false,
             force_non_interactive = true,
         })
+        self.looking_npc = self.objects.val
     elseif self.index == 2 then
         local e_width, e_height = self.images.ermitanyo:getDimensions()
         self.objects.ermitanyo = Sprite({
@@ -95,20 +107,28 @@ function Scene:load()
             is_hoverable = false, is_clickable = false,
             force_non_interactive = true,
             collider = {
-                w = 164,
-                h = 64,
+                w = 23,
+                h = 48,
                 origin = "center"
             }
         })
+        self.looking_npc = self.objects.ermitanyo
     end
 
-    self.player = Player(WW * 0.7, self.objects.platform.y * p_sy)
+    local px, dir = unpack(player_initial_pos[self.index])
+    self.player = Player(px, self.objects.platform.y * p_sy)
+    self.player.show_health = false
+    self.player.dir = dir
+end
+
+function Scene:on_dialogue_show()
+    self.player.can_move = false
 end
 
 function Scene:on_dialogue_end()
     Events.emit("fadeout", 3, function()
         local game = require("game")
-        StateManager:switch(game, 1)
+        StateManager:switch(game, self.index)
     end)
 end
 
@@ -118,8 +138,8 @@ function Scene:update(dt)
     iter_objects(self.orders, self.objects, "check_collision", self.player)
     self.player:update(dt, self.objects.platform.height * self.objects.platform.sy)
 
-    local val = self.objects.val
-    if val then val.sx = (self.player.x < val.x) and -1 or 1 end
+    local looking_npc = self.looking_npc
+    if looking_npc then looking_npc.sx = (self.player.x < looking_npc.x) and -1 or 1 end
 
     self.dialogue:update(dt)
 end
