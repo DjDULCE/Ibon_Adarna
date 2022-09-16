@@ -10,6 +10,7 @@ function Dialogue:new(opt)
 
     self.enabled = not not opt.enabled
     self.repeating = opt.repeating
+    self.simple = opt.simple
 
     self.data = opt.data
     self.current = 1
@@ -47,7 +48,8 @@ function Dialogue:new(opt)
     end
 end
 
-function Dialogue:on_dialogue_show()
+function Dialogue:on_dialogue_show(id)
+    if id and id ~= self then return end
     self.enabled = true
     self:show()
 end
@@ -81,6 +83,12 @@ function Dialogue:show()
     self.dt = 0
     self.t = 1
     self.skipped = false
+
+    if self.simple then
+        self.w = self.bg_w
+        self.x = self.bg.x - self.w * 0.5
+        return
+    end
 
     local face
     if data.name == "Don Juan" then
@@ -127,7 +135,9 @@ function Dialogue:draw()
         self.bg.ox, self.bg.oy
     )
 
-    love.graphics.draw(self.face, self.fx, self.fy, 0, self.fsx, 1, self.fox, self.foy)
+    if not self.simple then
+        love.graphics.draw(self.face, self.fx, self.fy, 0, self.fsx, 1, self.fox, self.foy)
+    end
 
     love.graphics.setFont(self.font)
     reflowprint(self.dt/self.t, self.text, self.x, self.y, self.w, self.align)

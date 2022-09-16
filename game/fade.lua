@@ -6,6 +6,7 @@ function Fade:new()
     self.alpha = 0
 
     Events.register(self, "fadeout")
+    Events.register(self, "fadein")
 end
 
 function Fade:fadeout(duration, cb)
@@ -19,8 +20,21 @@ function Fade:fadeout(duration, cb)
             if cb then
                 cb()
             end
-        end
-    )
+        end)
+end
+
+function Fade:fadein(duration, cb)
+    self.timer = timer(duration,
+        function(progress)
+            self.alpha = 1 - progress
+        end,
+        function()
+            print("finished fadein")
+            self.timer = nil
+            if cb then
+                cb()
+            end
+        end)
 end
 
 function Fade:update(dt)

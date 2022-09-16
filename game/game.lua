@@ -2,24 +2,45 @@ local Game = class({
     name = "Game"
 })
 
-local enemies = { "wolf", "snake", "boar", "spider" }
+local enemies = {
+    { "wolf", "snake", "boar", "spider" },
+    -- { "boar", "eagle", "snake", "adarna" },
+    {"adarna"},
+}
+local additional_objs = {
+    {},
+    { "tree", "ermitanyo", "don_diego", "don_pedro", }
+}
+
 local choices = { "a", "b", "c" }
 local icon_scale = 0.2
+
+local tasks = {
+    {
+        "Talunin lahat ng kalaban",
+        "Tagpuin ang matandang ermitanyo",
+    },
+    {
+        "Talunin lahat ng kalaban",
+        "Tagpuin at talunin ang Ibong Adarna",
+    },
+}
 
 function Game:new(index)
     UserData.data.stage = index
     UserData:save()
-    local id = self:type()
-    local idn = string.lower(id) .. tostring(index)
+    local id = string.lower(self:type())
+    local idn = id .. tostring(index)
     self.images = Assets.load_images(idn)
     self.ui = Assets.load_images("ui")
+    self.sources = Assets.load_sources(id)
     self.controls = Controls()
     self.difficulty = UserData.data.difficulty
     self.index = index
 
     self.total_meters = 1000
     self.current_meter = 0
-    self.pacing = DEV and 256 or 64
+    self.pacing = DEV and 512 or 64
     self.current_enemy = 1
     self.hurt_alpha = 0
 
@@ -34,8 +55,13 @@ function Game:new(index)
     }
 
     local i = tablex.index_of(self.orders, "icon_player")
-    for _, str in ipairs(enemies) do
+    for _, str in ipairs(enemies[self.index]) do
         table.insert(self.orders, i, "icon_" .. str)
+    end
+
+    local i2 = tablex.index_of(self.orders, "platform")
+    for _, str in ipairs(additional_objs[self.index]) do
+        table.insert(self.orders, i2, str)
     end
 
     self.damage_text = {
@@ -53,15 +79,30 @@ function Game:new(index)
         enabled = false,
     })
 
+    if self.index == 2 then
+        self.prologue = Dialogue({
+            font = Assets.fonts.impact24,
+            data = require("data.prologue" .. self.index),
+            align = "center",
+            repeating = false,
+            enabled = false,
+            simple = true,
+        })
+    end
+
     Events.register(self, "on_clicked_a")
     Events.register(self, "start_battle")
     Events.register(self, "end_battle")
+    Events.register(self, "post_battle")
     Events.register(self, "display_damage")
     Events.register(self, "finished_turn")
     Events.register(self, "on_dialogue_end")
 end
 
 function Game:load()
+    self.sources.bgm:play()
+    self.sources.bgm:setLooping(false)
+
     local bgw, bgh = self.images.bg:getDimensions()
     self.objects.bg = Sprite({
         image = self.images.bg,
@@ -94,7 +135,7 @@ function Game:load()
 
     local bw, bh = self.ui.box:getDimensions()
     local font2 = Assets.fonts.impact20
-    local text2 = "Talunin lahat ng kalaban"
+    local text2 = tasks[self.index][1]
     self.objects.box1 = Sprite({
         image = self.ui.box,
         x = HALF_WW - padding * 2.5,
@@ -108,7 +149,7 @@ function Game:load()
         text_color = { 0, 0, 0 },
     })
 
-    local text3 = "Tagpuin ang matandang ermitanyo"
+    local text3 = tasks[self.index][2]
     self.objects.box2 = Sprite({
         image = self.ui.box,
         x = self.objects.box1.x,
@@ -161,9 +202,9 @@ function Game:load()
     })
 
     local obj_bar = self.objects.bar
-    local spacing = (bar_w * bar_sx) / (#enemies + 2)
+    local spacing = (bar_w * bar_sx) / (#enemies[self.index] + 2)
     local offset = bar_w * bar_sx * 0.25
-    for i, str in ipairs(enemies) do
+    for i, str in ipairs(enemies[self.index]) do
         local key = "icon_" .. str
         local w, h = self.ui[key]:getDimensions()
         self.objects[key] = Sprite({
@@ -206,12 +247,30 @@ function Game:load()
         limit = qbg_w * 0.8,
     })
 
+    if self.index == 2 then
+        self:load_stage2()
+    end
+
     self.player = Player(WW * 0.2, self.objects.platform.y)
     self.player.dir = -1
     self.player.can_move = false
     self.player.fake_move = true
 
     Events.register(self, "on_player_move_x")
+end
+
+function Game:load_stage2()
+    local tw, th = self.images.tree:getDimensions()
+    local ts = 0.75
+    self.objects.tree = Sprite({
+        image = self.images.tree,
+        x = WW * 1.5,
+        y = self.objects.platform.y - th * 0.35 * ts,
+        sx = ts, sy = ts,
+        ox = tw * 0.5, oy = th * 0.5,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+    })
 end
 
 function Game:on_player_move_x(dir, dt)
@@ -232,28 +291,49 @@ function Game:on_player_move_x(dir, dt)
     local obj_ip = self.objects.icon_player
     obj_ip.x = obj_ip.orig_x + n
 
-    local key_enemy = enemies[self.current_enemy]
+    local key_enemy = enemies[self.index][self.current_enemy]
     if key_enemy then
         local ip = self.objects.icon_player
         local ep = self.objects["icon_" .. key_enemy]
 
         if (not self.enemy) and (ip.x >= (ep.x - 36)) then
-            self:show_enemy(enemies[self.current_enemy])
+            self:show_enemy(enemies[self.index][self.current_enemy])
         end
         if ip.x >= ep.x then
             self.player.can_move = false
         end
     elseif self.current_meter >= self.total_meters then
         self.player.can_move = false
-        self.dialogue_timer = timer(2, nil, function()
-            Events.emit("on_dialogue_show")
-            self.dialogue_timer = nil
-        end)
+        self.player.anim:gotoFrame(1)
+        if self.index == 1 then
+            self.dialogue_timer = timer(2, nil, function()
+                Events.emit("on_dialogue_show")
+                self.dialogue_timer = nil
+            end)
+        elseif self.index == 2 then
+        end
     end
 end
 
 function Game:on_dialogue_end()
     self.controls.enabled = false
+
+    if self.prologue then
+        self.prologue = nil
+        Events.emit("fadeout", 1, function()
+            self.objects.bar.alpha = 0
+            self.objects.icon_player.alpha = 0
+            for _, str in ipairs(enemies[self.index]) do
+                local key = "icon_" .. str
+                self.objects[key].alpha = 0
+            end
+
+            Events.emit("fadein", 1, function()
+            end)
+        end)
+        return
+    end
+
     Events.emit("fadeout", 3, function()
         local scene = require("scene")
         StateManager:switch(scene, self.index + 1)
@@ -288,6 +368,19 @@ function Game:show_enemy(enemy_name)
         heart = self.ui.heart,
         icon = self.ui["icon_" .. enemy_name],
     })
+
+    if enemy_name == "adarna" then
+        local obj_tree = self.objects.tree
+        local tx = WW * 0.75
+        self.tree_timer = timer(1,
+            function(tree_progress)
+                obj_tree.x = mathx.lerp(obj_tree.x, tx, tree_progress)
+            end,
+            function()
+                self.tree_timer = nil
+            end
+        )
+    end
 end
 
 function Game:start_battle(obj_enemy)
@@ -303,7 +396,7 @@ function Game:start_battle(obj_enemy)
     obj_question.tx = obj_question.x - w * obj_question.sx * 0.5
     obj_question.ty = obj_question.y - h * obj_question.sy * 0.5 + 16
 
-    local font = Assets.fonts.impact20
+    local font = Assets.fonts.impact18
     local offset = font:getWidth(" ") * 0.5
     local img_choice = self.ui.btn_choice
     local icw, ich = img_choice:getDimensions()
@@ -312,9 +405,10 @@ function Game:start_battle(obj_enemy)
     local last_str = ""
     for i, letter in ipairs(choices) do
         local key = "choice_" .. letter
-        local str2 = string.format("%s     %s", string.upper(letter), question[letter])
+        local str2 = string.format("%s       %s", string.upper(letter), question[letter])
         local ii = i - 1
         local x = bx + (font:getWidth(last_str) * ii) + (64 * ii)
+        if i > 2 then x = x - 32 end
         self.objects[key] = Sprite({
             image = img_choice,
             x = x, y = obj_question.y + h * obj_question.sy * 0.5 - 48,
@@ -370,6 +464,16 @@ function Game:end_battle()
     self.enemy = nil
 end
 
+function Game:post_battle(enemy_name)
+    if enemy_name == "adarna" then
+        self.player.can_move = false
+        self.player.show_health = false
+        self.wait_timer = timer(1, nil, function()
+            Events.emit("on_dialogue_show", self.prologue)
+        end)
+    end
+end
+
 function Game:display_damage(obj, damage)
     local d = self.damage_text
     d.text = tostring(damage)
@@ -392,8 +496,11 @@ function Game:update(dt)
     iter_objects(self.orders, self.objects, "update", dt)
     self.player:update(dt, self.objects.platform.height)
     if self.enemy then self.enemy:update(dt) end
-    if self.dialogue then self.dialogue:update(dt) end
+    self.dialogue:update(dt)
+    if self.prologue then self.prologue:update(dt) end
     if self.dialogue_timer then self.dialogue_timer:update(dt) end
+    if self.tree_timer then self.tree_timer:update(dt) end
+    if self.wait_timer then self.wait_timer:update(dt) end
 end
 
 function Game:draw()
@@ -401,7 +508,8 @@ function Game:draw()
     iter_objects(self.orders, self.objects, "draw")
     self.player:draw()
     if self.enemy then self.enemy:draw() end
-    if self.dialogue then self.dialogue:draw() end
+    self.dialogue:draw()
+    if self.prologue then self.prologue:draw() end
     self.controls:draw()
     love.graphics.setColor(1, 1, 1, 1)
 
@@ -426,6 +534,7 @@ function Game:mousereleased(mx, my, mb)
 end
 
 function Game:exit()
+    self.sources.bgm:stop()
     Events.clear()
 end
 

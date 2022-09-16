@@ -2,36 +2,24 @@ local Enemy = class({
     name = "enemy"
 })
 
-local data = {
-    wolf = {
-        filipino = "lobo",
-        health = { 10, 10, 10 },
-        damage = { 1, 2, 4 },
-    },
-    snake = {
-        filipino = "ahas",
-        health = { 10, 10, 10 },
-        damage = { 1, 2, 4 },
-    },
-    boar = {
-        filipino = "baboy damo",
-        health = { 10, 10, 10 },
-        damage = { 1, 2, 4 },
-    },
-    spider = {
-        filipino = "gagamba",
-        health = { 10, 10, 10 },
-        damage = { 1, 2, 4 },
-    }
+local damages_data = {1, 2, 4}
+
+local translation = {
+    wolf = "lobo",
+    snake = "ahas",
+    boar = "baboy damo",
+    spider = "gagamba",
+    eagle = "agila",
+    adarna = "ibong adarna",
 }
 
 function Enemy:new(name, opts, images)
     local difficulty = UserData.data.difficulty
     self.name = name
-    self.name_filipino = data[name].filipino
-    self.health = data[name].health[difficulty]
+    self.name_filipino = translation[name]
+    self.health = 10
     self.max_health = self.health
-    self.damage = data[name].damage[difficulty]
+    self.damage = damages_data[difficulty]
 
     self.sprite = Sprite(opts)
     self.images = images
@@ -64,6 +52,7 @@ function Enemy:damage_enemy(damage)
             end,
             function()
                 Events.emit("end_battle")
+                Events.emit("post_battle", self.name)
                 self.timer_death = nil
             end)
     end
