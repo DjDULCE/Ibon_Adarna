@@ -3,8 +3,16 @@ local Dialogue = class({
 })
 
 local padding = 32
+local mapping = {
+    ["Don Juan"] = "player",
+    ["Don Fernando"] = "fernando",
+    ["Ermitanyo"] = "ermitanyo",
+    ["Don Diego"] = "diego",
+    ["Don Pedro"] = "pedro",
+}
 
 function Dialogue:new(opt)
+    self.id = opt.id
     self.images = Assets.load_images("dialogue")
     self.faces = Assets.load_images("faces")
 
@@ -59,7 +67,7 @@ function Dialogue:show()
     local data = self.data[self.current]
     if not data then
         self.enabled = false
-        Events.emit("on_dialogue_end")
+        Events.emit("on_dialogue_end", self)
 
         if self.repeating then
             self.current = 1
@@ -90,13 +98,9 @@ function Dialogue:show()
         return
     end
 
-    local face
-    if data.name == "Don Juan" then
-        face = "player"
-    elseif data.name == "Don Fernando" then
-        face = "fernando"
-    elseif data.name == "Ermitanyo" then
-        face = "ermitanyo"
+    local face = mapping[data.name]
+    if not face then
+        error("no face asset found for " .. data.name)
     end
 
     local face_image = self.faces[face]

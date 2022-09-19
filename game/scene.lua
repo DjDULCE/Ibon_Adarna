@@ -4,7 +4,7 @@ local Scene = class({
 
 local objects = {
     { "bed", "fernando", "val" },
-    { "ermitanyo", "" },
+    { "ermitanyo" },
 }
 
 local player_initial_pos

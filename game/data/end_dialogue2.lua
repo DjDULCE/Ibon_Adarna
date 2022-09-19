@@ -1,5 +1,13 @@
 return {
-	{
-		"Habang umaawit ang ibon ay sinugatan niya ang kanyang palad upang di makatulog. Iniwasan din niyang mapatakan sa pagbabawas ng ibon. Sa pagkakataong iyon, nahuli ni Prinsipe Juan ang engkantadang ibon.",	
-	},
+    {
+		name = "Don Juan",
+		side = "left",
+        "Nabihag ko nga ang Ibong Adarna! Pero papano ang aking mga kapatid?",
+    },
+    {
+        name = "Ermitanyo",
+        side = "right",
+		"Heto ang banga. Punuin mo ito ng tubig at ibuhos mo sa dalawang bato upang bumalik bilang tao ang mga ito.",
+    },
 }
+

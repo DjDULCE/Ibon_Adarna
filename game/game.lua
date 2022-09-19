@@ -9,7 +9,7 @@ local enemies = {
 }
 local additional_objs = {
     {},
-    { "tree", "ermitanyo", "don_diego", "don_pedro", }
+    { "don_pedro", "don_diego", "ermitanyo", "statue1", "statue2", "tree", },
 }
 
 local choices = { "a", "b", "c" }
@@ -42,7 +42,7 @@ function Game:new(index)
     self.current_meter = 0
     self.pacing = DEV and 512 or 64
     self.current_enemy = 1
-    self.hurt_alpha = 0
+    self.fade_alpha = 0
 
     self.in_battle = false
 
@@ -72,6 +72,7 @@ function Game:new(index)
     }
 
     self.dialogue = Dialogue({
+        id = "end_dialogue" .. self.index,
         font = Assets.fonts.impact24,
         data = require("data.end_dialogue" .. self.index),
         align = "left",
@@ -81,6 +82,7 @@ function Game:new(index)
 
     if self.index == 2 then
         self.prologue = Dialogue({
+            id = "prologue" .. self.index,
             font = Assets.fonts.impact24,
             data = require("data.prologue" .. self.index),
             align = "center",
@@ -315,29 +317,132 @@ function Game:on_player_move_x(dir, dt)
     end
 end
 
-function Game:on_dialogue_end()
+function Game:on_dialogue_end(obj_dialogue)
     self.controls.enabled = false
+    print("Finished", obj_dialogue.id)
 
-    if self.prologue then
-        self.prologue = nil
-        Events.emit("fadeout", 1, function()
-            self.objects.bar.alpha = 0
-            self.objects.icon_player.alpha = 0
-            for _, str in ipairs(enemies[self.index]) do
-                local key = "icon_" .. str
-                self.objects[key].alpha = 0
-            end
-
-            Events.emit("fadein", 1, function()
-            end)
-        end)
-        return
+    if self.index == 2 then
+        local res = self:handle_prologue_2(obj_dialogue)
+        if res then return end
     end
 
     Events.emit("fadeout", 3, function()
         local scene = require("scene")
         StateManager:switch(scene, self.index + 1)
     end)
+end
+
+function Game:handle_prologue_2(obj_dialogue)
+    if obj_dialogue.id == "end_dialogue2b" then return end
+
+    if obj_dialogue.id == "prologue2" then
+        self.player.x = WW * 0.55
+        local ew, eh = self.images.ermitanyo:getDimensions()
+        self.objects.ermitanyo = Sprite({
+            image = self.images.ermitanyo,
+            x = WW * 0.6,
+            y = self.objects.platform.y - eh * 0.5,
+            sx = -1, sy = 1,
+            ox = ew * 0.5, oy = eh * 0.5,
+            force_non_interactive = true,
+            is_clickable = false, is_hoverable = false,
+        })
+
+        local sw, sh = self.images.statue:getDimensions()
+        self.objects.statue1 = Sprite({
+            image = self.images.statue,
+            x = WW * 0.65,
+            y = self.objects.platform.y - sh * 0.5,
+            sx = 1, sy = 1,
+            ox = sw * 0.5, oy = sh * 0.5,
+            force_non_interactive = true,
+            is_clickable = false, is_hoverable = false,
+        })
+
+        self.objects.statue2 = Sprite({
+            image = self.images.statue,
+            x = self.objects.statue1.x + sw * 0.5 + 8,
+            y = self.objects.platform.y - sh * 0.5,
+            sx = 1, sy = 1,
+            ox = sw * 0.5, oy = sh * 0.5,
+            force_non_interactive = true,
+            is_clickable = false, is_hoverable = false,
+        })
+
+        self.controls.enabled = true
+        self.objects.bar.alpha = 0
+        self.objects.icon_player.alpha = 0
+        for _, str in ipairs(enemies[self.index]) do self.objects["icon_" .. str].alpha = 0 end
+        self.fade_timer = timer(1,
+            function(progress) self.fade_alpha = 1 - progress end,
+            function()
+                self.fade_timer = nil
+                Events.emit("on_dialogue_show", self.dialogue)
+            end)
+    elseif obj_dialogue.id == "prologue2b" then
+        self.controls.enabled = true
+        self.objects.statue1 = nil
+        self.objects.statue2 = nil
+
+        local ddw, ddh = self.images.don_diego:getDimensions()
+        self.objects.don_diego = Sprite({
+            image = self.images.don_diego,
+            x = WW * 0.65,
+            y = self.objects.platform.y - ddh * 0.5,
+            sx = -1, sy = 1,
+            ox = ddw * 0.5, oy = ddh * 0.5,
+            force_non_interactive = true,
+            is_clickable = false, is_hoverable = false,
+        })
+
+        local dpw, dph = self.images.don_pedro:getDimensions()
+        self.objects.don_pedro = Sprite({
+            image = self.images.don_pedro,
+            x = WW * 0.68,
+            y = self.objects.platform.y - dph * 0.5,
+            sx = -1, sy = 1,
+            ox = dpw * 0.5, oy = dph * 0.5,
+            force_non_interactive = true,
+            is_clickable = false, is_hoverable = false,
+        })
+
+        self.dialogue = Dialogue({
+            id = "end_dialogue" .. self.index .. "b",
+            font = Assets.fonts.impact24,
+            data = require("data.end_dialogue" .. self.index .. "b"),
+            align = "left",
+            repeating = false,
+            enabled = false,
+        })
+        self.fade_timer = timer(1,
+            function(progress) self.fade_alpha = 1 - progress end,
+            function()
+                self.fade_timer = nil
+                self.wait_timer = timer(1, nil, function()
+                    Events.emit("on_dialogue_show", self.dialogue)
+                end)
+            end)
+    elseif obj_dialogue.id == "end_dialogue2" then
+        self.controls.enabled = true
+        self.prologue = Dialogue({
+            id = "prologue" .. self.index .. "b",
+            font = Assets.fonts.impact24,
+            data = require("data.prologue" .. self.index .. "b"),
+            align = "center",
+            repeating = false,
+            enabled = false,
+            simple = true,
+        })
+        self.fade_timer = timer(1,
+            function(progress) self.fade_alpha = progress end,
+            function()
+                self.fade_timer = nil
+                self.wait_timer = timer(1, nil, function()
+                    Events.emit("on_dialogue_show", self.prologue)
+                end)
+            end)
+    end
+    return true
 end
 
 function Game:on_clicked_a()
@@ -468,9 +573,16 @@ function Game:post_battle(enemy_name)
     if enemy_name == "adarna" then
         self.player.can_move = false
         self.player.show_health = false
-        self.wait_timer = timer(1, nil, function()
-            Events.emit("on_dialogue_show", self.prologue)
-        end)
+        self.fade_timer = timer(1,
+            function(progress)
+                self.fade_alpha = progress
+            end,
+            function()
+                self.fade_timer = nil
+                self.wait_timer = timer(1, nil, function()
+                    Events.emit("on_dialogue_show", self.prologue)
+                end)
+            end)
     end
 end
 
@@ -501,6 +613,7 @@ function Game:update(dt)
     if self.dialogue_timer then self.dialogue_timer:update(dt) end
     if self.tree_timer then self.tree_timer:update(dt) end
     if self.wait_timer then self.wait_timer:update(dt) end
+    if self.fade_timer then self.fade_timer:update(dt) end
 end
 
 function Game:draw()
@@ -509,6 +622,11 @@ function Game:draw()
     self.player:draw()
     if self.enemy then self.enemy:draw() end
     self.dialogue:draw()
+
+    love.graphics.setColor(0, 0, 0, self.fade_alpha)
+    love.graphics.rectangle("fill", 0, 0, WW, WH)
+    love.graphics.setColor(1, 1, 1, 1)
+
     if self.prologue then self.prologue:draw() end
     self.controls:draw()
     love.graphics.setColor(1, 1, 1, 1)
@@ -516,10 +634,6 @@ function Game:draw()
     love.graphics.setColor(self.damage_text.color)
     love.graphics.setFont(self.damage_text.font)
     love.graphics.print(self.damage_text.text, self.damage_text.x, self.damage_text.y)
-    love.graphics.setColor(1, 1, 1, 1)
-
-    love.graphics.setColor(1, 0, 0, self.hurt_alpha)
-    love.graphics.rectangle("fill", 0, 0, WW, WH)
     love.graphics.setColor(1, 1, 1, 1)
 end
 
