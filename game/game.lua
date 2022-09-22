@@ -5,13 +5,13 @@ local Game = class({
 local enemies = {
     { "wolf", "snake", "boar", "spider" },
     { "boar", "eagle", "snake", "adarna" },
-    -- { "spider", "bat", "giant", },
-    { "giant", },
+    -- { "spider", "bat", "giant", "serpent" },
+    { "serpent", },
 }
 local additional_objs = {
     {},
     { "don_pedro", "don_diego", "ermitanyo", "statue1", "statue2", "tree", },
-    { "juana", },
+    { "juana", "leonora", },
 }
 
 local choices = { "a", "b", "c" }
@@ -305,11 +305,13 @@ function Game:on_player_move_x(dir, dt)
         local ip = self.objects.icon_player
         local ep = self.objects["icon_" .. key_enemy]
 
-        if self.index == 3 then
-            if key_enemy == "giant" then
-                if (not self.objects.juana) and (ip.x >= (ep.x - 128)) then
-                    self:show_other("juana")
-                end
+        if self.index == 3 and ip.x >= (ep.x - 64) then
+            if key_enemy == "giant" and (not self.objects.juana) then
+                self:show_other("juana")
+                self.player.can_move = false
+            elseif key_enemy == "serpent" and (not self.objects.leonora) then
+                self:show_other("leonora")
+                self.player.can_move = false
             end
         end
 
@@ -350,12 +352,16 @@ function Game:on_dialogue_end(obj_dialogue)
             self.player.dir = 1
             self.player.fake_move2 = false
             local obj_juana = self.objects.juana
+            obj_juana.sx = -1
+            obj_juana.not_look = true
+            local orig_x = obj_juana.x
+            local orig_px = self.player.x
             self.player_go_timer = timer(3,
                 function(progress)
-                    obj_juana.x = mathx.lerp(obj_juana.x, -64, mathx.smoothstep(progress))
-                    self.player.x = mathx.lerp(self.player.x, WW * 0.2, mathx.smoothstep(progress))
+                    obj_juana.x = mathx.lerp(orig_x, -64, progress)
+                    self.player.x = mathx.lerp(orig_px, WW * 0.2, progress)
                     self.player.anim:resume()
-                    self.player:update(love.timer.getDelta())
+                    self.player.anim:update(love.timer.getDelta())
                 end,
                 function()
                     self.player.anim:gotoFrame(1)
@@ -527,15 +533,16 @@ function Game:show_enemy(enemy_name)
     if enemy_name == "adarna" then
         local obj_tree = self.objects.tree
         local tx = WW * 0.75
+        local orig_x = obj_tree.x
         self.tree_timer = timer(1,
             function(tree_progress)
-                obj_tree.x = mathx.lerp(obj_tree.x, tx, mathx.smoothstep(tree_progress))
+                obj_tree.x = mathx.lerp(orig_x, tx, tree_progress)
             end,
             function()
                 self.tree_timer = nil
             end
         )
-    elseif enemy_name == "giant" then
+    elseif enemy_name == "giant" or enemy_name == "serpent" then
         self.enemy_dialogue = Dialogue({
             id = "enemy_dialogue_" .. enemy_name,
             font = Assets.fonts.impact24,
@@ -568,12 +575,14 @@ function Game:show_other(name)
     })
 
     local tx = WW * 0.8
+    local orig_x = self.objects[name].x
     self.show_timer = timer(1,
         function(progress)
-            self.objects[name].x = mathx.lerp(self.objects[name].x, tx, mathx.smoothstep(progress))
+            self.objects[name].x = mathx.lerp(orig_x, tx, progress)
         end,
         function()
             self.show_timer = nil
+            self.player.can_move = true
         end
     )
 
@@ -686,7 +695,7 @@ function Game:post_battle(enemy_name)
                 end)
             end
         )
-    elseif enemy_name == "giant" then
+    elseif enemy_name == "giant" or enemy_name == "serpent" then
         self.player.can_move = true
         self.player.fake_move2 = true
         self.player.show_health = false
@@ -728,7 +737,7 @@ function Game:update(dt)
     if self.player_go_timer then self.player_go_timer:update(dt) end
 
     local obj_juana = self.objects.juana
-    if obj_juana then
+    if obj_juana and not obj_juana.not_look then
         obj_juana.sx = self.player.x <= obj_juana.x and -1 or 1
     end
 end

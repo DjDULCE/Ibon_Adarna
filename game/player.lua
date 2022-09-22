@@ -97,9 +97,10 @@ function Player:start_attack()
     self.dir = -self.dir
     self.width, self.height = unpack(data[self.cur_anim])
     self.target_x = self.x + 128
+    local orig_x = self.x
     self.timer_attack = timer(1,
         function(progress)
-            self.x = mathx.lerp(self.x, self.target_x, progress)
+            self.x = mathx.lerp(orig_x, self.target_x, progress)
             self.anim:update(love.timer.getDelta())
         end)
 end
@@ -108,9 +109,10 @@ function Player:end_attack()
     Events.emit("damage_enemy", self.damage)
     self.anim_attack:pauseAtStart()
     self.target_x = self.x - 128
-    self.timer_attack = timer(1,
+    local orig_x = self.x
+    self.timer_attack = timer(0.25,
         function(progress)
-            self.x = mathx.lerp(self.x, self.target_x, progress)
+            self.x = mathx.lerp(orig_x, self.target_x, progress)
             self.anim:update(love.timer.getDelta())
         end,
         function()

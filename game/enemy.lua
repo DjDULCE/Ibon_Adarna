@@ -13,6 +13,7 @@ local translation = {
     adarna = "ibong adarna",
     bat = "paniki",
     giant = "higante",
+    serpent = "sepentye",
 }
 
 function Enemy:new(name, opts, images)
@@ -28,9 +29,10 @@ function Enemy:new(name, opts, images)
 
     self.target_x = WW * 0.7
 
-    self.timer = timer(2,
+    local orig_x = self.sprite.x
+    self.timer = timer(1,
         function(progress)
-            self.sprite.x = mathx.lerp(self.sprite.x, self.target_x, progress)
+            self.sprite.x = mathx.lerp(orig_x, self.target_x, progress)
         end,
         function()
             self.timer = nil
@@ -68,9 +70,10 @@ end
 function Enemy:enemy_start_attack()
     self.sprite.target_x = self.sprite.x - 128
     local triggered = false
-    self.timer_attack = timer(1,
+    local orig_x = self.sprite.x
+    self.timer_attack = timer(0.5,
         function(progress)
-            self.sprite.x = mathx.lerp(self.sprite.x, self.sprite.target_x, progress)
+            self.sprite.x = mathx.lerp(orig_x, self.sprite.target_x, progress)
             if not triggered and progress >= 0.5 then
                 triggered = true
             end
@@ -83,9 +86,10 @@ end
 
 function Enemy:enemy_end_attack()
     self.sprite.target_x = self.sprite.x + 128
-    self.timer_attack = timer(1,
+    local orig_x = self.sprite.x
+    self.timer_attack = timer(0.5,
         function(progress)
-            self.sprite.x = mathx.lerp(self.sprite.x, self.sprite.target_x, progress)
+            self.sprite.x = mathx.lerp(orig_x, self.sprite.target_x, progress)
         end,
         function()
             self.timer_attack = nil
