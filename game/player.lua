@@ -20,6 +20,8 @@ function Player:new(x, y)
     self.health = healths[difficulty]
     self.max_health = self.health
     self.damage = DEV and 100 or damages[difficulty]
+    self.fake_move = false
+    self.fake_move2 = false
 
     self.cur_anim = "walk"
 
@@ -127,30 +129,36 @@ function Player:on_down_left()
     if self.fake_move and self.current_meter <= 0 then return end
 
     local dt = love.timer.getDelta()
-    if not self.fake_move then
+    if not self.fake_move or self.fake_move2 then
         self.x = self.x - self.speed * dt
         self.vpos.x = self.x
     end
     self.dir = 1
     self.anim:update(dt)
-    Events.emit("on_player_move_x", -1, dt)
+
+    if not self.fake_move2 then
+        Events.emit("on_player_move_x", -1, dt)
+    end
 end
 
 function Player:on_down_right()
     if not self.can_move then return end
     local dt = love.timer.getDelta()
-    if not self.fake_move then
+    if not self.fake_move or self.fake_move2 then
         self.x = self.x + self.speed * dt
         self.vpos.x = self.x
     end
     self.dir = -1
     self.anim:update(dt)
-    Events.emit("on_player_move_x", 1, dt)
+
+    if not self.fake_move2 then
+        Events.emit("on_player_move_x", 1, dt)
+    end
 end
 
 function Player:on_clicked_a()
     if not self.ref_other then return end
-    Events.emit("on_dialogue_show")
+    Events.emit("on_dialogue_show", self.ref_other.dialogue)
 end
 
 function Player:on_clicked_b()

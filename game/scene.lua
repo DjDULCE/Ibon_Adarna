@@ -5,6 +5,7 @@ local Scene = class({
 local objects = {
     { "bed", "fernando", "val" },
     { "ermitanyo" },
+    { "don_diego", "don_pedro" },
 }
 
 local player_initial_pos
@@ -23,6 +24,7 @@ function Scene:new(index)
     tablex.append_inplace(self.orders, objects[index])
 
     self.dialogue = Dialogue({
+        id = "scene" .. index,
         font = Assets.fonts.impact24,
         data = require("data.scene" .. index),
         align = "left",
@@ -36,6 +38,7 @@ function Scene:new(index)
     player_initial_pos = {
         {WW * 0.7, 1},
         {WW * 0.3, -1},
+        {WW * 0.1, -1},
     }
 end
 
@@ -113,6 +116,38 @@ function Scene:load()
             }
         })
         self.looking_npc = self.objects.ermitanyo
+    elseif self.index == 3 then
+        local ddw, ddh = self.images.don_diego:getDimensions()
+        self.objects.don_diego = Sprite({
+            image = self.images.don_diego,
+            x = WW * 0.35,
+            y = self.objects.platform.y - ddh * 0.5,
+            sx = 1, sy = 1,
+            ox = ddw * 0.5, oy = ddh * 0.5,
+            force_non_interactive = true,
+            is_clickable = false, is_hoverable = false,
+            collider = {
+                w = 20,
+                h = 47,
+                origin = "center"
+            }
+        })
+
+        local dpw, dph = self.images.don_pedro:getDimensions()
+        self.objects.don_pedro = Sprite({
+            image = self.images.don_pedro,
+            x = WW * 0.4,
+            y = self.objects.platform.y - dph * 0.5,
+            sx = 1, sy = 1,
+            ox = dpw * 0.5, oy = dph * 0.5,
+            force_non_interactive = true,
+            is_clickable = false, is_hoverable = false,
+            collider = {
+                w = 20,
+                h = 47,
+                origin = "center"
+            }
+        })
     end
 
     local px, dir = unpack(player_initial_pos[self.index])
@@ -125,7 +160,23 @@ function Scene:on_dialogue_show()
     self.player.can_move = false
 end
 
-function Scene:on_dialogue_end()
+function Scene:on_dialogue_end(obj_dialogue)
+    if self.index == 3 and obj_dialogue.id == "scene3" then
+        self.dialogue = Dialogue({
+            id = "scene" .. self.index .. "b",
+            font = Assets.fonts.impact24,
+            data = require("data.scene" .. self.index .. "b"),
+            align = "center",
+            repeating = false,
+            enabled = false,
+            simple = true,
+        })
+        self.controls.enabled = true
+        Events.emit("on_dialogue_show", self.dialogue)
+        return
+    end
+
+    self.controls.enabled = false
     Events.emit("fadeout", 3, function()
         local game = require("game")
         StateManager:switch(game, self.index)

@@ -9,6 +9,8 @@ local mapping = {
     ["Ermitanyo"] = "ermitanyo",
     ["Don Diego"] = "diego",
     ["Don Pedro"] = "pedro",
+    ["Higante"] = "giant",
+    ["Prinsesa Juana"] = "juana",
 }
 
 function Dialogue:new(opt)

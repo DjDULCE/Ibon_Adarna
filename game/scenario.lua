@@ -17,11 +17,13 @@ end
 
 function Scenario:new(index)
     assert(index and type(index) == "number" and index > 0)
+    self.index = index
     local id = self:type()
     local idn = id .. tostring(index)
     self.images = Assets.load_images(idn)
-    self.sources = Assets.load_sources(idn)
+    self.sources = Assets.load_sources(id)
     self.texts = require("data." .. idn)
+    self.alpha = 0
 
     self.objects = {}
     self.orders = {"pic"}
@@ -67,8 +69,16 @@ function Scenario:next_slide()
         self.subtext_index = 1
         if self.current_index > self.max_index then
             Events.emit("fadeout", 3, function()
-                -- Go to next scene
-                print(1)
+                self.alpha = 1
+                Events.emit("fadein", 1, function()
+                    if self.index == 1 then
+                        local game = require("game")
+                        StateManager:switch(game, self.index)
+                    elseif self.index == 3 then
+                        local scene = require("scene")
+                        StateManager:switch(scene, self.index)
+                    end
+                end)
             end)
             return
         end
@@ -110,6 +120,9 @@ end
 function Scenario:draw()
     love.graphics.setColor(1, 1, 1, 1)
     iter_objects(self.orders, self.objects, "draw")
+    love.graphics.setColor(0, 0, 0, self.alpha)
+    love.graphics.rectangle("fill", 0, 0, WW, WH)
+    love.graphics.setColor(1, 1, 1, 1)
 end
 
 function Scenario:mousepressed(mx, my, mb)

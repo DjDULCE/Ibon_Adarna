@@ -11,6 +11,8 @@ local translation = {
     spider = "gagamba",
     eagle = "agila",
     adarna = "ibong adarna",
+    bat = "paniki",
+    giant = "higante",
 }
 
 function Enemy:new(name, opts, images)
@@ -32,7 +34,12 @@ function Enemy:new(name, opts, images)
         end,
         function()
             self.timer = nil
-            Events.emit("start_battle", self)
+
+            if self.dialogue then
+                Events.emit("on_dialogue_show", self.dialogue)
+            else
+                Events.emit("start_battle", self)
+            end
         end)
 
     Events.register(self, "enemy_start_attack")

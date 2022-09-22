@@ -3,6 +3,7 @@ local Sprite = class({
 })
 
 function Sprite:new(opts)
+    self.name = opts.name
     self.image = opts.image
     self.width = self.image:getWidth()
     self.height = opts.height
@@ -125,6 +126,14 @@ end
 function Sprite:update(dt)
     local mx, my = love.mouse.getPosition()
     self.mouse.x, self.mouse.y = mx, my
+
+    local col = self.collider
+    if col then
+        local x = self.collider.x or self.x
+        local y = self.collider.y or self.y
+        self.vpos.x, self.vpos.y = x, y
+        self.vsize.x, self.vsize.y = self.collider.w * 0.5, self.collider.h * 0.5
+    end
 
     local cp = self.center_pos
     local hs = self.half_size

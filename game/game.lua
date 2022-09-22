@@ -4,12 +4,14 @@ local Game = class({
 
 local enemies = {
     { "wolf", "snake", "boar", "spider" },
-    -- { "boar", "eagle", "snake", "adarna" },
-    {"adarna"},
+    { "boar", "eagle", "snake", "adarna" },
+    -- { "spider", "bat", "giant", },
+    { "giant", },
 }
 local additional_objs = {
     {},
     { "don_pedro", "don_diego", "ermitanyo", "statue1", "statue2", "tree", },
+    { "juana", },
 }
 
 local choices = { "a", "b", "c" }
@@ -24,9 +26,14 @@ local tasks = {
         "Talunin lahat ng kalaban",
         "Tagpuin at talunin ang Ibong Adarna",
     },
+    {
+        "Talunin lahat ng kalaban, Higante at ang Serpyente",
+        "Tagpuin ang dalawang prinsesa",
+    },
 }
 
 function Game:new(index)
+    print("Entering game", index)
     UserData.data.stage = index
     UserData:save()
     local id = string.lower(self:type())
@@ -298,9 +305,18 @@ function Game:on_player_move_x(dir, dt)
         local ip = self.objects.icon_player
         local ep = self.objects["icon_" .. key_enemy]
 
+        if self.index == 3 then
+            if key_enemy == "giant" then
+                if (not self.objects.juana) and (ip.x >= (ep.x - 128)) then
+                    self:show_other("juana")
+                end
+            end
+        end
+
         if (not self.enemy) and (ip.x >= (ep.x - 36)) then
             self:show_enemy(enemies[self.index][self.current_enemy])
         end
+
         if ip.x >= ep.x then
             self.player.can_move = false
         end
@@ -312,7 +328,7 @@ function Game:on_player_move_x(dir, dt)
                 Events.emit("on_dialogue_show")
                 self.dialogue_timer = nil
             end)
-        elseif self.index == 2 then
+        elseif self.index == 3 then
         end
     end
 end
@@ -324,11 +340,45 @@ function Game:on_dialogue_end(obj_dialogue)
     if self.index == 2 then
         local res = self:handle_prologue_2(obj_dialogue)
         if res then return end
+    elseif self.index == 3 then
+        if obj_dialogue == self.enemy_dialogue then
+            self.enemy_dialogue = nil
+            Events.emit("start_battle", self.enemy)
+            return
+        elseif obj_dialogue == self.other_dialogue then
+            self.other_dialogue = nil
+            self.player.dir = 1
+            self.player.fake_move2 = false
+            local obj_juana = self.objects.juana
+            self.player_go_timer = timer(3,
+                function(progress)
+                    obj_juana.x = mathx.lerp(obj_juana.x, -64, mathx.smoothstep(progress))
+                    self.player.x = mathx.lerp(self.player.x, WW * 0.2, mathx.smoothstep(progress))
+                    self.player.anim:resume()
+                    self.player:update(love.timer.getDelta())
+                end,
+                function()
+                    self.player.anim:gotoFrame(1)
+                    self.player.dir = -1
+                    self.objects.juana.collider = nil
+                    self.player_go_timer = nil
+                    self.player.fake_move = true
+                    self.controls.enabled = true
+                    Events.emit("end_battle")
+                end
+            )
+            return
+        end
     end
 
     Events.emit("fadeout", 3, function()
-        local scene = require("scene")
-        StateManager:switch(scene, self.index + 1)
+        if self.index == 1 then
+            local scene = require("scene")
+            StateManager:switch(scene, self.index + 1)
+        elseif self.index == 2 then
+            local scenario = require("scenario")
+            StateManager:switch(scenario, self.index + 1)
+        end
     end)
 end
 
@@ -479,12 +529,64 @@ function Game:show_enemy(enemy_name)
         local tx = WW * 0.75
         self.tree_timer = timer(1,
             function(tree_progress)
-                obj_tree.x = mathx.lerp(obj_tree.x, tx, tree_progress)
+                obj_tree.x = mathx.lerp(obj_tree.x, tx, mathx.smoothstep(tree_progress))
             end,
             function()
                 self.tree_timer = nil
             end
         )
+    elseif enemy_name == "giant" then
+        self.enemy_dialogue = Dialogue({
+            id = "enemy_dialogue_" .. enemy_name,
+            font = Assets.fonts.impact24,
+            data = require("data.enemy_dialogue_" .. enemy_name),
+            align = "left",
+            repeating = false,
+            enabled = false,
+        })
+        self.enemy.dialogue = self.enemy_dialogue
+    end
+end
+
+function Game:show_other(name)
+    print("showing other:", name)
+    local ow, oh = self.images[name]:getDimensions()
+    local osx, osy = -1, 1
+    self.objects[name] = Sprite({
+        image = self.images[name],
+        x = WW * 1.5 + ow * osx * 0.5,
+        y = WH - self.objects.platform.height - oh * osy * 0.5,
+        ox = ow * 0.5, oy = oh * 0.5,
+        sx = osx, sy = osy,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+        collider = {
+            w = 24,
+            h = 49,
+            origin = "center"
+        }
+    })
+
+    local tx = WW * 0.8
+    self.show_timer = timer(1,
+        function(progress)
+            self.objects[name].x = mathx.lerp(self.objects[name].x, tx, mathx.smoothstep(progress))
+        end,
+        function()
+            self.show_timer = nil
+        end
+    )
+
+    if name == "juana" then
+        self.other_dialogue = Dialogue({
+            id = "other_dialogue_" .. name,
+            font = Assets.fonts.impact24,
+            data = require("data.other_dialogue_" .. name),
+            align = "left",
+            repeating = false,
+            enabled = false,
+        })
+        self.objects[name].dialogue = self.other_dialogue
     end
 end
 
@@ -582,7 +684,12 @@ function Game:post_battle(enemy_name)
                 self.wait_timer = timer(1, nil, function()
                     Events.emit("on_dialogue_show", self.prologue)
                 end)
-            end)
+            end
+        )
+    elseif enemy_name == "giant" then
+        self.player.can_move = true
+        self.player.fake_move2 = true
+        self.player.show_health = false
     end
 end
 
@@ -606,14 +713,24 @@ function Game:update(dt)
     if self.hurt_timer then self.hurt_timer:update(dt) end
     self.controls:update(dt)
     iter_objects(self.orders, self.objects, "update", dt)
+    iter_objects(self.orders, self.objects, "check_collision", self.player)
     self.player:update(dt, self.objects.platform.height)
     if self.enemy then self.enemy:update(dt) end
     self.dialogue:update(dt)
+    if self.enemy_dialogue then self.enemy_dialogue:update(dt) end
+    if self.other_dialogue then self.other_dialogue:update(dt) end
     if self.prologue then self.prologue:update(dt) end
     if self.dialogue_timer then self.dialogue_timer:update(dt) end
     if self.tree_timer then self.tree_timer:update(dt) end
     if self.wait_timer then self.wait_timer:update(dt) end
     if self.fade_timer then self.fade_timer:update(dt) end
+    if self.show_timer then self.show_timer:update(dt) end
+    if self.player_go_timer then self.player_go_timer:update(dt) end
+
+    local obj_juana = self.objects.juana
+    if obj_juana then
+        obj_juana.sx = self.player.x <= obj_juana.x and -1 or 1
+    end
 end
 
 function Game:draw()
@@ -622,6 +739,8 @@ function Game:draw()
     self.player:draw()
     if self.enemy then self.enemy:draw() end
     self.dialogue:draw()
+    if self.enemy_dialogue then self.enemy_dialogue:draw() end
+    if self.other_dialogue then self.other_dialogue:draw() end
 
     love.graphics.setColor(0, 0, 0, self.fade_alpha)
     love.graphics.rectangle("fill", 0, 0, WW, WH)
