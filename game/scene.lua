@@ -6,11 +6,13 @@ local objects = {
     { "bed", "fernando", "val" },
     { "ermitanyo" },
     { "don_diego", "don_pedro" },
+    { "eagle", },
 }
 
 local player_initial_pos
 
 function Scene:new(index)
+    print("scene", index)
     assert(index and type(index) == "number" and index > 0)
     local id = self:type()
     local idn = id .. tostring(index)
@@ -38,6 +40,7 @@ function Scene:new(index)
     player_initial_pos = {
         {WW * 0.7, 1},
         {WW * 0.3, -1},
+        {WW * 0.1, -1},
         {WW * 0.1, -1},
     }
 end
@@ -148,6 +151,23 @@ function Scene:load()
                 origin = "center"
             }
         })
+    elseif self.index == 4 then
+        local ew, eh = self.images.eagle:getDimensions()
+        self.objects.eagle = Sprite({
+            image = self.images.eagle,
+            x = WW * 0.6,
+            y = self.objects.platform.y - eh * 0.5,
+            sx = -1, sy = 1,
+            ox = ew * 0.5, oy = eh * 0.5,
+            force_non_interactive = true,
+            is_clickable = false, is_hoverable = false,
+            collider = {
+                w = 225,
+                h = 205,
+                origin = "center"
+            }
+        })
+        self.looking_npc = self.objects.eagle
     end
 
     local px, dir = unpack(player_initial_pos[self.index])

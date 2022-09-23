@@ -33,7 +33,7 @@ local tasks = {
 }
 
 function Game:new(index)
-    print("Entering game", index)
+    print("game", index)
     UserData.data.stage = index
     UserData:save()
     local id = string.lower(self:type())

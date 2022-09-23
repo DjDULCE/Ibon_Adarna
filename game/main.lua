@@ -47,8 +47,8 @@ function love.load()
 
 	-- StateManager.current = require("menu")()
 	-- StateManager.current = require("scenario")(4)
-	-- StateManager.current = require("scene")(3)
-	StateManager.current = require("game")(3)
+	StateManager.current = require("scene")(4)
+	-- StateManager.current = require("game")(3)
 	StateManager:load()
 end
 
