@@ -16,6 +16,7 @@ local function get_longest_str(texts)
 end
 
 function Scenario:new(index)
+    print("scenario", index)
     assert(index and type(index) == "number" and index > 0)
     self.index = index
     local id = self:type()
@@ -71,10 +72,11 @@ function Scenario:next_slide()
             Events.emit("fadeout", 3, function()
                 self.alpha = 1
                 Events.emit("fadein", 1, function()
+                    print("index", self.index)
                     if self.index == 1 then
                         local game = require("game")
                         StateManager:switch(game, self.index)
-                    elseif self.index == 3 then
+                    elseif self.index == 3 or self.index == 4 then
                         local scene = require("scene")
                         StateManager:switch(scene, self.index)
                     end

@@ -348,32 +348,45 @@ function Game:on_dialogue_end(obj_dialogue)
             Events.emit("start_battle", self.enemy)
             return
         elseif obj_dialogue == self.other_dialogue then
-            self.other_dialogue = nil
-            self.player.dir = 1
-            self.player.fake_move2 = false
-            local obj_juana = self.objects.juana
-            obj_juana.sx = -1
-            obj_juana.not_look = true
-            local orig_x = obj_juana.x
-            local orig_px = self.player.x
-            self.player_go_timer = timer(3,
-                function(progress)
-                    obj_juana.x = mathx.lerp(orig_x, -64, progress)
-                    self.player.x = mathx.lerp(orig_px, WW * 0.2, progress)
-                    self.player.anim:resume()
-                    self.player.anim:update(love.timer.getDelta())
-                end,
-                function()
-                    self.player.anim:gotoFrame(1)
-                    self.player.dir = -1
-                    self.objects.juana.collider = nil
-                    self.player_go_timer = nil
-                    self.player.fake_move = true
-                    self.controls.enabled = true
-                    Events.emit("end_battle")
-                end
-            )
-            return
+            if self.other_dialogue.id == "other_dialogue_juana" then
+                self.other_dialogue = nil
+                self.player.dir = 1
+                self.player.fake_move2 = false
+                local obj_juana = self.objects.juana
+                obj_juana.sx = -1
+                obj_juana.not_look = true
+                local orig_x = obj_juana.x
+                local orig_px = self.player.x
+                self.player_go_timer = timer(3,
+                    function(progress)
+                        obj_juana.x = mathx.lerp(orig_x, -64, progress)
+                        self.player.x = mathx.lerp(orig_px, WW * 0.2, progress)
+                        self.player.anim:resume()
+                        self.player.anim:update(love.timer.getDelta())
+                    end,
+                    function()
+                        self.player.anim:gotoFrame(1)
+                        self.player.dir = -1
+                        self.objects.juana.collider = nil
+                        self.player_go_timer = nil
+                        self.player.fake_move = true
+                        self.controls.enabled = true
+                        Events.emit("end_battle")
+                    end
+                )
+                return
+            elseif self.other_dialogue.id == "other_dialogue_leonora" then
+                self.other_dialogue = nil
+                Events.emit("fadeout", 3, function()
+                    self.fade_alpha = 1
+                    self.controls.should_draw = false
+                    Events.emit("fadein", 1, function()
+                        local scenario = require("scenario")
+                        StateManager:switch(scenario, self.index + 1)
+                    end)
+                end)
+                return
+            end
         end
     end
 
@@ -586,7 +599,7 @@ function Game:show_other(name)
         end
     )
 
-    if name == "juana" then
+    if name == "juana" or name == "leonora" then
         self.other_dialogue = Dialogue({
             id = "other_dialogue_" .. name,
             font = Assets.fonts.impact24,

@@ -8,6 +8,7 @@ local alpha = 0.5
 
 function Controls:new()
     self.enabled = true
+    self.should_draw = true
     self.images = Assets.load_images("controls")
     self.objects = {}
     self.orders = {"btn_a", "btn_b", "btn_left", "btn_right"}
@@ -103,6 +104,7 @@ function Controls:update(dt)
 end
 
 function Controls:draw()
+    if not self.should_draw then return end
     love.graphics.setColor(1, 1, 1, 1)
     iter_objects(self.orders, self.objects, "draw")
     love.graphics.setColor(1, 1, 1, 1)
