@@ -370,7 +370,7 @@ function Game:on_dialogue_end(obj_dialogue)
                         self.player_go_timer = nil
                         self.player.fake_move = true
                         self.controls.enabled = true
-                        Events.emit("end_battle")
+                        self.in_battle = false
                     end
                 )
                 return

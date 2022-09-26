@@ -206,6 +206,9 @@ function Player:update(dt, ground_height)
     while (self.y + self.height) > (WH - ground_height) do
         self.y = self.y - dt
     end
+
+    self.vpos.x, self.vpos.y = self.x, self.y
+    self.vsize.x, self.vsize.y = self.width * 0.5, self.height * 0.5
 end
 
 function Player:draw()
