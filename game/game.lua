@@ -773,7 +773,19 @@ end
 function Game:draw()
     love.graphics.setColor(1, 1, 1, 1)
     iter_objects(self.orders, self.objects, "draw")
-    self.player:draw()
+
+    local obj_bb = self.objects.box_bg
+    local skip_player = false
+    if obj_bb.alpha == 1 then
+        local bbw, bbh = self.ui.box_bg:getDimensions()
+        if self.player.x >= (obj_bb.x - bbw * 0.5 * obj_bb.sx) and
+            self.player.x <= (obj_bb.x + bbw * 0.5 * obj_bb.sx) then
+            skip_player = true
+        end
+    end
+
+    if not skip_player then self.player:draw() end
+
     if self.enemy then self.enemy:draw() end
     self.dialogue:draw()
     if self.enemy_dialogue then self.enemy_dialogue:draw() end
