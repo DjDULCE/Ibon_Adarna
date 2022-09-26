@@ -20,6 +20,7 @@ function Scene:new(index)
     self.images = Assets.load_images(idn)
     self.sources = Assets.load_sources(id)
     self.controls = Controls()
+    self.alpha = 0
 
     self.objects = {}
     self.orders = {"platform"}
@@ -198,8 +199,12 @@ function Scene:on_dialogue_end(obj_dialogue)
 
     self.controls.enabled = false
     Events.emit("fadeout", 3, function()
-        local game = require("game")
-        StateManager:switch(game, self.index)
+        self.controls.should_draw = false
+        self.alpha = 1
+        Events.emit("fadein", 1, function()
+            local game = require("game")
+            StateManager:switch(game, self.index)
+        end)
     end)
 end
 
@@ -227,6 +232,10 @@ function Scene:draw()
     self.player:draw()
     self.dialogue:draw()
     self.controls:draw()
+
+    love.graphics.setColor(0, 0, 0, self.alpha)
+    love.graphics.rectangle("fill", 0, 0, WW, WH)
+    love.graphics.setColor(1, 1, 1, 1)
 end
 
 function Scene:mousepressed(mx, my, mb)
