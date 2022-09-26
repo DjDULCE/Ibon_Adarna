@@ -706,7 +706,7 @@ function Game:post_battle(enemy_name)
     elseif enemy_name == "giant" or enemy_name == "serpent" then
         self.player.can_move = true
         self.player.fake_move2 = true
-        self.player.show_health = false
+        self.player.show_health = true
     end
 end
 
