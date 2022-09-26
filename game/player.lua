@@ -7,7 +7,6 @@ local data = {
     attack = { 92, 49 }
 }
 
-local healths = { 10, 10, 10 }
 local damages = { 4, 2, 2 }
 
 function Player:new(x, y)
@@ -17,7 +16,7 @@ function Player:new(x, y)
     self.x = x
     self.y = y
     self.dir = 1
-    self.health = healths[difficulty]
+    self.health = UserData.data.life
     self.max_health = self.health
     self.damage = DEV and 100 or damages[difficulty]
     self.fake_move = false
@@ -248,6 +247,11 @@ function Player:draw()
     end
 
     love.graphics.setColor(1, 1, 1, 1)
+end
+
+function Player:exit()
+    UserData.data.life = self.health
+    UserData:save()
 end
 
 return Player

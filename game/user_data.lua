@@ -8,6 +8,7 @@ local UserData = {
         score = { 0, 0, 0 },
         difficulty = 1,
         stage = 1,
+        life = 10,
     },
 }
 

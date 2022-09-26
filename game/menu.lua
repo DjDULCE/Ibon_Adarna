@@ -163,6 +163,8 @@ function Menu:load()
                             UserData:save()
 
                             update_group(self.group_controls, 0, false)
+                            UserData.data.life = 10
+                            UserData:save()
                             local Scenario = require("scenario")
                             StateManager:switch(Scenario, 1)
                         end)
