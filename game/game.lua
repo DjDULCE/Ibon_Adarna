@@ -1,5 +1,5 @@
 local Game = class({
-    name = "Game"
+    name = "Game",
 })
 
 local enemies = {
@@ -376,32 +376,17 @@ function Game:on_dialogue_end(obj_dialogue)
                 return
             elseif self.other_dialogue.id == "other_dialogue_leonora" then
                 self.other_dialogue = nil
-                Events.emit("fadeout", 3, function()
-                    self.fade_alpha = 1
-                    self.controls.should_draw = false
-                    Events.emit("fadein", 1, function()
-                        local scenario = require("scenario")
-                        StateManager:switch(scenario, self.index + 1)
-                    end)
-                end)
+                self:goto_next("scenario")
                 return
             end
         end
     end
 
-    Events.emit("fadeout", 3, function()
-        self.fade_alpha = 1
-        self.controls.should_draw = false
-        Events.emit("fadein", 1, function()
-            if self.index == 1 then
-                local scene = require("scene")
-                StateManager:switch(scene, self.index + 1)
-            elseif self.index == 2 then
-                local scenario = require("scenario")
-                StateManager:switch(scenario, self.index + 1)
-            end
-        end)
-    end)
+    if self.index == 1 then
+        self:goto_next("scene")
+    elseif self.index == 2 then
+        self:goto_next("scenario")
+    end
 end
 
 function Game:handle_prologue_2(obj_dialogue)
@@ -520,6 +505,13 @@ end
 function Game:on_clicked_a()
     if self.objects.box_bg.alpha == 0 then return end
     for _, obj in ipairs(self.group_guide) do obj.alpha = 0 end
+
+    if self.end_tasks_shown then
+        self:goto_next(self.end_tasks_shown, true)
+        Events.remove(self, "on_clicked_a")
+        return true
+    end
+
     local btn_pause = self.objects.btn_pause
     btn_pause.alpha = 1
     btn_pause.is_hoverable = true
@@ -716,6 +708,26 @@ function Game:post_battle(enemy_name)
         self.player.fake_move2 = true
         self.player.show_health = false
     end
+end
+
+function Game:goto_next(str, shown_quest)
+    if not shown_quest then
+        self.controls.enabled = true
+        self.objects.box1.image = self.ui.checked_box
+        self.objects.box2.image = self.ui.checked_box
+        for _, obj in ipairs(self.group_guide) do obj.alpha = 1 end
+        self.end_tasks_shown = str
+        Events.register(self, "on_clicked_a")
+        return
+    end
+    Events.emit("fadeout", 3, function()
+        self.fade_alpha = 1
+        self.controls.should_draw = false
+        Events.emit("fadein", 1, function()
+            local next_state = require(str)
+            StateManager:switch(next_state, self.index + 1)
+        end)
+    end)
 end
 
 function Game:display_damage(obj, damage)
