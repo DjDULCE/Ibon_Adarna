@@ -34,6 +34,8 @@ end
 
 function Events.clear()
     tablex.clear(events)
+    Events.register(FADE, "fadeout")
+    Events.register(FADE, "fadein")
 end
 
 return Events
