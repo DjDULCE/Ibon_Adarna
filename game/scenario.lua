@@ -73,10 +73,7 @@ function Scenario:next_slide()
                 self.alpha = 1
                 Events.emit("fadein", 1, function()
                     print("index", self.index)
-                    if self.index == 1 then
-                        local game = require("game")
-                        StateManager:switch(game, self.index)
-                    elseif self.index == 3 or self.index == 4 then
+                    if self.index == 1 or self.index == 3 then
                         local scene = require("scene")
                         StateManager:switch(scene, self.index)
                     end
