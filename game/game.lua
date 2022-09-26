@@ -5,8 +5,7 @@ local Game = class({
 local enemies = {
     { "wolf", "snake", "boar", "spider" },
     { "boar", "eagle", "snake", "adarna" },
-    -- { "spider", "bat", "giant", "serpent" },
-    { "serpent", },
+    { "spider", "bat", "giant", "serpent" },
 }
 local additional_objs = {
     {},
@@ -391,13 +390,17 @@ function Game:on_dialogue_end(obj_dialogue)
     end
 
     Events.emit("fadeout", 3, function()
-        if self.index == 1 then
-            local scene = require("scene")
-            StateManager:switch(scene, self.index + 1)
-        elseif self.index == 2 then
-            local scenario = require("scenario")
-            StateManager:switch(scenario, self.index + 1)
-        end
+        self.fade_alpha = 1
+        self.controls.should_draw = false
+        Events.emit("fadein", 1, function()
+            if self.index == 1 then
+                local scene = require("scene")
+                StateManager:switch(scene, self.index + 1)
+            elseif self.index == 2 then
+                local scenario = require("scenario")
+                StateManager:switch(scenario, self.index + 1)
+            end
+        end)
     end)
 end
 
