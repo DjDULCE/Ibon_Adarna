@@ -238,7 +238,7 @@ function Player:draw()
         love.graphics.setColor(1, 1, 1, 1)
 
         love.graphics.setFont(font)
-        love.graphics.print("prinsipe juan",
+        love.graphics.print("Prinsipe Juan",
             gap * 2 + ipw * scale,
             by + hh * scale * 0.5 + gap,
             0, 1, 1,

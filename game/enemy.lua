@@ -5,15 +5,17 @@ local Enemy = class({
 local damages_data = {1, 2, 4}
 
 local translation = {
-    wolf = "lobo",
-    snake = "ahas",
-    boar = "baboy damo",
-    spider = "gagamba",
-    eagle = "agila",
-    adarna = "ibong adarna",
-    bat = "paniki",
-    giant = "higante",
-    serpent = "sepentye",
+    wolf = "Lobo",
+    snake = "Ahas",
+    boar = "Baboy Damo",
+    spider = "Gagamba",
+    eagle = "Agila",
+    adarna = "Ibong Adarna",
+    bat = "Paniki",
+    giant = "Higante",
+    serpent = "Sepentye",
+    crow = "Uwak",
+    lion = "Leon",
 }
 
 function Enemy:new(name, opts, images)

@@ -42,7 +42,7 @@ function Scene:new(index)
         {WW * 0.7, 1},
         {WW * 0.3, -1},
         {WW * 0.1, -1},
-        {WW * 0.1, -1},
+        {WW * 0.55, 1},
     }
 end
 
@@ -156,9 +156,9 @@ function Scene:load()
         local ew, eh = self.images.eagle:getDimensions()
         self.objects.eagle = Sprite({
             image = self.images.eagle,
-            x = WW * 0.6,
+            x = WW * 0.35,
             y = self.objects.platform.y - eh * 0.5,
-            sx = -1, sy = 1,
+            sx = 1, sy = 1,
             ox = ew * 0.5, oy = eh * 0.5,
             force_non_interactive = true,
             is_clickable = false, is_hoverable = false,
@@ -198,9 +198,9 @@ function Scene:on_dialogue_end(obj_dialogue)
     end
 
     self.controls.enabled = false
+    self.controls.should_draw = false
+    self.alpha = 1
     Events.emit("fadeout", 3, function()
-        self.controls.should_draw = false
-        self.alpha = 1
         Events.emit("fadein", 1, function()
             local game = require("game")
             StateManager:switch(game, self.index)

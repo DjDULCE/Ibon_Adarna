@@ -6,11 +6,13 @@ local enemies = {
     { "wolf", "snake", "boar", "spider" },
     { "boar", "eagle", "snake", "adarna" },
     { "spider", "bat", "giant", "serpent" },
+    { "crow", "lion", "snake", "boar" },
 }
 local additional_objs = {
     {},
     { "don_pedro", "don_diego", "ermitanyo", "statue1", "statue2", "tree", },
     { "juana", "leonora", },
+    { "maria", }
 }
 
 local choices = { "a", "b", "c" }
@@ -29,6 +31,21 @@ local tasks = {
         "Talunin lahat ng kalaban, Higante at ang Serpyente",
         "Tagpuin ang dalawang prinsesa",
     },
+    {
+        "Talunin lahat ng kalaban",
+        "Tagpuin ang si Prinsesa Maria",
+    },
+}
+
+if DEV then
+    if #enemies ~= # additional_objs or #enemies ~= #tasks then
+        error("mismatch tables lengths")
+    end
+end
+
+local enemy_float = {
+    crow = 36,
+    eagle = 36,
 }
 
 function Game:new(index)
@@ -118,7 +135,7 @@ function Game:load()
         sx = WW / bgw, sy = WH / bgh,
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
-        parallax_x = true,
+        -- parallax_x = true,
         speed = 64,
     })
 
@@ -322,14 +339,20 @@ function Game:on_player_move_x(dir, dt)
             self.player.can_move = false
         end
     elseif self.current_meter >= self.total_meters then
-        self.player.can_move = false
-        self.player.anim:gotoFrame(1)
+        if self.index ~= 4 then
+            self.player.can_move = false
+            self.player.anim:gotoFrame(1)
+        end
+
         if self.index == 1 then
             self.dialogue_timer = timer(2, nil, function()
                 Events.emit("on_dialogue_show")
                 self.dialogue_timer = nil
             end)
-        elseif self.index == 3 then
+        elseif self.index == 4 and not self.objects.maria then
+            self.player.can_move = false
+            self.player.anim:gotoFrame(1)
+            self:show_other("maria")
         end
     end
 end
@@ -380,6 +403,12 @@ function Game:on_dialogue_end(obj_dialogue)
                 return
             end
         end
+    elseif self.index == 4 then
+        self.player.can_move = false
+        self.controls.should_draw = false
+        self.other_dialogue = nil
+        self:goto_next("scene")
+        return
     end
 
     if self.index == 1 then
@@ -525,10 +554,12 @@ function Game:show_enemy(enemy_name)
     print("showing enemy:", enemy_name)
     local ew, eh = self.images[enemy_name]:getDimensions()
     local esx, esy = 1, 1
+    local oy = enemy_float[enemy_name] or 0
+
     self.enemy = Enemy(enemy_name, {
         image = self.images[enemy_name],
         x = WW + ew * esx,
-        y = WH - self.objects.platform.height - eh * esy * 0.5,
+        y = WH - self.objects.platform.height - eh * esy * 0.5 - oy,
         ox = ew * 0.5, oy = eh * 0.5,
         sx = esx, sy = esy,
         is_hoverable = false, is_clickable = false,
@@ -591,6 +622,11 @@ function Game:show_other(name)
         function()
             self.show_timer = nil
             self.player.can_move = true
+
+            if self.index == 4 then
+                self.player.fake_move2 = true
+                self.player.fake_move = false
+            end
         end
     )
 
@@ -767,6 +803,11 @@ function Game:update(dt)
     local obj_juana = self.objects.juana
     if obj_juana and not obj_juana.not_look then
         obj_juana.sx = self.player.x <= obj_juana.x and -1 or 1
+    end
+
+    local obj_maria = self.objects.maria
+    if obj_maria then
+        obj_maria.sx = self.player.x <= obj_maria.x and -1 or 1
     end
 end
 
