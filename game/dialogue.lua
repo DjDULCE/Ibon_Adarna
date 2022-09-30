@@ -36,7 +36,7 @@ function Dialogue:new(opt)
     self.align = opt.align or "center"
     self.font = opt.font
     self.alpha = opt.alpha or 1
-    self.color = opt.color or {0, 0, 0}
+    self.color = opt.color or {1, 1, 1}
     self.speed = opt.speed or 1
 
     self.y = WH - self.font:getHeight() * 6 - padding * 0.25
@@ -150,6 +150,7 @@ function Dialogue:draw()
     end
 
     love.graphics.setFont(self.font)
+    love.graphics.setColor(0, 0, 0, 1)
     reflowprint(self.dt/self.t, self.text, self.x, self.y, self.w, self.align)
     love.graphics.setColor(1, 1, 1, 1)
 
