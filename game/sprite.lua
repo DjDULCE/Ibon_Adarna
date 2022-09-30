@@ -94,6 +94,14 @@ function Sprite:new(opts)
     end
 end
 
+function Sprite:add_collider(tbl)
+    self.collider = tbl
+    local x = self.collider.x or self.x
+    local y = self.collider.y or self.y
+    self.vpos = vec2(x, y)
+    self.vsize = vec2(self.collider.w * 0.5, self.collider.h * 0.5)
+end
+
 function Sprite:on_player_move_x(dir, dt)
     local x, y, w, h = self.quad:getViewport()
     local rw, rh = self.quad:getTextureDimensions()

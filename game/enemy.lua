@@ -16,6 +16,7 @@ local translation = {
     serpent = "Sepentye",
     crow = "Uwak",
     lion = "Leon",
+    salermo = "Haring Salermo",
 }
 
 function Enemy:new(name, opts, images)

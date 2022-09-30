@@ -7,6 +7,7 @@ local objects = {
     { "ermitanyo" },
     { "don_diego", "don_pedro" },
     { "eagle", },
+    { "salermo", "maria", },
 }
 
 local player_initial_pos
@@ -21,6 +22,7 @@ function Scene:new(index)
     self.sources = Assets.load_sources(id)
     self.controls = Controls()
     self.alpha = 0
+    self.alpha2 = 0
 
     self.objects = {}
     self.orders = {"platform"}
@@ -43,6 +45,7 @@ function Scene:new(index)
         {WW * 0.3, -1},
         {WW * 0.1, -1},
         {WW * 0.55, 1},
+        {WW * 0.3, -1},
     }
 end
 
@@ -169,6 +172,35 @@ function Scene:load()
             }
         })
         self.looking_npc = self.objects.eagle
+    elseif self.index == 5 then
+        local sw, sh = self.images.salermo:getDimensions()
+        self.objects.salermo = Sprite({
+            image = self.images.salermo,
+            x = WW * 0.65,
+            y = self.objects.platform.y - sh * 0.5,
+            sx = 1, sy = 1,
+            ox = sw * 0.5, oy = sh * 0.5,
+            force_non_interactive = true,
+            is_clickable = false, is_hoverable = false,
+            collider = {
+                w = 26,
+                h = 63,
+                origin = "center"
+            }
+        })
+        local mw, mh = self.images.maria:getDimensions()
+        self.objects.maria = Sprite({
+            image = self.images.maria,
+            x = WW * 0.7,
+            y = self.objects.platform.y - mh * 0.5,
+            sx = 1, sy = 1,
+            ox = mw * 0.5, oy = mh * 0.5,
+            force_non_interactive = true,
+            is_clickable = false, is_hoverable = false,
+        })
+
+        self.looking_npc = self.objects.salermo
+        self.looking_npc2 = self.objects.maria
     end
 
     local px, dir = unpack(player_initial_pos[self.index])
@@ -178,10 +210,15 @@ function Scene:load()
 end
 
 function Scene:on_dialogue_show()
-    self.player.can_move = false
+    if self.index == 5 and self.objects.maria then
+        self.player.can_move = true
+    else
+        self.player.can_move = false
+    end
 end
 
 function Scene:on_dialogue_end(obj_dialogue)
+    print("on_dialogue_end", self.index, obj_dialogue.id)
     if self.index == 3 and obj_dialogue.id == "scene3" then
         self.dialogue = Dialogue({
             id = "scene" .. self.index .. "b",
@@ -195,12 +232,83 @@ function Scene:on_dialogue_end(obj_dialogue)
         self.controls.enabled = true
         Events.emit("on_dialogue_show", self.dialogue)
         return
+    elseif self.index == 5 then
+        if obj_dialogue.id == "scene5" then
+            self.player.x = WW * 0.45
+            self.dialogue = Dialogue({
+                id = "scene" .. self.index .. "b",
+                font = Assets.fonts.impact24,
+                data = require("data.scene" .. self.index .. "b"),
+                align = "center",
+                repeating = false,
+                enabled = false,
+                simple = true,
+            })
+            self.alpha2 = 1
+            self.controls.enabled = true
+            Events.emit("on_dialogue_show", self.dialogue)
+            return
+        elseif obj_dialogue.id == "scene5b" then
+            local sx = self.objects.salermo.x
+            self.objects.salermo.x = self.objects.maria.x
+            self.objects.maria.x = sx
+            self.objects.salermo.collider = nil
+            self.objects.maria:add_collider({
+                w = 29,
+                h = 48,
+                origin = "center"
+            })
+
+            self.dialogue = Dialogue({
+                id = "scene" .. self.index .. "c",
+                font = Assets.fonts.impact24,
+                data = require("data.scene" .. self.index .. "c"),
+                align = "center",
+                repeating = false,
+                enabled = false,
+            })
+            self.objects.maria.dialogue = self.dialogue
+            self.alpha2 = 0
+            self.player.can_move = true
+            self.controls.enabled = true
+            return
+        elseif obj_dialogue.id == "scene5c" then
+            self.objects.maria = nil
+            self.dialogue = Dialogue({
+                id = "scene" .. self.index .. "d",
+                font = Assets.fonts.impact24,
+                data = require("data.scene" .. self.index .. "d"),
+                align = "center",
+                repeating = false,
+                enabled = false,
+                simple = true,
+            })
+            self.alpha2 = 1
+            self.player.can_move = false
+            self.controls.enabled = true
+            Events.emit("on_dialogue_show", self.dialogue)
+            return
+        elseif obj_dialogue.id == "scene5d" then
+            self.alpha = 1
+            self.player.can_move = false
+            self.controls.enabled = false
+            self.controls.should_draw = false
+            Events.emit("fadeout", 3, function()
+                self.alpha = 1
+                Events.emit("fadein", 1, function()
+                    local game = require("game")
+                    StateManager:switch(game, self.index)
+                end)
+            end)
+            return
+        end
     end
 
+    self.player.can_move = false
     self.controls.enabled = false
     self.controls.should_draw = false
-    self.alpha = 1
     Events.emit("fadeout", 3, function()
+        self.alpha = 1
         Events.emit("fadein", 1, function()
             local game = require("game")
             StateManager:switch(game, self.index)
@@ -217,6 +325,9 @@ function Scene:update(dt)
     local looking_npc = self.looking_npc
     if looking_npc then looking_npc.sx = (self.player.x < looking_npc.x) and -1 or 1 end
 
+    local looking_npc2 = self.looking_npc2
+    if looking_npc2 then looking_npc2.sx = (self.player.x < looking_npc2.x) and -1 or 1 end
+
     self.dialogue:update(dt)
 end
 
@@ -230,7 +341,13 @@ function Scene:draw()
     iter_objects(self.orders, self.objects, "draw")
 
     self.player:draw()
+
+    love.graphics.setColor(0, 0, 0, self.alpha2)
+    love.graphics.rectangle("fill", 0, 0, WW, WH)
+    love.graphics.setColor(1, 1, 1, 1)
+
     self.dialogue:draw()
+
     self.controls:draw()
 
     love.graphics.setColor(0, 0, 0, self.alpha)

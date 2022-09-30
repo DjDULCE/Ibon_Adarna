@@ -7,12 +7,14 @@ local enemies = {
     { "boar", "eagle", "snake", "adarna" },
     { "spider", "bat", "giant", "serpent" },
     { "crow", "lion", "snake", "boar" },
+    { "wolf", "eagle", "snake", "salermo" },
 }
 local additional_objs = {
     {},
     { "don_pedro", "don_diego", "ermitanyo", "statue1", "statue2", "tree", },
     { "juana", "leonora", },
-    { "maria", }
+    { "maria", },
+    { "maria", "salermo2", },
 }
 
 local choices = { "a", "b", "c" }
@@ -34,6 +36,10 @@ local tasks = {
     {
         "Talunin lahat ng kalaban",
         "Tagpuin ang si Prinsesa Maria",
+    },
+    {
+        "Talunin lahat ng kalaban",
+        "Talunin si Haring Salermo",
     },
 }
 
@@ -409,6 +415,12 @@ function Game:on_dialogue_end(obj_dialogue)
         self.other_dialogue = nil
         self:goto_next("scene")
         return
+    elseif self.index == 5 then
+        self.player.can_move = false
+        self.controls.should_draw = false
+        self.other_dialogue = nil
+        self:goto_next("scenario")
+        return
     end
 
     if self.index == 1 then
@@ -743,6 +755,52 @@ function Game:post_battle(enemy_name)
         self.player.can_move = true
         self.player.fake_move2 = true
         self.player.show_health = true
+    elseif enemy_name == "salermo" then
+        self.player.can_move = false
+        self.player.fake_move2 = false
+        self.player.show_health = false
+        self.fade_timer = timer(1,
+            function(progress)
+                self.fade_alpha = progress
+            end,
+            function()
+                local ow, oh = self.images.maria:getDimensions()
+                local osx, osy = -1, 1
+                self.objects.maria = Sprite({
+                    image = self.images.maria,
+                    x = WW * 0.5,
+                    y = WH - self.objects.platform.height - oh * osy * 0.5,
+                    ox = ow * 0.5, oy = oh * 0.5,
+                    sx = osx, sy = osy,
+                    is_hoverable = false, is_clickable = false,
+                    force_non_interactive = true,
+                })
+
+                local sw, sh = self.images.salermo:getDimensions()
+                local ssx, ssy = 1, 1
+                self.objects.salermo2 = Sprite({
+                    image = self.images.salermo,
+                    x = WW * 0.75,
+                    y = WH - self.objects.platform.height - sh * ssy * 0.5,
+                    ox = sw * 0.5, oy = sh * 0.5,
+                    sx = ssx, sy = ssy,
+                    is_hoverable = false, is_clickable = false,
+                    force_non_interactive = true,
+                })
+
+                self.player.x = WW * 0.6
+
+                self.fade_timer = timer(1,
+                    function(progress)
+                        self.fade_alpha = 1 - progress
+                    end,
+                    function()
+                        self.fade_timer = nil
+                        Events.emit("on_dialogue_show", self.dialogue)
+                    end
+                )
+            end
+        )
     end
 end
 

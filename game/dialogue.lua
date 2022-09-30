@@ -14,6 +14,7 @@ local mapping = {
     ["Serpyente"] = "serpent",
     ["Agila"] = "eagle",
     ["Prinsesa Maria"] = "maria",
+    ["Haring Salermo"] = "salermo",
 }
 
 function Dialogue:new(opt)
