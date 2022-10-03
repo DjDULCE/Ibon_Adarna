@@ -16,7 +16,7 @@ function love.conf(t)
 	t.modules.thread = true
 	t.modules.timer = true
 	t.modules.touch = true
-	t.modules.video = false
+	t.modules.video = true
 	t.modules.window = true
 
 	t.window.width = 960

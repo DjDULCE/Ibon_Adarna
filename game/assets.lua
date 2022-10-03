@@ -4,6 +4,7 @@ local Assets = {
 
 local ASSETS_PATH = "assets/"
 local SOURCES_PATH = ASSETS_PATH .. "sources/"
+local VIDEOS_PATH = ASSETS_PATH .. "videos/"
 local IMPACT_PATH = ASSETS_PATH .. "impact.ttf"
 local font_sizes = {18, 20, 24, 28, 32}
 
@@ -35,6 +36,11 @@ function Assets.load_sources(id)
         sources[key] = love.audio.newSource(path .. filename, "stream")
     end
     return sources
+end
+
+function Assets.load_video(id)
+    print("loading video", id)
+    return love.graphics.newVideo(VIDEOS_PATH .. id .. ".ogv")
 end
 
 return Assets
