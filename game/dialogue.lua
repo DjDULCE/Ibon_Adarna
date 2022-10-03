@@ -73,6 +73,7 @@ function Dialogue:show()
     local data = self.data[self.current]
     if not data then
         self.enabled = false
+        self.current_name = nil
         Events.emit("on_dialogue_end", self)
 
         if self.repeating then
@@ -81,6 +82,8 @@ function Dialogue:show()
         end
         return
     end
+
+    self.current_name = data.name
 
     self.text_index = self.text_index + 1
     if self.text_index > #data then
@@ -91,7 +94,10 @@ function Dialogue:show()
     end
 
     local next_text = data[self.text_index]
-    if not next_text then return end
+    if not next_text then
+        self.current_name = nil
+        return
+    end
 
     self.text = next_text
     self.dt = 0
@@ -151,7 +157,15 @@ function Dialogue:draw()
 
     love.graphics.setFont(self.font)
     love.graphics.setColor(0, 0, 0, 1)
-    reflowprint(self.dt/self.t, self.text, self.x, self.y, self.w, self.align)
+
+    local y = self.y
+
+    if self.current_name then
+        love.graphics.print(self.current_name .. ":", self.x, y)
+        y = self.y + self.font:getHeight() * 1.25
+    end
+
+    reflowprint(self.dt/self.t, self.text, self.x, y, self.w, self.align)
     love.graphics.setColor(1, 1, 1, 1)
 
     love.graphics.setColor(1, 0, 0, 1)
