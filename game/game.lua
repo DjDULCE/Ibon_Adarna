@@ -389,6 +389,7 @@ function Game:on_dialogue_end(obj_dialogue)
                     function(progress)
                         obj_juana.x = mathx.lerp(orig_x, -64, progress)
                         self.player.x = mathx.lerp(orig_px, WW * 0.2, progress)
+                        self.player.notif.alpha = 0
                         self.player.anim:resume()
                         self.player.anim:update(love.timer.getDelta())
                     end,
@@ -583,7 +584,7 @@ function Game:show_enemy(enemy_name)
 
     if enemy_name == "adarna" then
         local obj_tree = self.objects.tree
-        local tx = WW * 0.75
+        local tx = WW * 0.7
         local orig_x = obj_tree.x
         self.tree_timer = timer(1,
             function(tree_progress)
@@ -625,7 +626,7 @@ function Game:show_other(name)
         }
     })
 
-    local tx = WW * 0.8
+    local tx = WW * 0.85
     local orig_x = self.objects[name].x
     self.show_timer = timer(1,
         function(progress)
