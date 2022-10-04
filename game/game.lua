@@ -132,7 +132,7 @@ end
 
 function Game:load()
     self.sources.bgm:play()
-    self.sources.bgm:setLooping(false)
+    self.sources.bgm:setLooping(true)
 
     local bgw, bgh = self.images.bg:getDimensions()
     self.objects.bg = Sprite({

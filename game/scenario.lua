@@ -131,6 +131,9 @@ function Scenario:update(dt)
                 if self.index == 1 or self.index == 3 then
                     local scene = require("scene")
                     StateManager:switch(scene, self.index)
+                elseif self.index == 4 or self.index == 5 then
+                    local game = require("game")
+                    StateManager:switch(game, self.index)
                 end
             end)
         end)
@@ -148,9 +151,9 @@ end
 
 function Scenario:mousepressed(mx, my, mb)
     -- if mb == 1 then self:next_slide() end
-    -- if mb == 1 then
+    -- if DEV and mb == 1 then
     --     self.video:seek(2 * 60 + 10)
-    --     self.video:getSource():seek(2 * 60 + 10)
+    --     self.video:getSource():seek(1 * 60 + 54)
     -- end
 end
 
