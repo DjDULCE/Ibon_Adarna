@@ -9,6 +9,7 @@ local UserData = {
         difficulty = 1,
         stage = 1,
         life = 10,
+        last_id = nil,
     },
 }
 

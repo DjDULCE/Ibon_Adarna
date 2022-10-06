@@ -9,6 +9,8 @@ function StateManager:switch(next_state, ...)
 
     self.current = next_state(...)
     print("Switched to", self.current:type())
+    UserData.data.last_id = self.current:type()
+    UserData:save()
     self.current:load(...)
 end
 

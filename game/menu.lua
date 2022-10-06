@@ -169,6 +169,7 @@ function Menu:load()
                             UserData:save()
 
                             update_group(self.group_controls, 0, false)
+                            UserData.data.stage = 1
                             UserData.data.life = 10
                             UserData:save()
                             local Scenario = require("scenario")
@@ -360,6 +361,14 @@ function Menu:load()
     self.objects.btn_magumpisa.on_clicked = function()
         update_group(self.group_main, 0, false)
         update_group(self.group_start, 1, true)
+    end
+
+    self.objects.btn_magpatuloy.on_clicked = function()
+        local last = UserData.data.last_id
+        if last then
+            local n = require(last)
+            StateManager:switch(n, UserData.data.stage)
+        end
     end
 
     self.objects.btn_back.on_clicked = function()
