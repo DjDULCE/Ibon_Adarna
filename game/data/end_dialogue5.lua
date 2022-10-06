@@ -7,11 +7,12 @@ return {
     {
         name = "Prinsesa Maria",
         side = "left",
-		"Hindi, Ama! Magulang man kita ngunit mahal ko si Juan. Ako sana’y patawarin.",
+		"Hindi, Ama! Magulang man kita ngunit mahal ko si Juan. Ako sana'y patawarin.",
     },
 	{
 		name = "Haring Salermo",
 		side = "right",
-        "Maria!!! ISusumpa kita! Ang iyong minamahal na si Don Juan ay tiyak na malilimutan ka kapag dumating na siya sa Berbanya! Siya’y ikakasal unang babaing kanyang makikita sa kaharian ng Berbanya at ikaw ay habambuhay na mag-iisa!!",
+        "Maria!!! Isusumpa kita! Ang iyong minamahal na si Don Juan ay tiyak na malilimutan ka kapag dumating na siya sa Berbanya!",
+		"Siya'y ikakasal unang babaing kanyang makikita sa kaharian ng Berbanya at ikaw ay habambuhay na mag-iisa!!",
     },
 }

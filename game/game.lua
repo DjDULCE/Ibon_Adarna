@@ -413,7 +413,6 @@ function Game:on_dialogue_end(obj_dialogue)
         end
     elseif self.index == 4 then
         self.player.can_move = false
-        self.controls.should_draw = false
         self.other_dialogue = nil
         self:goto_next("scene")
         return
