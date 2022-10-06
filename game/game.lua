@@ -662,7 +662,18 @@ function Game:start_battle(obj_enemy)
     local obj_question = self.objects.question_bg
     obj_question.alpha = 1
 
-    local data = require("data." .. obj_enemy.name)
+    local suffix = ""
+    if UserData.data.difficulty == 1 then
+        suffix = "easy"
+    elseif UserData.data.difficulty == 2 then
+        suffix = "medium"
+    elseif UserData.data.difficulty == 3 then
+        suffix = "hard"
+    end
+
+    local id = string.format("data.game%d.%s.%s", self.index, suffix, obj_enemy.name)
+    print("loaded question: ", id)
+    local data = require(id)
     local question = tablex.pick_random(data)
     local w, h = obj_question.image:getDimensions()
     obj_question.text = question.question

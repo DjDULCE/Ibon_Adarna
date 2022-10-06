@@ -2,9 +2,9 @@ return {
 	{
 		question = "Ano ang binilin ng Ermitanyo bago umalis si Don Juan?",
 		answer = "a",
-		a = "Wag maging bato",
-		b = "Hanapin ang Ibong Adarna",
-		c = "Hanapin ang magkapatid",
+		a = "Mag ingat upang hind maging bato",
+		b = "Umalis ka na at hanapin mo ang Ibong Adarna",
+		c = "Wag kang susuko sa paghanap ng Ibong Adarna",
 	},
 	{
 		question = "Ano ang tinutukoy ng Ermitanyo na madadaanan ni Don Juan",
@@ -16,7 +16,7 @@ return {
 	{
 		question = "Ano ang inilarawan ng Ermitanyo sa puno?",
 		answer = "a",
-		a = "Kawili wiling tignan",
+		a = Kawili wiling tignan",
 		b = "Malaki ito",
 		c = "May bunga ito",
 	},

@@ -15,7 +15,7 @@ return {
 	},
 	{
 		question = "Sino ang binuhusan ni Don Juan matapos mahuli ang Ibon?",
-		answer = "b",
+		answer = "a",
 		a = "Ermitanyo",
 		b = "Don Pedro at Don Diego",
 		c = "Ibong Adarna",

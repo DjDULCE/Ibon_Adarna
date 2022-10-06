@@ -31,7 +31,7 @@ return {
 		question = "Ano ang kailangan sa ibong upang mapagaling si Haring Fernando?",
 		answer = "a",
 		a = "Awit ng Ibong Adarna",
-		b = "Dugo ng Ibong Adarna",
+		b = "Dugo ng Ibong Adarna ",
 		c = "Tuka ng Ibong Adarna",
 	},
 }

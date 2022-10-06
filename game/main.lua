@@ -33,13 +33,6 @@ function iter_objects(tbl_orders, tbl_objects, fn, ...)
 end
 
 function love.load()
-	if DEV then
-		local files = love.filesystem.getDirectoryItems("data/")
-		for _, filename in ipairs(files) do
-			print(filename, require("data." .. filename:sub(0, -5)))
-		end
-	end
-
 	FADE = Fade()
 	UserData:init()
 	Assets.init()
@@ -47,8 +40,8 @@ function love.load()
 
 	StateManager.current = require("menu")()
 	-- StateManager.current = require("scenario")(4)
-	-- StateManager.current = require("scene")(4)
-	-- StateManager.current = require("game")(4)
+	-- StateManager.current = require("scene")(5)
+	-- StateManager.current = require("game")(1)
 	StateManager:load()
 end
 
