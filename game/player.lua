@@ -21,6 +21,7 @@ function Player:new(x, y)
     self.damage = DEV and 100 or damages[difficulty]
     self.fake_move = false
     self.fake_move2 = false
+    self.on_talk = false
 
     self.cur_anim = "walk"
 
@@ -61,7 +62,6 @@ function Player:new(x, y)
     Events.register(self, "on_down_left")
     Events.register(self, "on_down_right")
     Events.register(self, "on_clicked_a")
-    Events.register(self, "on_clicked_b")
     Events.register(self, "on_collide")
     Events.register(self, "on_remove_collide")
     Events.register(self, "start_battle")
@@ -69,6 +69,7 @@ function Player:new(x, y)
     Events.register(self, "start_attack")
     Events.register(self, "end_attack")
     Events.register(self, "damage_player")
+    Events.register(self, "on_dialogue_end")
 end
 
 function Player:damage_player(damage)
@@ -159,10 +160,13 @@ end
 
 function Player:on_clicked_a()
     if not self.ref_other then return end
+    if self.on_talk then return end
     Events.emit("on_dialogue_show", self.ref_other.dialogue)
+    self.on_talk = true
 end
 
-function Player:on_clicked_b()
+function Player:on_dialogue_end()
+    if self.on_talk then self.on_talk = false end
 end
 
 function Player:on_collide(other)
