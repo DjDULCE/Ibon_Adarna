@@ -28,12 +28,15 @@ function Menu:new()
     local id = self:type()
     self.images = Assets.load_images(id)
     self.images_control = Assets.load_images("controls")
+    self.ui = Assets.load_images("ui")
+    self.faces = Assets.load_images("faces")
     self.sources = Assets.load_sources("menu")
 
     self.objects = {}
     self.orders = {
         "box_title", "ibong_adarna", "title",
         "btn_gear", "btn_trophy", "btn_credits",
+        "box_bg", "denice", "jayson", "veronica",
         "menu_box", "box_settings", "btn_start", "btn_back",
         "box_settings_controls1", "box_settings_controls2",
         "btn_music_left", "btn_music_right",
@@ -208,6 +211,72 @@ function Menu:load()
         is_hoverable = false, is_clickable = false,
     })
 
+    local font2 = Assets.fonts.impact18
+    local bw, bh = self.ui.box_bg:getDimensions()
+    local bsx = (WW * 0.6)/bw
+    local bsy = (WH * 0.8)/bh
+    self.objects.box_bg = Sprite({
+        image = self.ui.box_bg,
+        x = HALF_WW, y = HALF_WH,
+        sx = bsx, sy = bsy,
+        ox = bw * 0.5, oy = bh * 0.5,
+        alpha = 0,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+    })
+
+    local dw, dh = self.faces.player:getDimensions()
+    local ds = 0.5
+    self.objects.denice = Sprite({
+        image = self.faces.player,
+        x = HALF_WW - bw * bsx * 0.5 + 64,
+        y = HALF_WH - bh * bsy * 0.5 + 32 + font:getHeight() * 2 + dh * ds * 0.5,
+        sx = ds, sy = ds,
+        ox = dw * 0.5, oy = dh * 0.5,
+        alpha = 0,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+        text = "Denice Justine Dulce",
+        text_color = text_color,
+        font = font2,
+        tx = HALF_WW - bw * bsx * 0.5 + 64 + dw * ds * 0.5 + 16,
+        toy = font2:getHeight() * 0.5,
+    })
+
+    local jw, jh = self.faces.diego:getDimensions()
+    self.objects.jayson = Sprite({
+        image = self.faces.diego,
+        x = HALF_WW - bw * bsx * 0.5 + 64,
+        y = self.objects.denice.y + dh * ds * 0.5 + jh * ds * 0.5 + 16,
+        sx = ds, sy = ds,
+        ox = jw * 0.5, oy = jh * 0.5,
+        alpha = 0,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+        text = "Jayson R. Pontigon",
+        text_color = text_color,
+        font = font2,
+        tx = HALF_WW - bw * bsx * 0.5 + 64 + jw * ds * 0.5 + 16,
+        toy = font2:getHeight() * 0.5,
+    })
+
+    local vw, vh = self.faces.juana:getDimensions()
+    self.objects.veronica = Sprite({
+        image = self.faces.juana,
+        x = HALF_WW + 64,
+        y = self.objects.denice.y,
+        sx = ds, sy = ds,
+        ox = vw * 0.5, oy = vh * 0.5,
+        alpha = 0,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+        text = "Veronica Balasta",
+        text_color = text_color,
+        font = font2,
+        tx = HALF_WW + 64 + vw * ds * 0.5 + 16,
+        toy = font2:getHeight() * 0.5,
+    })
+
     local back_y = bb_h * bb_sy * 0.5 + pad
     self.objects.btn_back = Sprite({
         image = self.images.box_button,
@@ -238,6 +307,12 @@ function Menu:load()
         self.objects.ibong_adarna,
         self.objects.btn_back,
     }
+    self.group_credits = {
+        self.objects.box_bg,
+        self.objects.denice,
+        self.objects.jayson,
+        self.objects.veronica,
+    }
     for i, opt in ipairs(options) do
         local key = "btn_" .. string.lower(opt)
         if i <= 3 then
@@ -253,13 +328,14 @@ function Menu:load()
         self.objects.btn_start.is_clickable = false
         self.objects.btn_start.is_hoverable = false
 
-        self.timer = timer(1.25,
+        local bird = self.objects.ibong_adarna
+        local ox, oy = bird.x, bird.y
+        self.timer = timer(0.75,
             function(progress)
-                local bird = self.objects.ibong_adarna
                 local box_title = self.objects.box_title
                 local title = self.objects.title
-                bird.x = mathx.lerp(bird.x, bird.target_x, progress)
-                bird.y = mathx.lerp(bird.y, bird.target_y, progress)
+                bird.x = mathx.lerp(ox, bird.target_x, progress)
+                bird.y = mathx.lerp(oy, bird.target_y, progress)
                 box_title.y = mathx.lerp(box_title.y, box_title.target_y, progress)
                 title.y = box_title.y
             end,
@@ -288,7 +364,17 @@ function Menu:load()
 
     self.objects.btn_back.on_clicked = function()
         update_group(self.group_start, 0, false)
+        update_group(self.group_credits, 0, false)
         update_group(self.group_main, 1, true)
+    end
+
+    self.objects.btn_credits.on_clicked = function()
+        update_group(self.group_start, 0, false)
+        update_group(self.group_main, 0, false)
+        update_group(self.group_credits, 1, true)
+        self.objects.btn_back.alpha = 1
+        self.objects.btn_back.is_clickable = true
+        self.objects.btn_back.is_hoverable = true
     end
 
     self:setup_settings()
@@ -713,6 +799,44 @@ function Menu:draw()
     end
 
     iter_objects(self.orders, self.objects, "draw")
+
+    local bb = self.objects.box_bg
+    if bb.alpha == 1 then
+        local font = Assets.fonts.impact18
+        local bw, bh = self.ui.box_bg:getDimensions()
+        love.graphics.setFont(font)
+        love.graphics.setColor(0, 0, 0, 1)
+
+        love.graphics.print(
+            "Developed By:",
+            bb.x - bw * bb.sx * 0.5 + 32,
+            bb.y - bh * bb.sy * 0.5 + 32
+        )
+        love.graphics.print(
+            "Voice over By:",
+            bb.x + bw * bb.sx * 0.5 - 64,
+            bb.y - bh * bb.sy * 0.5 + 32,
+            0, 1, 1,
+            font:getWidth("Voice over By:")
+        )
+
+        local j = self.objects.jayson
+        local jh = self.faces.diego:getHeight()
+        love.graphics.print(
+            "Dialog scripts By:\n- Jhulie_nyx",
+            bb.x - bw * bb.sx * 0.5 + 32,
+            j.y + jh * j.sy * 0.5 + 32
+        )
+
+        local vw = self.faces.juana:getWidth()
+        love.graphics.print(
+            "Music By:\n- Always music\n- Orchestral\n- Dag reinhott",
+            HALF_WW + vw * 0.5 * 0.5 + 16,
+            j.y + jh * j.sy * 0.5 + 16
+        )
+    end
+
+
     love.graphics.setColor(1, 1, 1, 1)
 end
 
