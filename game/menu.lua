@@ -28,6 +28,7 @@ function Menu:new()
     local id = self:type()
     self.images = Assets.load_images(id)
     self.images_control = Assets.load_images("controls")
+    self.sources = Assets.load_sources("menu")
 
     self.objects = {}
     self.orders = {
@@ -54,6 +55,8 @@ function Menu:new()
 end
 
 function Menu:load()
+    self.sources.bgm:play()
+    self.sources.bgm:setLooping(true)
     local box_title_sx, box_title_sy = 1.75, 1
     local box_title_w, box_title_h = self.images.box_title:getDimensions()
 
@@ -740,6 +743,7 @@ function Menu:mousefocus(focus)
 end
 
 function Menu:exit()
+    self.sources.bgm:stop()
 end
 
 return Menu
