@@ -129,6 +129,10 @@ function Dialogue:show()
         self.x = self.bg.x - self.bg.ox + fw * 0.5 + padding
         self.fx = self.x + self.w + fw * 0.5 + padding
         self.fsx = -1
+
+        if face == "serpent" then
+            self.fsx = 1
+        end
     end
 end
 

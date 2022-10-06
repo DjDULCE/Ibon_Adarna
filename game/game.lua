@@ -30,7 +30,7 @@ local tasks = {
         "Tagpuin at talunin ang Ibong Adarna",
     },
     {
-        "Talunin lahat ng kalaban, Higante at ang Serpyente",
+        "Talunin ang Higante at Serpyente",
         "Tagpuin ang dalawang prinsesa",
     },
     {
