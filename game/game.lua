@@ -680,32 +680,38 @@ function Game:start_battle(obj_enemy)
     obj_question.tx = obj_question.x - w * obj_question.sx * 0.5
     obj_question.ty = obj_question.y - h * obj_question.sy * 0.5 + 16
 
+
     local font = Assets.fonts.impact18
-    local offset = font:getWidth(" ") * 0.5
     local img_choice = self.ui.btn_choice
     local icw, ich = img_choice:getDimensions()
     local choice_scale = 0.5
-    local bx = obj_question.x - w * obj_question.sx * 0.5 + 48 + icw * choice_scale * 0.5
-    local last_str = ""
-    for i, letter in ipairs(choices) do
+
+    local total = icw * choice_scale * #choices + 8 * #choices
+    for _, letter in ipairs(choices) do
+        total = total + font:getWidth(question[letter])
+    end
+    total = total/#choices
+    local bx = total + obj_question.x - w * obj_question.sx * 0.5 + icw * choice_scale * 0.5
+
+    for _, letter in ipairs(choices) do
         local key = "choice_" .. letter
-        local str2 = string.format("%s       %s", string.upper(letter), question[letter])
-        local ii = i - 1
-        local x = bx + (font:getWidth(last_str) * ii) + (64 * ii)
-        if i > 2 then x = x - 32 end
+        local text = question[letter]
+        local tx = bx + icw * choice_scale * 0.5 + 8
+
         self.objects[key] = Sprite({
             image = img_choice,
-            x = x, y = obj_question.y + h * obj_question.sy * 0.5 - 48,
+            x = bx, y = obj_question.y + h * obj_question.sy * 0.5 - 48,
             ox = icw * 0.5, oy = ich * 0.5,
             sx = choice_scale, sy = choice_scale,
             font = font,
-            text = str2,
-            tx = x - offset * 2,
+            text = text,
+            tx = tx,
             toy = font:getHeight() * 0.5,
             text_color = { 0, 0, 0 },
-            collision_include_text = true,
+            collision_include_text = false,
         })
-        last_str = str2
+
+        bx = tx + font:getWidth(text) + icw * choice_scale
 
         self.objects[key].on_clicked = function()
             print("Answered", letter, question.answer == letter)
@@ -901,7 +907,7 @@ function Game:draw()
     local obj_bb = self.objects.box_bg
     local skip_player = false
     if obj_bb.alpha == 1 then
-        local bbw, bbh = self.ui.box_bg:getDimensions()
+        local bbw = self.ui.box_bg:getWidth()
         if self.player.x >= (obj_bb.x - bbw * 0.5 * obj_bb.sx) and
             self.player.x <= (obj_bb.x + bbw * 0.5 * obj_bb.sx) then
             skip_player = true
