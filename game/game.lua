@@ -128,6 +128,7 @@ function Game:new(index)
     Events.register(self, "display_damage")
     Events.register(self, "finished_turn")
     Events.register(self, "on_dialogue_end")
+    Events.register(self, "on_game_over")
 end
 
 function Game:load()
@@ -841,6 +842,18 @@ function Game:display_damage(obj, damage)
         end)
 end
 
+function Game:on_game_over()
+    self.controls.enabled = false
+    self.fade_alpha = 1
+    self.gameover = true
+    self.gameover_timer = timer(1.25, nil,
+        function()
+            local menu = require("menu")
+            StateManager:switch(menu)
+        end
+    )
+end
+
 function Game:update(dt)
     if self.hurt_timer then self.hurt_timer:update(dt) end
     self.controls:update(dt)
@@ -858,6 +871,7 @@ function Game:update(dt)
     if self.fade_timer then self.fade_timer:update(dt) end
     if self.show_timer then self.show_timer:update(dt) end
     if self.player_go_timer then self.player_go_timer:update(dt) end
+    if self.gameover_timer then self.gameover_timer:update(dt) end
 
     local obj_juana = self.objects.juana
     if obj_juana and not obj_juana.not_look then
@@ -898,6 +912,18 @@ function Game:draw()
     if self.prologue then self.prologue:draw() end
     self.controls:draw()
     love.graphics.setColor(1, 1, 1, 1)
+
+    if self.gameover then
+        local font = Assets.fonts.impact32
+        love.graphics.setFont(font)
+        love.graphics.print(
+            "IKAW AY NATALO",
+            HALF_WW, HALF_WH,
+            0, 2, 2,
+            font:getWidth("IKAW AY NATALO") * 0.5,
+            font:getHeight() * 0.5
+        )
+    end
 
     love.graphics.setColor(self.damage_text.color)
     love.graphics.setFont(self.damage_text.font)

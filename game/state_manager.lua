@@ -7,10 +7,16 @@ function StateManager:switch(next_state, ...)
         self.current:exit()
     end
 
+    local t = self.current:type()
+
     self.current = next_state(...)
-    print("Switched to", self.current:type())
-    UserData.data.last_id = self.current:type()
-    UserData:save()
+
+    print("Switched to", t)
+    if t ~= "menu" then
+        UserData.data.last_id = self.current:type()
+        UserData:save()
+    end
+
     self.current:load(...)
 end
 

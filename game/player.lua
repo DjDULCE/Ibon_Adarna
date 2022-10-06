@@ -77,7 +77,7 @@ function Player:damage_player(damage)
     self.health = self.health - damage
 
     if self.health <= 0 then
-        error("Game Over")
+        Events.emit("on_game_over")
     end
 end
 
@@ -194,6 +194,7 @@ function Player:on_remove_collide()
 end
 
 function Player:update(dt, ground_height)
+    if self.health <= 0 then return end
     if self.timer_attack then self.timer_attack:update(dt) end
     self.y = self.y + self.gravity * dt
     self.vpos.y = self.y
