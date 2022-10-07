@@ -82,10 +82,10 @@ function Enemy:damage_enemy(damage)
             score_inc = 4
             max_score = 80
         end
-        local d = UserData.data[difficulty]
-        d.score = d.score + score_inc
-        if d.score > max_score then
-            d.score = max_score
+        local d = UserData.data.score
+        d[difficulty] = d[difficulty] + score_inc
+        if d[difficulty] > max_score then
+            d[difficulty] = max_score
         end
         UserData:save()
     end
