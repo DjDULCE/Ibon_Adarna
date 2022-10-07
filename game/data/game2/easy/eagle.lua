@@ -16,7 +16,7 @@ return {
 	{
 		question = "Ano ang inilarawan ng Ermitanyo sa puno?",
 		answer = "a",
-		a = Kawili wiling tignan",
+		a = "Kawili wiling tignan",
 		b = "Malaki ito",
 		c = "May bunga ito",
 	},

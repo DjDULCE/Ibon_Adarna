@@ -33,6 +33,26 @@ function iter_objects(tbl_orders, tbl_objects, fn, ...)
 end
 
 function love.load()
+	if DEV then
+		local files = love.filesystem.getDirectoryItems("data/")
+		for _, filename in ipairs(files) do
+			if love.filesystem.getInfo("data/" .. filename).type == "file" then
+				print(filename, require("data." .. filename:sub(0, -5)))
+			end
+		end
+
+		local dif = {"easy", "medium", "hard"}
+		for i = 1, 5 do
+			for _, v in ipairs(dif) do
+				local qf = love.filesystem.getDirectoryItems("data/game" .. i .. "/" .. v)
+				for _, filename in ipairs(qf) do
+					local str = string.format("data.game%d.%s.%s", i, v, filename:sub(0, -5))
+					print("testing question files:", filename, require(str))
+				end
+			end
+		end
+	end
+
 	FADE = Fade()
 	UserData:init()
 	Assets.init()

@@ -686,11 +686,12 @@ function Game:start_battle(obj_enemy)
     local icw, ich = img_choice:getDimensions()
     local choice_scale = 0.5
 
-    local total = icw * choice_scale * #choices + 8 * #choices
-    for _, letter in ipairs(choices) do
-        total = total + font:getWidth(question[letter])
-    end
-    total = total/#choices
+    -- local total = icw * choice_scale * #choices + 8 * #choices
+    -- for _, letter in ipairs(choices) do
+    --     total = total + font:getWidth(question[letter])
+    -- end
+    -- total = total/#choices
+    local total = 64
     local bx = total + obj_question.x - w * obj_question.sx * 0.5 + icw * choice_scale * 0.5
 
     for _, letter in ipairs(choices) do
@@ -709,6 +710,7 @@ function Game:start_battle(obj_enemy)
             toy = font:getHeight() * 0.5,
             text_color = { 0, 0, 0 },
             collision_include_text = false,
+            choice_letter = letter,
         })
 
         bx = tx + font:getWidth(text) + icw * choice_scale

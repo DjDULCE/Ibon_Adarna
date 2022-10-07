@@ -66,6 +66,8 @@ function Sprite:new(opts)
     self.tsx = opts.tsx or 1
     self.tsy = opts.tsy or 1
 
+    self.choice_letter = opts.choice_letter
+
     self.is_printf = opts.is_printf
     self.limit = opts.limit
     self.align = opts.align or "left"
@@ -209,6 +211,17 @@ function Sprite:draw()
         else
             love.graphics.printf(self.text, self.tx, self.ty, self.limit, self.align,
              0, tsx, tsy, self.tox, self.toy)
+        end
+
+        if self.choice_letter then
+            love.graphics.print(
+                self.choice_letter,
+                self.x, self.y,
+                0,
+                tsx, tsy,
+                self.font:getWidth(self.choice_letter) * 0.5,
+                self.font:getHeight() * 0.5
+            )
         end
 
         if self.font then
