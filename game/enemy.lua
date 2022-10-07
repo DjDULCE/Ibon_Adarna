@@ -67,6 +67,27 @@ function Enemy:damage_enemy(damage)
                 Events.emit("post_battle", self.name)
                 self.timer_death = nil
             end)
+
+        --update score
+        local difficulty = UserData.data.difficulty
+        local score_inc = 0
+        local max_score = 0
+        if difficulty == 1 then
+            score_inc = 2
+            max_score = 40
+        elseif difficulty == 2 then
+            score_inc = 3
+            max_score = 60
+        elseif difficulty == 3 then
+            score_inc = 4
+            max_score = 80
+        end
+        local d = UserData.data[difficulty]
+        d.score = d.score + score_inc
+        if d.score > max_score then
+            d.score = max_score
+        end
+        UserData:save()
     end
 end
 
