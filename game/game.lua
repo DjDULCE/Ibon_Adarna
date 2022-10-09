@@ -2,6 +2,8 @@ local Game = class({
     name = "Game",
 })
 
+local settings_boxes = {"resume", "restart", "exit"}
+
 local enemies = {
     { "wolf", "snake", "boar", "spider" },
     { "boar", "eagle", "snake", "adarna" },
@@ -81,11 +83,17 @@ function Game:new(index)
         "bar", "icon_player",
         "question_bg", "choice_a", "choice_b", "choice_c",
         "box_bg", "box1", "box2",
+        "pause_bg", "paused_text_box", "btn_close",
+        "btn_music", "btn_sound",
     }
 
     local i = tablex.index_of(self.orders, "icon_player")
     for _, str in ipairs(enemies[self.index]) do
         table.insert(self.orders, i, "icon_" .. str)
+    end
+
+    for _, str in ipairs(settings_boxes) do
+        table.insert(self.orders, "btn_" .. str)
     end
 
     local i2 = tablex.index_of(self.orders, "platform")
@@ -165,6 +173,133 @@ function Game:load()
         text_color = { 0, 0, 0 },
     })
 
+    self.objects.pause_bg = Sprite({
+        image = self.ui.box_bg,
+        x = HALF_WW, y = HALF_WH,
+        ox = bbw * 0.5, oy = bbh * 0.5,
+        sx = bbsx, sy = bbsy,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+        alpha = 0,
+    })
+
+    local ptbw, ptbh = self.ui.paused_text_box:getDimensions()
+    self.objects.paused_text_box = Sprite({
+        image = self.ui.paused_text_box,
+        x = HALF_WW,
+        y = self.objects.pause_bg.y - bbh * bbsy * 0.5 + 32,
+        ox = ptbw * 0.5, oy = ptbh * 0.5,
+        sx = 0.6, sy = 0.6,
+        is_hoverable = false, is_clickable = false,
+        force_non_interactive = true,
+        alpha = 0,
+        font = font,
+        text = "PAUSED",
+        tox = font:getWidth("PAUSED") * 0.5,
+        toy = font:getHeight() * 0.5,
+        text_color = { 0, 0, 0 },
+    })
+
+    local cw, ch = self.ui.btn_x:getDimensions()
+    self.objects.btn_close = Sprite({
+        image = self.ui.btn_x,
+        x = self.objects.pause_bg.x + bbw * bbsx * 0.5 - 16,
+        y = self.objects.pause_bg.y - bbh * bbsy * 0.5 + 16,
+        sx = 0.2, sy = 0.2,
+        ox = cw * 0.5, oy = ch * 0.5,
+        is_hoverable = false, is_clickable = false,
+        alpha = 0,
+    })
+    self.objects.btn_close.on_clicked = function()
+        self:on_paused(false)
+    end
+
+    local mimg, simg
+    if UserData.data.music == 1 then
+        mimg = self.ui.btn_music_on
+    else
+        mimg = self.ui.btn_music_off
+    end
+
+    if UserData.data.sound == 1 then
+        simg = self.ui.btn_sound_on
+    else
+        simg = self.ui.btn_sound_off
+    end
+
+    local mw, mh = mimg:getDimensions()
+    local sw, sh = simg:getDimensions()
+    local bs = 0.8
+
+    self.objects.btn_music = Sprite({
+        image = mimg,
+        x = HALF_WW + 64,
+        y = self.objects.paused_text_box.y + ptbh * 0.5 + 32,
+        sx = bs, sy = bs,
+        ox = mw * 0.5, oy = mh * 0.5,
+        is_hoverable = false, is_clickable = false,
+        alpha = 0,
+    })
+    self.objects.btn_music.on_clicked = function()
+        UserData.data.music = UserData.data.music == 1 and 0 or 1
+        if UserData.data.music == 1 then
+            self.objects.btn_music.image = self.ui.btn_music_on
+        else
+            self.objects.btn_music.image = self.ui.btn_music_off
+        end
+        UserData:save()
+    end
+
+    self.objects.btn_sound = Sprite({
+        image = simg,
+        x = HALF_WW - 64,
+        y = self.objects.paused_text_box.y + ptbh * 0.5 + 32,
+        sx = bs, sy = bs,
+        ox = sw * 0.5, oy = sh * 0.5,
+        is_hoverable = false, is_clickable = false,
+        alpha = 0,
+    })
+    self.objects.btn_sound.on_clicked = function()
+        UserData.data.sound = UserData.data.sound == 1 and 0 or 1
+        if UserData.data.sound == 1 then
+            self.objects.btn_sound.image = self.ui.btn_sound_on
+        else
+            self.objects.btn_sound.image = self.ui.btn_sound_off
+        end
+        UserData:save()
+    end
+
+    for i, str in ipairs(settings_boxes) do
+        local key = "btn_" .. str
+        local img = self.ui[key]
+        local w, h = img:getDimensions()
+        local scale = 0.5
+        if i == #settings_boxes then
+            scale = 0.6
+        end
+        local y = self.objects.btn_sound.y + sh * bs * 0.5 + 64
+        y = y + (i - 1) * h * scale * 0.5 + 32 * (i - 1)
+
+        self.objects[key] = Sprite({
+            image = img,
+            x = HALF_WW, y = y,
+            sx = scale, sy = scale,
+            ox = w * 0.5, oy = h * 0.5,
+            is_hoverable = false, is_clickable = false,
+            alpha = 0,
+        })
+    end
+
+    self.objects.btn_resume.on_clicked = function() self:on_paused(false) end
+    self.objects.btn_restart.on_clicked = function()
+        local game = require("game")
+        StateManager:switch(game, self.index)
+    end
+    self.objects.btn_exit.on_clicked = function()
+        local menu = require("menu")
+        StateManager:switch(menu)
+    end
+
     local bw, bh = self.ui.box:getDimensions()
     local font2 = Assets.fonts.impact20
     local text2 = tasks[self.index][1]
@@ -219,6 +354,9 @@ function Game:load()
         is_hoverable = false, is_clickable = false,
         alpha = 0,
     })
+    self.objects.btn_pause.on_clicked = function()
+        self:on_paused(true)
+    end
 
     local bar_w, bar_h = self.ui.bar:getDimensions()
     local bar_sx = (WW * 0.7) / bar_w
@@ -289,6 +427,35 @@ function Game:load()
     self.player.fake_move = true
 
     Events.register(self, "on_player_move_x")
+end
+
+function Game:on_paused(bool)
+    local a = bool == true and 1 or 0
+    self.objects.pause_bg.alpha = a
+    self.objects.paused_text_box.alpha = a
+    self.objects.btn_close.alpha = a
+    self.objects.btn_close.is_hoverable = bool
+    self.objects.btn_close.is_clickable = bool
+    self.objects.btn_music.alpha = a
+    self.objects.btn_music.is_hoverable = bool
+    self.objects.btn_music.is_clickable = bool
+    self.objects.btn_sound.alpha = a
+    self.objects.btn_sound.is_hoverable = bool
+    self.objects.btn_sound.is_clickable = bool
+    for _, str in ipairs(settings_boxes) do
+        local key = "btn_" .. str
+        self.objects[key].alpha = a
+        self.objects[key].is_hoverable = bool
+        self.objects[key].is_clickable = bool
+    end
+
+    self.objects.btn_pause.alpha = bool == true and 0 or 1
+    self.objects.btn_pause.is_clickable = not bool
+    self.objects.btn_pause.is_hoverable = not bool
+
+    self.player.show_health = not bool
+    self.player.can_move = not bool
+    self.controls.enabled = not bool
 end
 
 function Game:load_stage2()
@@ -952,6 +1119,10 @@ end
 function Game:mousepressed(mx, my, mb)
     self.controls:mousepressed(mx, my, mb)
     iter_objects(self.orders, self.objects, "mousepressed", mx, my, mb)
+
+    if mb == 2 then
+        self:on_paused(true)
+    end
 end
 
 function Game:mousereleased(mx, my, mb)
