@@ -177,11 +177,6 @@ function Dialogue:draw()
 
     reflowprint(self.dt/self.t, self.text, self.x, y, self.w, self.align)
     love.graphics.setColor(1, 1, 1, 1)
-
-    love.graphics.setColor(1, 0, 0, 1)
-    love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
-    -- love.graphics.rectangle("line", self.fx, self.fy, self.face:getDimensions())
-    love.graphics.setColor(1, 1, 1, 1)
 end
 
 function Dialogue:on_clicked_b()
