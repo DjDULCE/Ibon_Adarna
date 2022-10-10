@@ -71,10 +71,10 @@ function love.load()
 	StateManager:load()
 end
 
--- function love.resize(w, h)
--- 	SCALE_X = w/WW
--- 	SCALE_Y = h/WH
--- end
+function love.resize(w, h)
+	SCALE_X = w/WW
+	SCALE_Y = h/WH
+end
 
 function love.update(dt)
 	FADE:update(dt)
@@ -91,6 +91,7 @@ function love.draw()
 		love.graphics.pop()
 	love.graphics.setCanvas()
 
+	-- love.graphics.draw(canvas)
 	love.graphics.draw(canvas, 0, 0, 0, SCALE_X, SCALE_Y)
 
 	-- if DEV then
@@ -102,14 +103,20 @@ function love.draw()
 end
 
 function love.mousepressed(mx, my, mb)
+	mx = mx * WW / love.graphics.getWidth()
+	my = my * WH / love.graphics.getHeight()
 	StateManager:mousepressed(mx, my, mb)
 end
 
 function love.mousereleased(mx, my, mb)
+	mx = mx * WW / love.graphics.getWidth()
+	my = my * WH / love.graphics.getHeight()
 	StateManager:mousereleased(mx, my, mb)
 end
 
 function love.mousemoved(mx, my, dmx, dmy, istouch)
+	mx = mx * WW / love.graphics.getWidth()
+	my = my * WH / love.graphics.getHeight()
 	StateManager:mousemoved(mx, my, dmx, dmy, istouch)
 end
 

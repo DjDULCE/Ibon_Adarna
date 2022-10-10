@@ -25,5 +25,5 @@ function love.conf(t)
 	t.console = true
 
 	t.identity = "IbongAdarna"
-	t.version = "11.3"
+	t.version = "11.4"
 end

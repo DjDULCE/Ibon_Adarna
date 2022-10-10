@@ -140,6 +140,10 @@ end
 
 function Sprite:update(dt)
     local mx, my = love.mouse.getPosition()
+
+	mx = mx * WW / love.graphics.getWidth()
+	my = my * WH / love.graphics.getHeight()
+
     self.mouse.x, self.mouse.y = mx, my
 
     local col = self.collider
