@@ -84,7 +84,7 @@ function Game:new(index)
         "bar", "icon_player",
         "question_bg", "choice_a", "choice_b", "choice_c",
         "box_bg", "box1", "box2",
-        "pause_bg", "paused_text_box", "btn_close",
+        "pause_bg", "paused_text_box",
         "btn_music", "btn_sound",
     }
 
