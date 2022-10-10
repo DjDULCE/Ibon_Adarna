@@ -21,6 +21,8 @@ function Dialogue:new(opt)
     self.id = opt.id
     self.images = Assets.load_images("dialogue")
     self.faces = Assets.load_images("faces")
+    self.sfx = Assets.load_sources("sfx", "static")
+    self.sfx.dialogue_next:setLooping(false)
 
     self.enabled = not not opt.enabled
     self.repeating = opt.repeating
@@ -102,6 +104,11 @@ function Dialogue:show()
     self.dt = 0
     self.t = 1
     self.skipped = false
+
+    if self.sfx.dialogue_next:isPlaying() then
+        self.sfx.dialogue_next:stop()
+    end
+    self.sfx.dialogue_next:play()
 
     if self.simple then
         self.w = self.bg_w

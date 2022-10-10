@@ -31,6 +31,7 @@ function Menu:new()
     self.ui = Assets.load_images("ui")
     self.faces = Assets.load_images("faces")
     self.sources = Assets.load_sources("menu")
+    self.sfx = Assets.load_sources("sfx", "static")
 
     self.objects = {}
     self.orders = {
@@ -110,6 +111,7 @@ function Menu:load()
         sx = btn_scale, sy = btn_scale,
         ox = gear_w * 0.5, oy = gear_h * 0.5,
         alpha = 0,
+        sound = self.sfx.select,
     })
 
     local trophy_w, trophy_h = self.images.btn_trophy:getDimensions()
@@ -120,6 +122,7 @@ function Menu:load()
         sx = btn_scale, sy = btn_scale,
         ox = trophy_w * 0.5, oy = trophy_h * 0.5,
         alpha = 0,
+        sound = self.sfx.select,
     })
 
     local bb_sx, bb_sy = 0.55, 0.5
@@ -143,6 +146,7 @@ function Menu:load()
             toy = font:getHeight() * 0.5,
             is_clickable = false, is_hoverable = false,
             alpha = 0,
+            sound = self.sfx.select,
         })
 
         if i >= 4 then
@@ -193,6 +197,7 @@ function Menu:load()
         tx = HALF_WW, ty = WH * 0.75,
         tox = font:getWidth("I-Tap ang Laro") * 0.5,
         toy = font:getHeight() * 0.5,
+        sound = self.sfx.select,
     })
 
     local credits_x = bb_w * bb_sx * 0.5 + pad
@@ -210,6 +215,7 @@ function Menu:load()
         toy = font:getHeight() * 0.5,
         alpha = 0,
         is_hoverable = false, is_clickable = false,
+        sound = self.sfx.select,
     })
 
     local font2 = Assets.fonts.impact18
@@ -292,6 +298,7 @@ function Menu:load()
         toy = font:getHeight() * 0.5,
         alpha = 0,
         is_hoverable = false, is_clickable = false,
+        sound = self.sfx.select,
     })
 
     self.group_main = {
@@ -442,6 +449,7 @@ function Menu:setup_settings()
             is_clickable = false, is_hoverable = false,
             force_non_interactive = true,
             alpha = 0,
+            sound = self.sfx.select,
         })
     end
 
@@ -486,6 +494,7 @@ function Menu:setup_settings()
             sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
             is_clickable = false, is_hoverable = false,
             alpha = 0,
+            sound = self.sfx.select,
         })
 
         local right_x = self.objects[key].x + btn_control_width * btn_control_sx + pad * 0.5
@@ -505,6 +514,7 @@ function Menu:setup_settings()
             sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
             is_clickable = false, is_hoverable = false,
             alpha = 0,
+            sound = self.sfx.select,
         })
     end
 
@@ -519,6 +529,7 @@ function Menu:setup_settings()
         sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
         is_clickable = false, is_hoverable = false,
         alpha = 0,
+        sound = self.sfx.close,
     })
 
     self.group_settings = {
@@ -578,6 +589,14 @@ function Menu:toggle_control(btn)
         btn_sound_right.color = { 1, 1, 1 }
         UserData.data.sound = 0
     end
+
+    for _, key in ipairs(self.orders) do
+        local obj = self.objects[key]
+        if obj and obj.sound then
+            obj.sound:setVolume(UserData.data.sound)
+        end
+    end
+    self.sources.bgm:setVolume(UserData.data.music)
     UserData:save()
 end
 
@@ -600,6 +619,7 @@ function Menu:setup_leaderboards()
         is_clickable = false, is_hoverable = false,
         force_non_interactive = true,
         alpha = 0,
+        sound = self.sfx.select,
     })
 
     local reset_sx, reset_sy = 0.5, 0.4
@@ -617,6 +637,7 @@ function Menu:setup_leaderboards()
         toy = font_impact32:getHeight() * 0.5,
         is_clickable = false, is_hoverable = false,
         alpha = 0,
+        sound = self.sfx.select,
     })
 
     local avatar_width, avatar_height = self.images.avatar:getDimensions()

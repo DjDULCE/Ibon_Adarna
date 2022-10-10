@@ -65,6 +65,7 @@ function Game:new(index)
     self.images = Assets.load_images(idn)
     self.ui = Assets.load_images("ui")
     self.sources = Assets.load_sources(id)
+    self.sfx = Assets.load_sources("sfx", "static")
     self.controls = Controls()
     self.difficulty = UserData.data.difficulty
     self.index = index
@@ -209,6 +210,7 @@ function Game:load()
         ox = cw * 0.5, oy = ch * 0.5,
         is_hoverable = false, is_clickable = false,
         alpha = 0,
+        sound = self.sfx.close,
     })
     self.objects.btn_close.on_clicked = function()
         self:on_paused(false)
@@ -239,6 +241,7 @@ function Game:load()
         ox = mw * 0.5, oy = mh * 0.5,
         is_hoverable = false, is_clickable = false,
         alpha = 0,
+        sound = self.sfx.select,
     })
     self.objects.btn_music.on_clicked = function()
         UserData.data.music = UserData.data.music == 1 and 0 or 1
@@ -247,6 +250,7 @@ function Game:load()
         else
             self.objects.btn_music.image = self.ui.btn_music_off
         end
+        self.sources.bgm:setVolume(UserData.data.music)
         UserData:save()
     end
 
@@ -258,6 +262,7 @@ function Game:load()
         ox = sw * 0.5, oy = sh * 0.5,
         is_hoverable = false, is_clickable = false,
         alpha = 0,
+        sound = self.sfx.select,
     })
     self.objects.btn_sound.on_clicked = function()
         UserData.data.sound = UserData.data.sound == 1 and 0 or 1
@@ -266,6 +271,14 @@ function Game:load()
         else
             self.objects.btn_sound.image = self.ui.btn_sound_off
         end
+
+        for _, key in ipairs(self.orders) do
+            local obj = self.objects[key]
+            if obj and obj.sound then
+                obj.sound:setVolume(UserData.data.sound)
+            end
+        end
+
         UserData:save()
     end
 
@@ -287,6 +300,7 @@ function Game:load()
             ox = w * 0.5, oy = h * 0.5,
             is_hoverable = false, is_clickable = false,
             alpha = 0,
+            sound = self.sfx.select,
         })
     end
 
@@ -353,6 +367,7 @@ function Game:load()
         ox = pause_w * 0.5, oy = pause_h * 0.5,
         is_hoverable = false, is_clickable = false,
         alpha = 0,
+        sound = self.sfx.select,
     })
     self.objects.btn_pause.on_clicked = function()
         self:on_paused(true)

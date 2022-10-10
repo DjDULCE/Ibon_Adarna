@@ -26,14 +26,15 @@ function Assets.load_images(id)
     return images
 end
 
-function Assets.load_sources(id)
+function Assets.load_sources(id, kind)
+    kind = kind or "stream"
     local sources = {}
     local path = SOURCES_PATH .. id .. "/"
     local files = love.filesystem.getDirectoryItems(path)
     for _, filename in ipairs(files) do
         local key = filename:sub(0, -5)
         print("loading", filename)
-        sources[key] = love.audio.newSource(path .. filename, "stream")
+        sources[key] = love.audio.newSource(path .. filename, kind)
     end
     return sources
 end

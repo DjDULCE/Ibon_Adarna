@@ -94,6 +94,11 @@ function Sprite:new(opts)
         self.quad = love.graphics.newQuad(0, 0, iw, ih, iw, ih)
         self.image:setWrap("repeat")
     end
+
+    self.sound = opts.sound
+    if self.sound then
+        self.sound:setLooping(false)
+    end
 end
 
 function Sprite:add_collider(tbl)
@@ -263,6 +268,14 @@ function Sprite:mousereleased(mx, my, mb)
         end
         self:on_clicked()
         self.is_overlap = false
+
+        if self.sound then
+            if self.sound:isPlaying() then
+                self.sound:stop()
+            end
+            self.sound:play()
+        end
+
         return true
     end
 end

@@ -13,6 +13,8 @@ function Player:new(x, y)
     local difficulty = UserData.data.difficulty
     self.images = Assets.load_images("player")
     self.ui = Assets.load_images("ui")
+    self.sfx = Assets.load_sources("sfx", "static")
+    self.sfx.player_attack:setLooping(false)
     self.x = x
     self.y = y
     self.dir = 1
@@ -91,6 +93,7 @@ function Player:end_battle()
 end
 
 function Player:start_attack()
+    self.sfx.player_attack:play()
     self.cur_anim = "attack"
     self.anim = self.anim_attack
     self.anim:resume()

@@ -20,6 +20,8 @@ local translation = {
 }
 
 function Enemy:new(name, opts, images)
+    self.sfx = Assets.load_sources("sfx", "static")
+    self.sfx.enemy_attack:setLooping(false)
     local difficulty = UserData.data.difficulty
     self.name = name
     self.name_filipino = translation[name]
@@ -92,6 +94,7 @@ function Enemy:damage_enemy(damage)
 end
 
 function Enemy:enemy_start_attack()
+    self.sfx.enemy_attack:play()
     self.sprite.target_x = self.sprite.x - 128
     local triggered = false
     local orig_x = self.sprite.x

@@ -1,7 +1,7 @@
 require("libs.batteries"):export()
 io.stdout:setvbuf("no")
 
-DEV = true
+DEV = false
 WW = 960
 WH = 540
 HALF_WW = WW * 0.5
