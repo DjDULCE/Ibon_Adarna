@@ -72,7 +72,7 @@ function Game:new(index)
 
     self.total_meters = 1000
     self.current_meter = 0
-    self.pacing = DEV and 512 or 64
+    self.pacing = DEV and 512 or 256
     self.current_enemy = 1
     self.fade_alpha = 0
 
