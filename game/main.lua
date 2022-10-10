@@ -56,6 +56,12 @@ function love.load()
 	FADE = Fade()
 	UserData:init()
 	Assets.init()
+
+
+	local w, h = love.graphics.getDimensions()
+	SCALE_X = w/WW
+	SCALE_Y = h/WH
+
 	canvas = love.graphics.newCanvas(WW, WH)
 
 	StateManager.current = require("menu")()
@@ -65,6 +71,11 @@ function love.load()
 	StateManager:load()
 end
 
+-- function love.resize(w, h)
+-- 	SCALE_X = w/WW
+-- 	SCALE_Y = h/WH
+-- end
+
 function love.update(dt)
 	FADE:update(dt)
 	StateManager:update(dt)
@@ -73,14 +84,14 @@ end
 function love.draw()
 	love.graphics.setColor(1, 1, 1, 1)
 	love.graphics.setCanvas(canvas)
-	love.graphics.clear()
-	love.graphics.push()
-	StateManager:draw()
-	FADE:draw()
-	love.graphics.pop()
+		love.graphics.clear()
+		love.graphics.push()
+			StateManager:draw()
+			FADE:draw()
+		love.graphics.pop()
 	love.graphics.setCanvas()
 
-	love.graphics.draw(canvas)
+	love.graphics.draw(canvas, 0, 0, 0, SCALE_X, SCALE_Y)
 
 	-- if DEV then
 	-- 	love.graphics.setColor(1, 0, 0, 1)
