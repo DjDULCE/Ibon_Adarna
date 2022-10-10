@@ -69,6 +69,7 @@ function Game:new(index)
     self.controls = Controls()
     self.difficulty = UserData.data.difficulty
     self.index = index
+    self.can_pause = true
 
     self.total_meters = 1000
     self.current_meter = 0
@@ -84,6 +85,9 @@ function Game:new(index)
         "bar", "icon_player",
         "question_bg", "choice_a", "choice_b", "choice_c",
         "box_bg", "box1", "box2",
+    }
+    self.pause_objects = {}
+    self.pause_orders = {
         "pause_bg", "paused_text_box",
         "btn_music", "btn_sound",
     }
@@ -94,7 +98,7 @@ function Game:new(index)
     end
 
     for _, str in ipairs(settings_boxes) do
-        table.insert(self.orders, "btn_" .. str)
+        table.insert(self.pause_orders, "btn_" .. str)
     end
 
     local i2 = tablex.index_of(self.orders, "platform")
@@ -136,6 +140,7 @@ function Game:new(index)
     Events.register(self, "post_battle")
     Events.register(self, "display_damage")
     Events.register(self, "finished_turn")
+    Events.register(self, "on_dialogue_show")
     Events.register(self, "on_dialogue_end")
     Events.register(self, "on_game_over")
 end
@@ -174,7 +179,7 @@ function Game:load()
         text_color = { 0, 0, 0 },
     })
 
-    self.objects.pause_bg = Sprite({
+    self.pause_objects.pause_bg = Sprite({
         image = self.ui.box_bg,
         x = HALF_WW, y = HALF_WH,
         ox = bbw * 0.5, oy = bbh * 0.5,
@@ -185,10 +190,10 @@ function Game:load()
     })
 
     local ptbw, ptbh = self.ui.paused_text_box:getDimensions()
-    self.objects.paused_text_box = Sprite({
+    self.pause_objects.paused_text_box = Sprite({
         image = self.ui.paused_text_box,
         x = HALF_WW,
-        y = self.objects.pause_bg.y - bbh * bbsy * 0.5 + 32,
+        y = self.pause_objects.pause_bg.y - bbh * bbsy * 0.5 + 32,
         ox = ptbw * 0.5, oy = ptbh * 0.5,
         sx = 0.6, sy = 0.6,
         is_hoverable = false, is_clickable = false,
@@ -202,17 +207,17 @@ function Game:load()
     })
 
     local cw, ch = self.ui.btn_x:getDimensions()
-    self.objects.btn_close = Sprite({
+    self.pause_objects.btn_close = Sprite({
         image = self.ui.btn_x,
-        x = self.objects.pause_bg.x + bbw * bbsx * 0.5 - 16,
-        y = self.objects.pause_bg.y - bbh * bbsy * 0.5 + 16,
+        x = self.pause_objects.pause_bg.x + bbw * bbsx * 0.5 - 16,
+        y = self.pause_objects.pause_bg.y - bbh * bbsy * 0.5 + 16,
         sx = 0.2, sy = 0.2,
         ox = cw * 0.5, oy = ch * 0.5,
         is_hoverable = false, is_clickable = false,
         alpha = 0,
         sound = self.sfx.close,
     })
-    self.objects.btn_close.on_clicked = function()
+    self.pause_objects.btn_close.on_clicked = function()
         self:on_paused(false)
     end
 
@@ -233,43 +238,43 @@ function Game:load()
     local sw, sh = simg:getDimensions()
     local bs = 0.8
 
-    self.objects.btn_music = Sprite({
+    self.pause_objects.btn_music = Sprite({
         image = mimg,
         x = HALF_WW + 64,
-        y = self.objects.paused_text_box.y + ptbh * 0.5 + 32,
+        y = self.pause_objects.paused_text_box.y + ptbh * 0.5 + 32,
         sx = bs, sy = bs,
         ox = mw * 0.5, oy = mh * 0.5,
         is_hoverable = false, is_clickable = false,
         alpha = 0,
         sound = self.sfx.select,
     })
-    self.objects.btn_music.on_clicked = function()
+    self.pause_objects.btn_music.on_clicked = function()
         UserData.data.music = UserData.data.music == 1 and 0 or 1
         if UserData.data.music == 1 then
-            self.objects.btn_music.image = self.ui.btn_music_on
+            self.pause_objects.btn_music.image = self.ui.btn_music_on
         else
-            self.objects.btn_music.image = self.ui.btn_music_off
+            self.pause_objects.btn_music.image = self.ui.btn_music_off
         end
         self.sources.bgm:setVolume(UserData.data.music)
         UserData:save()
     end
 
-    self.objects.btn_sound = Sprite({
+    self.pause_objects.btn_sound = Sprite({
         image = simg,
         x = HALF_WW - 64,
-        y = self.objects.paused_text_box.y + ptbh * 0.5 + 32,
+        y = self.pause_objects.paused_text_box.y + ptbh * 0.5 + 32,
         sx = bs, sy = bs,
         ox = sw * 0.5, oy = sh * 0.5,
         is_hoverable = false, is_clickable = false,
         alpha = 0,
         sound = self.sfx.select,
     })
-    self.objects.btn_sound.on_clicked = function()
+    self.pause_objects.btn_sound.on_clicked = function()
         UserData.data.sound = UserData.data.sound == 1 and 0 or 1
         if UserData.data.sound == 1 then
-            self.objects.btn_sound.image = self.ui.btn_sound_on
+            self.pause_objects.btn_sound.image = self.ui.btn_sound_on
         else
-            self.objects.btn_sound.image = self.ui.btn_sound_off
+            self.pause_objects.btn_sound.image = self.ui.btn_sound_off
         end
 
         for _, key in ipairs(self.orders) do
@@ -290,10 +295,10 @@ function Game:load()
         if i == #settings_boxes then
             scale = 0.6
         end
-        local y = self.objects.btn_sound.y + sh * bs * 0.5 + 64
+        local y = self.pause_objects.btn_sound.y + sh * bs * 0.5 + 64
         y = y + (i - 1) * h * scale * 0.5 + 32 * (i - 1)
 
-        self.objects[key] = Sprite({
+        self.pause_objects[key] = Sprite({
             image = img,
             x = HALF_WW, y = y,
             sx = scale, sy = scale,
@@ -304,12 +309,12 @@ function Game:load()
         })
     end
 
-    self.objects.btn_resume.on_clicked = function() self:on_paused(false) end
-    self.objects.btn_restart.on_clicked = function()
+    self.pause_objects.btn_resume.on_clicked = function() self:on_paused(false) end
+    self.pause_objects.btn_restart.on_clicked = function()
         local game = require("game")
         StateManager:switch(game, self.index)
     end
-    self.objects.btn_exit.on_clicked = function()
+    self.pause_objects.btn_exit.on_clicked = function()
         local menu = require("menu")
         StateManager:switch(menu)
     end
@@ -370,7 +375,9 @@ function Game:load()
         sound = self.sfx.select,
     })
     self.objects.btn_pause.on_clicked = function()
-        self:on_paused(true)
+        if self.can_pause then
+            self:on_paused(true)
+        end
     end
 
     local bar_w, bar_h = self.ui.bar:getDimensions()
@@ -446,22 +453,22 @@ end
 
 function Game:on_paused(bool)
     local a = bool == true and 1 or 0
-    self.objects.pause_bg.alpha = a
-    self.objects.paused_text_box.alpha = a
-    self.objects.btn_close.alpha = a
-    self.objects.btn_close.is_hoverable = bool
-    self.objects.btn_close.is_clickable = bool
-    self.objects.btn_music.alpha = a
-    self.objects.btn_music.is_hoverable = bool
-    self.objects.btn_music.is_clickable = bool
-    self.objects.btn_sound.alpha = a
-    self.objects.btn_sound.is_hoverable = bool
-    self.objects.btn_sound.is_clickable = bool
+    self.pause_objects.pause_bg.alpha = a
+    self.pause_objects.paused_text_box.alpha = a
+    self.pause_objects.btn_close.alpha = a
+    self.pause_objects.btn_close.is_hoverable = bool
+    self.pause_objects.btn_close.is_clickable = bool
+    self.pause_objects.btn_music.alpha = a
+    self.pause_objects.btn_music.is_hoverable = bool
+    self.pause_objects.btn_music.is_clickable = bool
+    self.pause_objects.btn_sound.alpha = a
+    self.pause_objects.btn_sound.is_hoverable = bool
+    self.pause_objects.btn_sound.is_clickable = bool
     for _, str in ipairs(settings_boxes) do
         local key = "btn_" .. str
-        self.objects[key].alpha = a
-        self.objects[key].is_hoverable = bool
-        self.objects[key].is_clickable = bool
+        self.pause_objects[key].alpha = a
+        self.pause_objects[key].is_hoverable = bool
+        self.pause_objects[key].is_clickable = bool
     end
 
     self.objects.btn_pause.alpha = bool == true and 0 or 1
@@ -546,7 +553,12 @@ function Game:on_player_move_x(dir, dt)
     end
 end
 
+function Game:on_dialogue_show()
+    self.can_pause = false
+end
+
 function Game:on_dialogue_end(obj_dialogue)
+    self.can_pause = true
     self.controls.enabled = false
     print("Finished", obj_dialogue.id)
 
@@ -1058,6 +1070,7 @@ function Game:update(dt)
     if self.hurt_timer then self.hurt_timer:update(dt) end
     self.controls:update(dt)
     iter_objects(self.orders, self.objects, "update", dt)
+    iter_objects(self.pause_orders, self.pause_objects, "update", dt)
     iter_objects(self.orders, self.objects, "check_collision", self.player)
     self.player:update(dt, self.objects.platform.height)
     if self.enemy then self.enemy:update(dt) end
@@ -1105,6 +1118,8 @@ function Game:draw()
     if self.enemy_dialogue then self.enemy_dialogue:draw() end
     if self.other_dialogue then self.other_dialogue:draw() end
 
+    iter_objects(self.pause_orders, self.pause_objects, "draw")
+
     love.graphics.setColor(0, 0, 0, self.fade_alpha)
     love.graphics.rectangle("fill", 0, 0, WW, WH)
     love.graphics.setColor(1, 1, 1, 1)
@@ -1134,11 +1149,13 @@ end
 function Game:mousepressed(mx, my, mb)
     self.controls:mousepressed(mx, my, mb)
     iter_objects(self.orders, self.objects, "mousepressed", mx, my, mb)
+    iter_objects(self.pause_orders, self.pause_objects, "mousepressed", mx, my, mb)
 end
 
 function Game:mousereleased(mx, my, mb)
     self.controls:mousereleased(mx, my, mb)
     iter_objects(self.orders, self.objects, "mousereleased", mx, my, mb)
+    iter_objects(self.pause_orders, self.pause_objects, "mousereleased", mx, my, mb)
 end
 
 function Game:exit()
