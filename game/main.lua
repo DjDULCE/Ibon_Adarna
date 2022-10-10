@@ -103,10 +103,6 @@ function love.mousemoved(mx, my, dmx, dmy, istouch)
 end
 
 function love.keypressed(key)
-	if key == "`" then
-		DEV = not DEV
-		return
-	end
 	StateManager:keypressed(key)
 end
 
