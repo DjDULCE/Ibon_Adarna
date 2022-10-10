@@ -878,7 +878,7 @@ function Game:start_battle(obj_enemy)
 
     for _, letter in ipairs(choices) do
         local key = "choice_" .. letter
-        local text = question[letter]
+        local text = string.upper(question[letter])
         local tx = bx + icw * choice_scale * 0.5 + 8
 
         self.objects[key] = Sprite({
@@ -1134,10 +1134,6 @@ end
 function Game:mousepressed(mx, my, mb)
     self.controls:mousepressed(mx, my, mb)
     iter_objects(self.orders, self.objects, "mousepressed", mx, my, mb)
-
-    if mb == 2 then
-        self:on_paused(true)
-    end
 end
 
 function Game:mousereleased(mx, my, mb)
