@@ -706,6 +706,12 @@ function Menu:setup_leaderboards()
     self.objects.btn_reset.on_clicked = function()
         UserData:reset_progress()
         UserData:save()
+
+        for i = 1, 3 do
+            local key = "box_score" .. i
+            local text = string.format("%s:%s%d", texts[i], spaces, tostring(score[i]))
+            self.objects[key].text = text
+        end
     end
 end
 
