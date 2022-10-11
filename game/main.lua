@@ -64,10 +64,10 @@ function love.load()
 
 	canvas = love.graphics.newCanvas(WW, WH)
 
-	StateManager.current = require("menu")()
+	-- StateManager.current = require("menu")()
 	-- StateManager.current = require("scenario")(4)
 	-- StateManager.current = require("scene")(5)
-	-- StateManager.current = require("game")(1)
+	StateManager.current = require("game")(1)
 	StateManager:load()
 end
 

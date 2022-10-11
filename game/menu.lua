@@ -218,6 +218,10 @@ function Menu:load()
         sound = self.sfx.select,
     })
 
+    self.objects.btn_lumisan.on_clicked = function()
+        love.event.quit()
+    end
+
     local font2 = Assets.fonts.impact18
     local bw, bh = self.ui.box_bg:getDimensions()
     local bsx = (WW * 0.6)/bw

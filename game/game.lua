@@ -612,7 +612,6 @@ function Game:on_dialogue_end(obj_dialogue)
         return
     elseif self.index == 5 then
         self.player.can_move = false
-        self.controls.should_draw = false
         self.other_dialogue = nil
         self:goto_next("scenario")
         return
@@ -1120,8 +1119,9 @@ function Game:draw()
 
     iter_objects(self.pause_orders, self.pause_objects, "draw")
 
+    local w, h = love.graphics.getDimensions()
     love.graphics.setColor(0, 0, 0, self.fade_alpha)
-    love.graphics.rectangle("fill", 0, 0, WW, WH)
+    love.graphics.rectangle("fill", 0, 0, w * SCALE_X, h * SCALE_Y)
     love.graphics.setColor(1, 1, 1, 1)
 
     if self.prologue then self.prologue:draw() end

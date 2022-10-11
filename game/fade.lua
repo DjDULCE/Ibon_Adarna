@@ -42,8 +42,9 @@ function Fade:update(dt)
 end
 
 function Fade:draw()
+    local w, h = love.graphics.getDimensions()
     love.graphics.setColor(0, 0, 0, self.alpha)
-    love.graphics.rectangle("fill", 0, 0, love.graphics.getDimensions())
+    love.graphics.rectangle("fill", 0, 0, w * SCALE_X, h * SCALE_Y)
     love.graphics.setColor(1, 1, 1, 1)
 end
 

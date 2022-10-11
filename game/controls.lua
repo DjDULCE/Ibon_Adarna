@@ -2,7 +2,7 @@ local Controls = class({
     name = "controls"
 })
 
-local btn_ctrl_scale = 0.25
+local btn_ctrl_scale = 0.3
 local gap = 32
 local alpha = 0.5
 
