@@ -58,7 +58,7 @@ function Menu:new()
     self.in_controls = false
 end
 
-function Menu:load()
+function Menu:load(show_main)
     self.sources.bgm:play()
     self.sources.bgm:setLooping(true)
     local box_title_sx, box_title_sy = 1.75, 1
@@ -400,6 +400,10 @@ function Menu:load()
     self:setup_settings()
     self:setup_leaderboards()
     self:setup_controls()
+
+    if show_main then
+        self.objects.btn_start.on_clicked()
+    end
 end
 
 function Menu:setup_settings()

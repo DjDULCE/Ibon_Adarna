@@ -1060,7 +1060,11 @@ function Game:on_game_over()
     self.gameover_timer = timer(1.25, nil,
         function()
             local menu = require("menu")
-            StateManager:switch(menu)
+            StateManager:switch(menu, true)
+            UserData.data.last_id = nil
+            UserData.data.life = 10
+            UserData.data.stage = 1
+            UserData:save()
         end
     )
 end
