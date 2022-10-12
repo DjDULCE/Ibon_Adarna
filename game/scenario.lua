@@ -144,9 +144,8 @@ function Scenario:draw()
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.draw(self.video, 0, 0, 0, self.vsx, self.vsy)
     -- iter_objects(self.orders, self.objects, "draw")
-    local w, h = love.graphics.getDimensions()
     love.graphics.setColor(0, 0, 0, self.alpha)
-    love.graphics.rectangle("fill", 0, 0, w, h)
+    love.graphics.rectangle("fill", 0, 0, 4096, 4096)
     love.graphics.setColor(1, 1, 1, 1)
 end
 

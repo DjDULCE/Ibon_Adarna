@@ -1119,9 +1119,8 @@ function Game:draw()
 
     iter_objects(self.pause_orders, self.pause_objects, "draw")
 
-    local w, h = love.graphics.getDimensions()
     love.graphics.setColor(0, 0, 0, self.fade_alpha)
-    love.graphics.rectangle("fill", 0, 0, w, h)
+    love.graphics.rectangle("fill", 0, 0, 4096, 4096)
     love.graphics.setColor(1, 1, 1, 1)
 
     if self.prologue then self.prologue:draw() end

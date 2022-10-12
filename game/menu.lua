@@ -819,9 +819,8 @@ function Menu:draw()
     love.graphics.draw(self.images.bg, 0, 0, 0, bg_sx, bg_sy)
 
     if self.in_controls then
-        local w, h = love.graphics.getDimensions()
         love.graphics.setColor(0, 0, 0, 1)
-        love.graphics.rectangle("fill", 0, 0, w, h)
+        love.graphics.rectangle("fill", 0, 0, 4096, 4096)
 
         love.graphics.setColor(1, 1, 1, self.objects.ctrl_avatar.alpha)
         love.graphics.setFont(font_impact32)
