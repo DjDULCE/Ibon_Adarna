@@ -145,7 +145,10 @@ function Scenario:draw()
     love.graphics.draw(self.video, 0, 0, 0, self.vsx, self.vsy)
     -- iter_objects(self.orders, self.objects, "draw")
     love.graphics.setColor(0, 0, 0, self.alpha)
+    love.graphics.push()
+    love.graphics.scale(SCALE_X, SCALE_Y)
     love.graphics.rectangle("fill", 0, 0, 4096, 4096)
+    love.graphics.pop()
     love.graphics.setColor(1, 1, 1, 1)
 end
 

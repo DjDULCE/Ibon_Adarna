@@ -22,6 +22,7 @@ function love.conf(t)
 	t.window.width = 960
 	t.window.height = 540
 	t.window.resizable = false
+	t.window.fullscreen = true
 	t.console = true
 
 	t.identity = "IbongAdarna"
