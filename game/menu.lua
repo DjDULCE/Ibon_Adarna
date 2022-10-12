@@ -402,7 +402,26 @@ function Menu:load(show_main)
     self:setup_controls()
 
     if show_main then
-        self.objects.btn_start.on_clicked()
+        self.objects.btn_start.alpha = 0
+        self.objects.btn_start.text_alpha = 0
+        self.objects.btn_start.is_clickable = false
+        self.objects.btn_start.is_hoverable = false
+
+        local bird = self.objects.ibong_adarna
+        local box_title = self.objects.box_title
+        local title = self.objects.title
+        bird.x = bird.target_x
+        bird.y = bird.target_y
+        box_title.y = box_title.target_y
+        title.y = box_title.y
+        for _, opt in ipairs(options) do
+            local key = "btn_" .. string.lower(opt)
+            self.objects[key].alpha = 1
+        end
+        self.objects.btn_credits.alpha = 1
+        self.objects.btn_gear.alpha = 1
+        self.objects.btn_trophy.alpha = 1
+        update_group(self.group_main, 1, true)
     end
 end
 
