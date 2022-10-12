@@ -10,8 +10,8 @@ function StateManager:switch(next_state, ...)
     self.current = next_state(...)
 
     print("Switched to", t)
-    if self.current:type() ~= "menu" then
-        UserData.data.last_id = self.current:type()
+    if string.lower(self.current:type()) ~= "menu" then
+        UserData.data.last_id = string.lower(self.current:type())
         UserData:save()
     end
 
