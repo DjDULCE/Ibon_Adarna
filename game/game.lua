@@ -1120,10 +1120,9 @@ function Game:draw()
     iter_objects(self.pause_orders, self.pause_objects, "draw")
 
     love.graphics.setColor(0, 0, 0, self.fade_alpha)
-    love.graphics.push()
-    love.graphics.scale(SCALE_X, SCALE_Y)
-    love.graphics.rectangle("fill", 0, 0, 4096, 4096)
-    love.graphics.pop()
+    local w, h = love.graphics.getDimensions()
+    local dpi = love.graphics.getDPIScale()
+    love.graphics.rectangle("fill", 0, 0, w * dpi, h * dpi)
     love.graphics.setColor(1, 1, 1, 1)
 
     if self.prologue then self.prologue:draw() end
