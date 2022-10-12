@@ -1121,7 +1121,7 @@ function Game:draw()
 
     local w, h = love.graphics.getDimensions()
     love.graphics.setColor(0, 0, 0, self.fade_alpha)
-    love.graphics.rectangle("fill", 0, 0, w * SCALE_X, h * SCALE_Y)
+    love.graphics.rectangle("fill", 0, 0, w, h)
     love.graphics.setColor(1, 1, 1, 1)
 
     if self.prologue then self.prologue:draw() end

@@ -345,7 +345,7 @@ function Scene:draw()
     local w, h = love.graphics.getDimensions()
 
     love.graphics.setColor(0, 0, 0, self.alpha2)
-    love.graphics.rectangle("fill", 0, 0, w * SCALE_X, h * SCALE_Y)
+    love.graphics.rectangle("fill", 0, 0, w, h)
     love.graphics.setColor(1, 1, 1, 1)
 
     self.dialogue:draw()
@@ -353,7 +353,7 @@ function Scene:draw()
     self.controls:draw()
 
     love.graphics.setColor(0, 0, 0, self.alpha)
-    love.graphics.rectangle("fill", 0, 0, w * SCALE_X, h * SCALE_Y)
+    love.graphics.rectangle("fill", 0, 0, w, h)
     love.graphics.setColor(1, 1, 1, 1)
 end
 
