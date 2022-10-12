@@ -131,9 +131,12 @@ function Scenario:update(dt)
                 if self.index == 1 or self.index == 3 then
                     local scene = require("scene")
                     StateManager:switch(scene, self.index)
-                elseif self.index == 4 or self.index == 5 then
+                elseif self.index == 4 then
                     local game = require("game")
                     StateManager:switch(game, self.index)
+                elseif self.index == 5 then
+                    local menu = require("menu")
+                    StateManager:switch(menu, true)
                 end
             end)
         end)
