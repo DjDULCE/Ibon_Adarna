@@ -3,8 +3,8 @@ local Player = class({
 })
 
 local data = {
-    walk = { 49, 53 },
-    attack = { 92, 49 }
+    walk = { 133, 110 },
+    attack = { math.floor(765/4), 90 }
 }
 
 local damages = { 4, 2, 2 }
@@ -243,6 +243,7 @@ end
 function Player:draw()
     love.graphics.setColor(1, 1, 1, 1)
     self.anim:draw(self.images[self.cur_anim], self.x, self.y, 0, self.dir, 1, self.ox, 0)
+
     if self.notif then self.notif:draw() end
 
     if self.show_health then
