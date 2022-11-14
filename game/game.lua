@@ -866,8 +866,11 @@ function Game:start_battle(obj_enemy)
 
     local id = string.format("data.game%d.%s.%s", self.index, suffix, obj_enemy.name)
     print("loaded question: ", id)
-    local data = require(id)
-    local question = tablex.pick_random(data)
+    self.qdata = tablex.copy(require(id))
+    if #self.qdata == 0 then
+        self.qdata = tablex.copy(require(id))
+    end
+    local question = tablex.take_random(self.qdata)
     local w, h = obj_question.image:getDimensions()
     obj_question.text = question.question
     obj_question.tx = obj_question.x - w * obj_question.sx * 0.5
