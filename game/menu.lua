@@ -239,7 +239,7 @@ function Menu:load(show_main)
     local dw, dh = self.faces.player:getDimensions()
     local ds = 0.5
     self.objects.denice = Sprite({
-        image = self.faces.player,
+        image = self.faces.dj,
         x = HALF_WW - bw * bsx * 0.5 + 64,
         y = HALF_WH - bh * bsy * 0.5 + 32 + font:getHeight() * 2 + dh * ds * 0.5,
         sx = ds, sy = ds,
@@ -256,7 +256,7 @@ function Menu:load(show_main)
 
     local jw, jh = self.faces.diego:getDimensions()
     self.objects.jayson = Sprite({
-        image = self.faces.diego,
+        image = self.faces.jayson,
         x = HALF_WW - bw * bsx * 0.5 + 64,
         y = self.objects.denice.y + dh * ds * 0.5 + jh * ds * 0.5 + 16,
         sx = ds, sy = ds,
@@ -273,7 +273,7 @@ function Menu:load(show_main)
 
     local vw, vh = self.faces.juana:getDimensions()
     self.objects.veronica = Sprite({
-        image = self.faces.juana,
+        image = self.faces.veronica,
         x = HALF_WW + 64,
         y = self.objects.denice.y,
         sx = ds, sy = ds,
@@ -290,16 +290,16 @@ function Menu:load(show_main)
 
     local back_y = bb_h * bb_sy * 0.5 + pad
     self.objects.btn_back = Sprite({
-        image = self.images.box_button,
+        image = self.ui.btn_back,
         x = credits_x, y = back_y,
         sx = bb_sx, sy = bb_sy,
         ox = bb_w * 0.5, oy = bb_h * 0.5,
-        text = "BUMALIK",
-        text_color = text_color,
-        font = font,
-        tx = credits_x, ty = back_y,
-        tox = font:getWidth("BUMALIK") * 0.5,
-        toy = font:getHeight() * 0.5,
+        -- text = "BUMALIK",
+        -- text_color = text_color,
+        -- font = font,
+        -- tx = credits_x, ty = back_y,
+        -- tox = font:getWidth("BUMALIK") * 0.5,
+        -- toy = font:getHeight() * 0.5,
         alpha = 0,
         is_hoverable = false, is_clickable = false,
         sound = self.sfx.select,
@@ -884,14 +884,14 @@ function Menu:draw()
         )
 
         local j = self.objects.jayson
-        local jh = self.faces.diego:getHeight()
+        local jh = self.faces.jayson:getHeight()
         love.graphics.print(
             "Dialog scripts By:\n- Jhulie_nyx",
             bb.x - bw * bb.sx * 0.5 + 32,
             j.y + jh * j.sy * 0.5 + 32
         )
 
-        local vw = self.faces.juana:getWidth()
+        local vw = self.faces.veronica:getWidth()
         love.graphics.print(
             "Music By:\n- Always music\n- Orchestral\n- Dag reinhott",
             HALF_WW + vw * 0.5 * 0.5 + 16,
