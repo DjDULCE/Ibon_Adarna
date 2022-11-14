@@ -8,6 +8,7 @@ local data = {
 }
 
 local damages = { 4, 2, 2 }
+local attack_dist = 360
 
 function Player:new(x, y)
     local difficulty = UserData.data.difficulty
@@ -72,6 +73,7 @@ function Player:new(x, y)
     Events.register(self, "end_attack")
     Events.register(self, "damage_player")
     Events.register(self, "on_dialogue_end")
+    Events.register(self, "player_win")
 end
 
 function Player:damage_player(damage)
@@ -92,6 +94,25 @@ function Player:end_battle()
     self.can_move = true
 end
 
+function Player:player_win()
+    self.timer_win = timer(0.25, nil, function()
+            self.dir = self.dir * -1
+            self.timer_win = timer(0.25, nil, function()
+                self.dir = self.dir * -1
+                self.timer_win = timer(0.25, nil, function()
+                    self.dir = self.dir * -1
+                    self.timer_win = timer(0.25, nil, function()
+                        self.dir = self.dir * -1
+                        self.timer_win = timer(0.25, nil, function()
+                            self.dir = -1
+                            Events.emit("disappear")
+                        end)
+                    end)
+                end)
+            end)
+        end)
+end
+
 function Player:start_attack()
     self.sfx.player_attack:play()
     self.cur_anim = "attack"
@@ -99,7 +120,7 @@ function Player:start_attack()
     self.anim:resume()
     self.dir = -self.dir
     self.width, self.height = unpack(data[self.cur_anim])
-    self.target_x = self.x + 128
+    self.target_x = self.x + attack_dist
     local orig_x = self.x
     self.timer_attack = timer(1,
         function(progress)
@@ -111,7 +132,7 @@ end
 function Player:end_attack()
     Events.emit("damage_enemy", self.damage)
     self.anim_attack:pauseAtStart()
-    self.target_x = self.x - 128
+    self.target_x = self.x - attack_dist
     local orig_x = self.x
     self.timer_attack = timer(0.25,
         function(progress)
@@ -199,6 +220,7 @@ end
 function Player:update(dt, ground_height)
     if self.health <= 0 then return end
     if self.timer_attack then self.timer_attack:update(dt) end
+    if self.timer_win then self.timer_win:update(dt) end
     self.y = self.y + self.gravity * dt
     self.vpos.y = self.y
 

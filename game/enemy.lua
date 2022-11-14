@@ -52,6 +52,7 @@ function Enemy:new(name, opts, images)
     Events.register(self, "enemy_start_attack")
     Events.register(self, "enemy_end_attack")
     Events.register(self, "damage_enemy")
+    Events.register(self, "disappear")
 end
 
 function Enemy:damage_enemy(damage)
@@ -59,38 +60,42 @@ function Enemy:damage_enemy(damage)
     self.health = self.health - damage
 
     if self.health <= 0 then
-        self.sprite.color = { 1, 0, 0 }
-        self.timer_death = timer(1,
-            function(progress)
-                self.sprite.alpha = 1 - progress
-            end,
-            function()
-                Events.emit("end_battle")
-                Events.emit("post_battle", self.name)
-                self.timer_death = nil
-            end)
-
-        --update score
-        local difficulty = UserData.data.difficulty
-        local score_inc = 0
-        local max_score = 0
-        if difficulty == 1 then
-            score_inc = 2
-            max_score = 40
-        elseif difficulty == 2 then
-            score_inc = 3
-            max_score = 60
-        elseif difficulty == 3 then
-            score_inc = 4
-            max_score = 80
-        end
-        local d = UserData.data.score
-        d[difficulty] = d[difficulty] + score_inc
-        if d[difficulty] > max_score then
-            d[difficulty] = max_score
-        end
-        UserData:save()
+        Events.emit("player_win")
     end
+end
+
+function Enemy:disappear()
+    self.sprite.color = { 1, 0, 0 }
+    self.timer_death = timer(1,
+        function(progress)
+            self.sprite.alpha = 1 - progress
+        end,
+        function()
+            Events.emit("end_battle")
+            Events.emit("post_battle", self.name)
+            self.timer_death = nil
+        end)
+
+    --update score
+    local difficulty = UserData.data.difficulty
+    local score_inc = 0
+    local max_score = 0
+    if difficulty == 1 then
+        score_inc = 2
+        max_score = 40
+    elseif difficulty == 2 then
+        score_inc = 3
+        max_score = 60
+    elseif difficulty == 3 then
+        score_inc = 4
+        max_score = 80
+    end
+    local d = UserData.data.score
+    d[difficulty] = d[difficulty] + score_inc
+    if d[difficulty] > max_score then
+        d[difficulty] = max_score
+    end
+    UserData:save()
 end
 
 function Enemy:enemy_start_attack()
