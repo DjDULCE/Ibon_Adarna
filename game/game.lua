@@ -892,7 +892,7 @@ function Game:start_battle(obj_enemy)
 
     for _, letter in ipairs(choices) do
         local key = "choice_" .. letter
-        local text = string.upper(question[letter])
+        local text = question[letter]
         local tx = bx + icw * choice_scale * 0.5 + 8
 
         self.objects[key] = Sprite({
@@ -906,7 +906,7 @@ function Game:start_battle(obj_enemy)
             toy = font:getHeight() * 0.5,
             text_color = { 0, 0, 0 },
             collision_include_text = false,
-            choice_letter = letter,
+            choice_letter = string.upper(letter),
         })
 
         bx = tx + font:getWidth(text) + icw * choice_scale
