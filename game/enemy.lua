@@ -60,22 +60,14 @@ function Enemy:damage_enemy(damage)
     Events.emit("display_damage", self.sprite, damage)
     self.health = self.health - damage
 
+    local orig_r = self.sprite.r
     if self.health <= 0 then
-        self.timer_rotate = timer(0.25, nil, function()
-                self.sprite.sx = self.sprite.sx * -1
-                self.timer_rotate = timer(0.25, nil, function()
-                    self.sprite.sx = self.sprite.sx * -1
-                    self.timer_rotate = timer(0.25, nil, function()
-                        self.sprite.sx = self.sprite.sx * -1
-                        self.timer_rotate = timer(0.25, nil, function()
-                            self.sprite.sx = self.sprite.sx * -1
-                            self.timer_rotate = timer(0.25, nil, function()
-                                self.sprite.sx = 1
-                                self:disappear()
-                            end)
-                        end)
-                    end)
-                end)
+        self.timer_rotate = timer(0.35, function(progress)
+                self.sprite.r = mathx.lerp(orig_r, 2 * math.pi, progress)
+            end,
+            function()
+                self.sprite.r = 0
+                self:disappear()
             end)
     end
 end
