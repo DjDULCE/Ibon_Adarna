@@ -73,7 +73,7 @@ function Player:new(x, y)
     Events.register(self, "end_attack")
     Events.register(self, "damage_player")
     Events.register(self, "on_dialogue_end")
-    Events.register(self, "player_win")
+    -- Events.register(self, "player_win")
 end
 
 function Player:damage_player(damage)
@@ -94,24 +94,24 @@ function Player:end_battle()
     self.can_move = true
 end
 
-function Player:player_win()
-    self.timer_win = timer(0.25, nil, function()
-            self.dir = self.dir * -1
-            self.timer_win = timer(0.25, nil, function()
-                self.dir = self.dir * -1
-                self.timer_win = timer(0.25, nil, function()
-                    self.dir = self.dir * -1
-                    self.timer_win = timer(0.25, nil, function()
-                        self.dir = self.dir * -1
-                        self.timer_win = timer(0.25, nil, function()
-                            self.dir = -1
-                            Events.emit("disappear")
-                        end)
-                    end)
-                end)
-            end)
-        end)
-end
+-- function Player:player_win()
+--     self.timer_win = timer(0.25, nil, function()
+--             self.dir = self.dir * -1
+--             self.timer_win = timer(0.25, nil, function()
+--                 self.dir = self.dir * -1
+--                 self.timer_win = timer(0.25, nil, function()
+--                     self.dir = self.dir * -1
+--                     self.timer_win = timer(0.25, nil, function()
+--                         self.dir = self.dir * -1
+--                         self.timer_win = timer(0.25, nil, function()
+--                             self.dir = -1
+--                             Events.emit("disappear")
+--                         end)
+--                     end)
+--                 end)
+--             end)
+--         end)
+-- end
 
 function Player:start_attack()
     self.sfx.player_attack:play()

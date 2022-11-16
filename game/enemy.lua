@@ -60,7 +60,22 @@ function Enemy:damage_enemy(damage)
     self.health = self.health - damage
 
     if self.health <= 0 then
-        Events.emit("player_win")
+        self.timer_rotate = timer(0.25, nil, function()
+                self.sprite.sx = self.sprite.sx * -1
+                self.timer_rotate = timer(0.25, nil, function()
+                    self.sprite.sx = self.sprite.sx * -1
+                    self.timer_rotate = timer(0.25, nil, function()
+                        self.sprite.sx = self.sprite.sx * -1
+                        self.timer_rotate = timer(0.25, nil, function()
+                            self.sprite.sx = self.sprite.sx * -1
+                            self.timer_rotate = timer(0.25, nil, function()
+                                self.sprite.sx = 1
+                                self:disappear()
+                            end)
+                        end)
+                    end)
+                end)
+            end)
     end
 end
 
@@ -133,6 +148,7 @@ function Enemy:update(dt)
     if self.timer then self.timer:update(dt) end
     if self.timer_attack then self.timer_attack:update(dt) end
     if self.timer_death then self.timer_death:update(dt) end
+    if self.timer_rotate then self.timer_rotate:update(dt) end
 end
 
 function Enemy:draw()
