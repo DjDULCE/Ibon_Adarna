@@ -25,24 +25,24 @@ function Controls:on_dialogue_end()
 end
 
 function Controls:load()
-    local b_width, b_height = self.images.btn_b:getDimensions()
-    self.objects.btn_b = Sprite({
-        image = self.images.btn_b,
-        x = WW - b_width * btn_ctrl_scale * 0.5 - gap,
-        y = WH - b_height * btn_ctrl_scale * 0.5 - gap * 0.5,
+    local a_width, a_height = self.images.btn_a:getDimensions()
+    self.objects.btn_a = Sprite({
+        image = self.images.btn_a,
+        x = WW - a_width * btn_ctrl_scale * 0.5 - gap,
+        y = WH - a_height * btn_ctrl_scale * 0.5 - gap * 0.5,
         sx = btn_ctrl_scale, sy = btn_ctrl_scale,
-        ox = b_width * 0.5, oy = b_height * 0.5,
+        ox = a_width * 0.5, oy = a_height * 0.5,
         is_hoverable = true, is_clickable = true,
         alpha = alpha,
     })
 
-    local a_width, a_height = self.images.btn_a:getDimensions()
-    self.objects.btn_a = Sprite({
-        image = self.images.btn_a,
-        x = self.objects.btn_b.x - a_width * btn_ctrl_scale * 0.5 - gap * 2,
-        y = self.objects.btn_b.y,
+    local b_width, b_height = self.images.btn_b:getDimensions()
+    self.objects.btn_b = Sprite({
+        image = self.images.btn_b,
+        x = self.objects.btn_a.x - a_width * btn_ctrl_scale * 0.5 - gap * 2,
+        y = self.objects.btn_a.y,
         sx = btn_ctrl_scale, sy = btn_ctrl_scale,
-        ox = a_width * 0.5, oy = a_height * 0.5,
+        ox = b_width * 0.5, oy = b_height * 0.5,
         is_hoverable = true, is_clickable = true,
         alpha = alpha,
     })
