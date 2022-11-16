@@ -76,6 +76,7 @@ function Game:new(index)
     self.pacing = DEV and 512 or 256
     self.current_enemy = 1
     self.fade_alpha = 0
+    self.qdata = {}
 
     self.in_battle = false
 
@@ -866,7 +867,6 @@ function Game:start_battle(obj_enemy)
 
     local id = string.format("data.game%d.%s.%s", self.index, suffix, obj_enemy.name)
     print("loaded question: ", id)
-    self.qdata = tablex.copy(require(id))
     if #self.qdata == 0 then
         self.qdata = tablex.copy(require(id))
     end
