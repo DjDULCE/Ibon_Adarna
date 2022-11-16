@@ -23,9 +23,9 @@ return {
 	{
 		question = "Ano ang ginawa ng Ermitanyo sa bigay na pagkain kay Don Juan?",
 		answer = "b",
-		a = "tinapon",
-		b = "binalik",
-		c = "kinain",
+		a = "Tinapon",
+		b = "Binalik",
+		c = "Kinain",
 	},
 	{
 		question = "Ano ang sukli na ginawa ng Ermitanyo kay Don Juan bilang salamat sa binigay na pagkain?",
