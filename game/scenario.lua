@@ -5,6 +5,7 @@ local Scenario = class({
 function Scenario:new(index)
     print("scenario", index)
     assert(index and type(index) == "number" and index > 0)
+    if index > 5 then index = 5 end
     self.index = index
     local id = self:type()
     local idn = id .. tostring(index)
