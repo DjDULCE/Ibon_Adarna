@@ -3,6 +3,7 @@ local Enemy = class({
 })
 
 local damages_data = {1, 2, 4}
+local attack_dist = 360
 
 local translation = {
     wolf = "Lobo",
@@ -115,7 +116,7 @@ end
 
 function Enemy:enemy_start_attack()
     self.sfx.enemy_attack:play()
-    self.sprite.target_x = self.sprite.x - 128
+    self.sprite.target_x = self.sprite.x - attack_dist
     local triggered = false
     local orig_x = self.sprite.x
     self.timer_attack = timer(0.5,
@@ -132,7 +133,7 @@ function Enemy:enemy_start_attack()
 end
 
 function Enemy:enemy_end_attack()
-    self.sprite.target_x = self.sprite.x + 128
+    self.sprite.target_x = self.sprite.x + attack_dist
     local orig_x = self.sprite.x
     self.timer_attack = timer(0.5,
         function(progress)
