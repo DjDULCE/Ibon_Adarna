@@ -12,6 +12,7 @@ local text_color = { 0, 0, 0 }
 local font_impact32, font_impact28
 local ctrl_text1 = "MGA PANGUNAHING KONTROL"
 local ctrl_text2 = "Mga Kontrol Para Sa Instraksyon"
+local ctrl_color = {197/255, 179/255, 38/255}
 
 local function update_group(tbl, alpha, interactive)
     for i = 1, #tbl do
@@ -236,7 +237,7 @@ function Menu:load(show_main)
         force_non_interactive = true,
     })
 
-    local dw, dh = self.faces.player:getDimensions()
+    local dw, dh = self.faces.dj:getDimensions()
     local ds = 0.5
     self.objects.denice = Sprite({
         image = self.faces.dj,
@@ -254,7 +255,7 @@ function Menu:load(show_main)
         toy = font2:getHeight() * 0.5,
     })
 
-    local jw, jh = self.faces.diego:getDimensions()
+    local jw, jh = self.faces.jayson:getDimensions()
     self.objects.jayson = Sprite({
         image = self.faces.jayson,
         x = HALF_WW - bw * bsx * 0.5 + 64,
@@ -271,7 +272,7 @@ function Menu:load(show_main)
         toy = font2:getHeight() * 0.5,
     })
 
-    local vw, vh = self.faces.juana:getDimensions()
+    local vw, vh = self.faces.veronica:getDimensions()
     self.objects.veronica = Sprite({
         image = self.faces.veronica,
         x = HALF_WW + 64,
@@ -743,40 +744,46 @@ function Menu:setup_leaderboards()
 end
 
 function Menu:setup_controls()
-    local btn_ctrl_scale = 0.25
+    local btn_ctrl_scale = 0.35
     local gap = 16
 
     local a_width, a_height = self.images_control.btn_a:getDimensions()
     local a_text = "Tanggapin/Kausapin"
     self.objects.btn_a = Sprite({
         image = self.images_control.btn_a,
-        x = HALF_WW, y = WH * 0.4,
+        x = 72,
+        y = WH * 0.4,
         sx = btn_ctrl_scale, sy = btn_ctrl_scale,
-        ox = a_width * 0.5, oy = a_height * 0.5,
+        ox = a_width * 0.5,
+        oy = a_height * 0.5,
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
         text = a_text,
         font = font_impact28,
-        tx = HALF_WW + gap * 4,
+        tx = 72 + gap * 4,
         toy = font_impact28:getHeight() * 0.5,
         alpha = 0,
+        text_color = ctrl_color,
     })
 
     local b_width, b_height = self.images_control.btn_b:getDimensions()
     local b_text = "Ipagliban/Huwag Ipagpatuloy"
+    local bx = self.objects.btn_a.x + font_impact28:getWidth(a_text) + gap * 2 + a_width * 0.5 + btn_ctrl_scale
     self.objects.btn_b = Sprite({
         image = self.images_control.btn_b,
-        x = HALF_WW,
-        y = self.objects.btn_a.y + a_height * btn_ctrl_scale + gap,
+        x = bx,
+        y = self.objects.btn_a.y,
         sx = btn_ctrl_scale, sy = btn_ctrl_scale,
-        ox = b_width * 0.5, oy = b_height * 0.5,
+        ox = b_width * 0.5,
+        oy = b_height * 0.5,
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
         text = b_text,
-        tx = HALF_WW + gap * 4,
+        tx = bx + gap * 4,
         toy = font_impact28:getHeight() * 0.5,
         font = font_impact28,
         alpha = 0,
+        text_color = ctrl_color,
     })
 
     local l_width, l_height = self.images_control.btn_left:getDimensions()
@@ -789,6 +796,7 @@ function Menu:setup_controls()
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
         alpha = 0,
+        text_color = ctrl_color,
     })
 
     local dir_text = "Kontrol Para sa Paggalaw"
@@ -802,10 +810,13 @@ function Menu:setup_controls()
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
         text = dir_text,
-        tx = HALF_WW + r_width * btn_ctrl_scale + gap * 4,
+        tx = HALF_WW,
+        ty = self.objects.btn_left.y + r_height * 0.5 * btn_ctrl_scale + font_impact28:getHeight() * 0.5 + gap,
+        tox = font_impact28:getWidth(dir_text) * 0.5,
         toy = font_impact28:getHeight() * 0.5,
         font = font_impact28,
         alpha = 0,
+        text_color = ctrl_color,
     })
 
     local ca_width, ca_height = self.images_control.avatar:getDimensions()
@@ -818,6 +829,7 @@ function Menu:setup_controls()
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
         alpha = 0,
+        force_hide = true,
     })
 
     self.group_controls = {
@@ -845,7 +857,9 @@ function Menu:draw()
         love.graphics.setColor(0, 0, 0, 1)
         love.graphics.rectangle("fill", 0, 0, 4096, 4096)
 
-        love.graphics.setColor(1, 1, 1, self.objects.ctrl_avatar.alpha)
+        local r, g, b = unpack(ctrl_color)
+        print(r, g, b)
+        love.graphics.setColor(r, g, b, self.objects.ctrl_avatar.alpha)
         love.graphics.setFont(font_impact32)
         love.graphics.print(ctrl_text1,
             HALF_WW, 64, 0, 1, 1,
@@ -854,9 +868,9 @@ function Menu:draw()
         )
         love.graphics.setFont(font_impact28)
         love.graphics.print(ctrl_text2,
-            HALF_WW,
+            64,
             64 + font_impact32:getHeight() * 1.1, 0, 1, 1,
-            font_impact28:getWidth(ctrl_text2) * 0.5,
+            -- font_impact28:getWidth(ctrl_text2) * 0.5,
             font_impact28:getHeight()
         )
     end

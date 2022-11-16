@@ -15,6 +15,7 @@ function Sprite:new(opts)
     self.sx_dt = opts.sx_dt or 0.1
     self.sy_dt = opts.sy_dt or 0.1
     self.color = opts.color or {1, 1, 1}
+    self.force_hide = opts.force_hide
 
     self.animated = opts.animated
     if self.animated then
@@ -189,7 +190,7 @@ function Sprite:draw()
     local r, g, b = unpack(self.color)
     love.graphics.setColor(r, g, b, self.alpha)
 
-    if self.image then
+    if self.image and not self.force_hide then
         if self.anim8 then
             self.anim8:draw(self.image, self.x, self.y, self.r, self.sx, self.sy, self.ox, self.oy)
         elseif self.quad then
