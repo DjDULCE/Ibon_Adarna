@@ -55,6 +55,7 @@ function Dialogue:new(opt)
 
     Events.register(self, "on_down_left")
     Events.register(self, "on_down_right")
+    Events.register(self, "on_clicked_a")
     Events.register(self, "on_clicked_b")
     Events.register(self, "on_dialogue_show")
 
@@ -179,17 +180,18 @@ function Dialogue:draw()
     love.graphics.setColor(1, 1, 1, 1)
 end
 
-function Dialogue:on_clicked_b()
+function Dialogue:on_clicked_a()
     if not self.enabled then return end
     if self.dt >= self.t then
         self:show()
         return true
     end
-    if not self.skipped then
-        self.dt = self.dt + 1000
-        self.skipped = true
-        return true
-    end
+    return true
+end
+
+function Dialogue:on_clicked_b()
+    if not self.enabled then return end
+    self.dt = self.dt + 1000
     return true
 end
 
