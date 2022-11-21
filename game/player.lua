@@ -19,7 +19,7 @@ function Player:new(x, y)
     self.x = x
     self.y = y
     self.dir = 1
-    self.health = UserData.data.life
+    self.health = UserData.data.init_hp or UserData.data.life
     self.max_health = 10
     self.damage = DEV and 100 or damages[difficulty]
     self.fake_move = false

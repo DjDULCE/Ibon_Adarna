@@ -56,8 +56,9 @@ local enemy_float = {
     eagle = 36,
 }
 
-function Game:new(index)
+function Game:new(index, init_hp)
     print("game", index)
+    UserData.data.init_hp = init_hp or UserData.data.life
     UserData.data.stage = index
     UserData:save()
     local id = string.lower(self:type())
@@ -313,7 +314,7 @@ function Game:load()
     self.pause_objects.btn_resume.on_clicked = function() self:on_paused(false) end
     self.pause_objects.btn_restart.on_clicked = function()
         local game = require("game")
-        StateManager:switch(game, self.index)
+        StateManager:switch(game, self.index, UserData.data.init_hp)
     end
     self.pause_objects.btn_exit.on_clicked = function()
         local menu = require("menu")
