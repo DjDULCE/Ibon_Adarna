@@ -43,6 +43,7 @@ function UserData:reset_progress()
     end
     data.difficulty = 1
     data.stage = 1
+    data.last_id = nil
 end
 
 return UserData
