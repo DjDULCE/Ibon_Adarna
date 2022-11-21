@@ -186,12 +186,14 @@ function Menu:load(show_main)
     end
 
     self.objects.btn_start = Sprite({
-        image = self.images.box_button,
+        image = self.ui.btn_tap_to_start,
         x = HALF_WW, y = WH * 0.75,
         ox = bb_w * 0.5,
         oy = bb_h * 0.5,
-        sx = bb_sx, sy = bb_sy,
-        alpha = 0, text_alpha = 1,
+        sx = bb_sx,
+        sy = bb_sy,
+        alpha = 1,
+        text_alpha = 1,
         text = "I-Tap ang Laro",
         text_color = text_color,
         font = font,
