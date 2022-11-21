@@ -74,6 +74,7 @@ function Scene:load()
         self.objects.bed = Sprite({
             image = self.images.bed,
             x = WW * 0.15, y = WH - p_height - bed_height,
+            sx = -1,
             ox = bed_width * 0.5,
             is_hoverable = false, is_clickable = false,
             force_non_interactive = true,
@@ -85,6 +86,7 @@ function Scene:load()
             x = self.objects.bed.x,
             y = self.objects.bed.y + 8,
             sx = -1,
+            sy = -1,
             r = math.pi / 2,
             ox = f_width * 0.5, oy = f_height * 0.5,
             is_hoverable = false, is_clickable = false,
