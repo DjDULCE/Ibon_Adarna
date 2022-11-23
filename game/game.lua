@@ -58,6 +58,7 @@ local enemy_float = {
 
 function Game:new(index, init_hp)
     print("game", index)
+    self.use_last_enemy = UserData.data.stage == index
     UserData.data.init_hp = init_hp or UserData.data.life
     UserData.data.stage = index
     UserData:save()
@@ -75,10 +76,15 @@ function Game:new(index, init_hp)
     self.total_meters = 1000
     self.current_meter = 0
     self.pacing = DEV and 512 or 256
+
     self.current_enemy = 1
+    if self.use_last_enemy then
+        self.current_enemy = UserData.data.last_enemy_index
+        self.current_meter = self.total_meters - (self.total_meters/self.current_enemy)
+    end
+
     self.fade_alpha = 0
     self.qdata = {}
-
     self.in_battle = false
 
     self.objects = {}
@@ -317,6 +323,8 @@ function Game:load()
         StateManager:switch(game, self.index, UserData.data.init_hp)
     end
     self.pause_objects.btn_exit.on_clicked = function()
+        UserData.data.last_enemy_index = self.current_enemy
+        UserData:save()
         local menu = require("menu")
         StateManager:switch(menu)
     end
@@ -449,6 +457,14 @@ function Game:load()
     self.player.dir = -1
     self.player.can_move = false
     self.player.fake_move = true
+
+    if self.use_last_enemy then
+        self.player.current_meter = self.current_meter
+        self.player.can_move = true
+        self:on_clicked_a()
+        self:on_player_move_x(1, love.timer.getDelta())
+        self.player.can_move = false
+    end
 
     Events.register(self, "on_player_move_x")
 end

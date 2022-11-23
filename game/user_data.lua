@@ -11,6 +11,7 @@ local UserData = {
         life = 10,
         init_hp = 10,
         last_id = nil,
+        last_enemy_index = nil,
     },
 }
 
