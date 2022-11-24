@@ -31,8 +31,8 @@ function UserData:init()
 end
 
 function UserData:save()
-    if self.data.stage > self.data.max_stage then
-        self.data.max_stage = self.data.max_stage
+    if self.data.stage >= self.data.max_stage then
+        self.data.max_stage = self.data.stage
     end
 
     local data = JSON.encode(self.data)

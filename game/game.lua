@@ -502,6 +502,10 @@ function Game:on_paused(bool)
             self.pause_objects[key].is_hoverable = true
             self.pause_objects[key].is_clickable = true
         end
+
+        self.pause_objects.btn_close.alpha = 0
+        self.pause_objects.btn_close.is_hoverable = false
+        self.pause_objects.btn_close.is_clickable = false
     else
         self.pause_objects.pause_bg.alpha = a
         self.pause_objects.paused_text_box.alpha = a
@@ -528,6 +532,10 @@ function Game:on_paused(bool)
         self.player.show_health = not bool
         self.player.can_move = not bool
         self.controls.enabled = not bool
+
+        self.pause_objects.btn_close.alpha = 0
+        self.pause_objects.btn_close.is_hoverable = false
+        self.pause_objects.btn_close.is_clickable = false
     end
 end
 
@@ -1091,19 +1099,19 @@ function Game:goto_next(str, shown_quest)
 end
 
 function Game:display_damage(obj, damage)
-    local d = self.damage_text
-    d.text = tostring(damage)
-    d.x, d.y = obj.x, obj.y - 16
-    d.ty = d.y - 64
-    self.hurt_timer = timer(0.5,
-        function(progress)
-            d.y = mathx.lerp(d.y, d.ty, progress)
-        end,
-        function()
-            self.hurt_timer = nil
-            d.x = -100
-            d.y = -100
-        end)
+    -- local d = self.damage_text
+    -- d.text = tostring(damage)
+    -- d.x, d.y = obj.x, obj.y - 16
+    -- d.ty = d.y - 64
+    -- self.hurt_timer = timer(0.5,
+    --     function(progress)
+    --         d.y = mathx.lerp(d.y, d.ty, progress)
+    --     end,
+    --     function()
+    --         self.hurt_timer = nil
+    --         d.x = -100
+    --         d.y = -100
+    --     end)
 end
 
 function Game:on_game_over()
@@ -1126,6 +1134,10 @@ function Game:open_yugto()
     local font = Assets.fonts.impact32
     self.pause_objects.paused_text_box.text = "MGA YUGTO"
     self.pause_objects.paused_text_box.tox = font:getWidth("MGA YUGTO") * 0.5
+
+    self.pause_objects.btn_close.alpha = 1
+    self.pause_objects.btn_close.is_hoverable = true
+    self.pause_objects.btn_close.is_clickable = true
 
     local objs = {"resume", "yugto", "restart", "exit", "music", "sound"}
     for _, str in ipairs(objs) do
@@ -1200,9 +1212,11 @@ function Game:open_yugto()
     local sy = 0.5
     local font_yugto = Assets.fonts.impact24
     for i, str in ipairs(yugtos) do
-        local text = str
+        local text
 
-        if i > UserData.data.max_stage then
+        if i <= UserData.data.max_stage then
+            text = str
+        else
             text = "??????"
         end
 
