@@ -8,6 +8,7 @@ local UserData = {
         score = { 0, 0, 0 },
         difficulty = 1,
         stage = 1,
+        max_stage = 1,
         life = 10,
         init_hp = 10,
         last_id = nil,
@@ -30,6 +31,10 @@ function UserData:init()
 end
 
 function UserData:save()
+    if self.data.stage > self.data.max_stage then
+        self.data.max_stage = self.data.max_stage
+    end
+
     local data = JSON.encode(self.data)
     love.filesystem.write(self.filename, data)
     print("saved save data")

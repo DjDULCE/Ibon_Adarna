@@ -210,11 +210,11 @@ function Menu:load(show_main)
         x = credits_x, y = credits_y,
         sx = bb_sx, sy = bb_sy,
         ox = bb_w * 0.5, oy = bb_h * 0.5,
-        text = "CREDITS",
+        text = "KREDITO",
         text_color = text_color,
         font = font,
         tx = credits_x, ty = credits_y,
-        tox = font:getWidth("CREDITS") * 0.5,
+        tox = font:getWidth("KREDITO") * 0.5,
         toy = font:getHeight() * 0.5,
         alpha = 0,
         is_hoverable = false, is_clickable = false,
@@ -652,18 +652,19 @@ function Menu:setup_leaderboards()
         sound = self.sfx.select,
     })
 
-    local reset_sx, reset_sy = 0.5, 0.4
+    local reset_sx = (bs_width * 0.7)/font_impact32:getWidth("Bumalik sa Umpisa")
+    local reset_sy = 0.4
     local reset_y = self.objects.menu_box.y + mb_height * 0.5 - bs_height * 0.5 + pad * 0.5
     self.objects.btn_reset = Sprite({
         image = self.images.box_settings,
         x = HALF_WW, y = reset_y,
         ox = bs_width * 0.5, oy = bs_height * 0.5,
         sx = reset_sx, sy = reset_sy,
-        text = "I-RESET",
+        text = "Bumalik sa Umpisa",
         text_color = text_color,
         font = font_impact32,
         tx = HALF_WW, ty = reset_y,
-        tox = font_impact32:getWidth("I-RESET") * 0.5,
+        tox = font_impact32:getWidth("Bumalik sa Umpisa") * 0.5,
         toy = font_impact32:getHeight() * 0.5,
         is_clickable = false, is_hoverable = false,
         alpha = 0,

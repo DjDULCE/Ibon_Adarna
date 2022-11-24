@@ -2,7 +2,7 @@ local Game = class({
     name = "Game",
 })
 
-local settings_boxes = {"resume", "restart", "exit"}
+local settings_boxes = {"resume", "yugto", "restart", "exit"}
 
 local enemies = {
     { "wolf", "snake", "boar", "spider" },
@@ -98,6 +98,9 @@ function Game:new(index, init_hp)
     self.pause_orders = {
         "pause_bg", "paused_text_box",
         "btn_music", "btn_sound",
+        "btn_yugto1", "btn_yugto2", "btn_yugto3",
+        "btn_yugto4", "btn_yugto5",
+        "btn_yes", "btn_no", "btn_close",
     }
 
     local i = tablex.index_of(self.orders, "icon_player")
@@ -208,8 +211,8 @@ function Game:load()
         force_non_interactive = true,
         alpha = 0,
         font = font,
-        text = "PAUSED",
-        tox = font:getWidth("PAUSED") * 0.5,
+        text = "I-Paused",
+        tox = font:getWidth("I-Paused") * 0.5,
         toy = font:getHeight() * 0.5,
         text_color = { 0, 0, 0 },
     })
@@ -303,7 +306,7 @@ function Game:load()
         if i == #settings_boxes then
             scale = 0.6
         end
-        local y = self.pause_objects.btn_sound.y + sh * bs * 0.5 + 64
+        local y = self.pause_objects.btn_sound.y + sh * bs * 0.5 + 48
         y = y + (i - 1) * h * scale * 0.5 + 32 * (i - 1)
 
         self.pause_objects[key] = Sprite({
@@ -321,6 +324,9 @@ function Game:load()
     self.pause_objects.btn_restart.on_clicked = function()
         local game = require("game")
         StateManager:switch(game, self.index, UserData.data.init_hp)
+    end
+    self.pause_objects.btn_yugto.on_clicked = function()
+        self:open_yugto()
     end
     self.pause_objects.btn_exit.on_clicked = function()
         UserData.data.last_enemy_index = self.current_enemy
@@ -471,31 +477,58 @@ end
 
 function Game:on_paused(bool)
     local a = bool == true and 1 or 0
-    self.pause_objects.pause_bg.alpha = a
-    self.pause_objects.paused_text_box.alpha = a
-    self.pause_objects.btn_close.alpha = a
-    self.pause_objects.btn_close.is_hoverable = bool
-    self.pause_objects.btn_close.is_clickable = bool
-    self.pause_objects.btn_music.alpha = a
-    self.pause_objects.btn_music.is_hoverable = bool
-    self.pause_objects.btn_music.is_clickable = bool
-    self.pause_objects.btn_sound.alpha = a
-    self.pause_objects.btn_sound.is_hoverable = bool
-    self.pause_objects.btn_sound.is_clickable = bool
-    for _, str in ipairs(settings_boxes) do
-        local key = "btn_" .. str
-        self.pause_objects[key].alpha = a
-        self.pause_objects[key].is_hoverable = bool
-        self.pause_objects[key].is_clickable = bool
+
+    if self.pause_objects.btn_yugto1 and self.pause_objects.btn_yugto1.alpha == 1 then
+        for i = 1, 5 do
+            local obj = self.pause_objects["btn_yugto" .. i]
+            obj.is_clickable = false
+            obj.is_hoverable = false
+            obj.alpha = 0
+        end
+
+        local font = Assets.fonts.impact32
+        self.pause_objects.paused_text_box.text = "I-Paused"
+        self.pause_objects.paused_text_box.tox = font:getWidth("I-Paused") * 0.5
+
+        self.pause_objects.btn_music.alpha = 1
+        self.pause_objects.btn_music.is_hoverable = true
+        self.pause_objects.btn_music.is_clickable = true
+        self.pause_objects.btn_sound.alpha = 1
+        self.pause_objects.btn_sound.is_hoverable = true
+        self.pause_objects.btn_sound.is_clickable = true
+        for _, str in ipairs(settings_boxes) do
+            local key = "btn_" .. str
+            self.pause_objects[key].alpha = 1
+            self.pause_objects[key].is_hoverable = true
+            self.pause_objects[key].is_clickable = true
+        end
+    else
+        self.pause_objects.pause_bg.alpha = a
+        self.pause_objects.paused_text_box.alpha = a
+        self.pause_objects.btn_close.alpha = a
+        self.pause_objects.btn_close.is_hoverable = bool
+        self.pause_objects.btn_close.is_clickable = bool
+        self.pause_objects.btn_music.alpha = a
+        self.pause_objects.btn_music.is_hoverable = bool
+        self.pause_objects.btn_music.is_clickable = bool
+        self.pause_objects.btn_sound.alpha = a
+        self.pause_objects.btn_sound.is_hoverable = bool
+        self.pause_objects.btn_sound.is_clickable = bool
+        for _, str in ipairs(settings_boxes) do
+            local key = "btn_" .. str
+            self.pause_objects[key].alpha = a
+            self.pause_objects[key].is_hoverable = bool
+            self.pause_objects[key].is_clickable = bool
+        end
+
+        self.objects.btn_pause.alpha = bool == true and 0 or 1
+        self.objects.btn_pause.is_clickable = not bool
+        self.objects.btn_pause.is_hoverable = not bool
+
+        self.player.show_health = not bool
+        self.player.can_move = not bool
+        self.controls.enabled = not bool
     end
-
-    self.objects.btn_pause.alpha = bool == true and 0 or 1
-    self.objects.btn_pause.is_clickable = not bool
-    self.objects.btn_pause.is_hoverable = not bool
-
-    self.player.show_health = not bool
-    self.player.can_move = not bool
-    self.controls.enabled = not bool
 end
 
 function Game:load_stage2()
@@ -1087,6 +1120,153 @@ function Game:on_game_over()
             UserData:save()
         end
     )
+end
+
+function Game:open_yugto()
+    local font = Assets.fonts.impact32
+    self.pause_objects.paused_text_box.text = "MGA YUGTO"
+    self.pause_objects.paused_text_box.tox = font:getWidth("MGA YUGTO") * 0.5
+
+    local objs = {"resume", "yugto", "restart", "exit", "music", "sound"}
+    for _, str in ipairs(objs) do
+        local obj = self.pause_objects["btn_" .. str]
+        obj.alpha = 0
+        obj.is_clickable = false
+        obj.is_hoverable = false
+    end
+
+    if not self.pause_objects.btn_yes then
+        local scale = 0.5
+        local yw, yh = self.ui.btn_yes:getDimensions()
+        self.pause_objects.btn_yes = Sprite({
+            image = self.ui.btn_yes,
+            x = HALF_WW - yw * 0.5,
+            y = HALF_WH,
+            sx = scale, sy = scale,
+            ox = yw * 0.5, oy = yh * 0.5,
+            alpha = 0,
+            is_clickable = false, is_hoverable = false
+        })
+
+        local nw, nh = self.ui.btn_no:getDimensions()
+        self.pause_objects.btn_no = Sprite({
+            image = self.ui.btn_no,
+            x = HALF_WW + nw * 0.5,
+            y = HALF_WH,
+            sx = scale, sy = scale,
+            ox = nw * 0.5, oy = nh * 0.5,
+            alpha = 0,
+            is_clickable = false, is_hoverable = false
+        })
+    end
+
+    self.pause_objects.btn_no.on_clicked = function()
+        for j = 1, 5 do
+            local obj = self.pause_objects["btn_yugto" .. j]
+            if j <= UserData.data.max_stage then
+                obj.is_clickable = true
+                obj.is_hoverable = true
+            else
+                obj.is_clickable = false
+                obj.is_hoverable = false
+            end
+            obj.alpha = 1
+        end
+
+        self.pause_objects.btn_yes.alpha = 0
+        self.pause_objects.btn_yes.is_clickable = false
+        self.pause_objects.btn_yes.is_hoverable = false
+        self.pause_objects.btn_no.alpha = 0
+        self.pause_objects.btn_no.is_clickable = false
+        self.pause_objects.btn_no.is_hoverable = false
+
+        self.pause_objects.paused_text_box.text = "MGA YUGTO"
+        self.pause_objects.paused_text_box.tox = font:getWidth("MGA YUGTO") * 0.5
+        self.pause_objects.paused_text_box.alpha = 1
+
+        self.pause_objects.pause_bg.text = ""
+    end
+
+    local yugtos = {
+        "UNANG YUGTO - PAGLALAKBAY",
+        "IKALAWA YUGTO - IBONG ADARNA",
+        "IKATLO YUGTO - HIGANTE AT SERPYENTE",
+        "IKAAPAT YUGTO - PRINSESA MARIA",
+        "IKALIMA YUGTO - HARING SALERMO",
+    }
+
+    local w, h = self.ui.box_yugto:getDimensions()
+    local sx = 1.25
+    local sy = 0.5
+    local font_yugto = Assets.fonts.impact24
+    for i, str in ipairs(yugtos) do
+        local text = str
+
+        if i > UserData.data.max_stage then
+            text = "??????"
+        end
+
+        local y = self.pause_objects.paused_text_box.y + 72
+        y = y + (i - 1) * h * sy * 0.5 + 40 * (i - 1)
+        local key = "btn_yugto" .. i
+        self.pause_objects[key] = Sprite({
+            image = self.ui.box_yugto,
+            x = HALF_WW, y = y,
+            sx = sx, sy = sy,
+            ox = w * 0.5, oy = h * 0.5,
+            is_hoverable = false, is_clickable = false,
+            alpha = 0,
+            sound = self.sfx.select,
+            text_color = {1, 1, 1, 1},
+            text = text,
+            font = font_yugto,
+            tox = font_yugto:getWidth(text) * 0.5,
+            toy = font_yugto:getHeight() * 0.5,
+        })
+
+        self.pause_objects[key].on_clicked = function()
+            for j = 1, 5 do
+                local obj = self.pause_objects["btn_yugto" .. j]
+                obj.alpha = 0
+                obj.is_clickable = false
+                obj.is_hoverable = false
+            end
+
+            self.pause_objects.btn_yes.alpha = 1
+            self.pause_objects.btn_yes.is_clickable = true
+            self.pause_objects.btn_yes.is_hoverable = true
+            self.pause_objects.btn_no.alpha = 1
+            self.pause_objects.btn_no.is_clickable = true
+            self.pause_objects.btn_no.is_hoverable = true
+
+            local new_text = "GUSTO MO BA BUMALIK SA UMPISA?"
+            self.pause_objects.paused_text_box.alpha = 0
+
+            local font3 = Assets.fonts.impact24
+            self.pause_objects.pause_bg.text = new_text
+            self.pause_objects.pause_bg.text_color = {0, 0, 0, 1}
+            self.pause_objects.pause_bg.font = font3
+            self.pause_objects.pause_bg.tox = font3:getWidth(new_text) * 0.5
+            self.pause_objects.pause_bg.toy = font3:getHeight() * 4
+
+            self.pause_objects.btn_yes.on_clicked = function()
+                local game = require("game")
+                StateManager:switch(game, i)
+            end
+        end
+    end
+
+    for i = 1, 5 do
+        local obj = self.pause_objects["btn_yugto" .. i]
+        if i <= UserData.data.max_stage then
+            obj.is_clickable = true
+            obj.is_hoverable = true
+        else
+            obj.is_clickable = false
+            obj.is_hoverable = false
+        end
+        obj.alpha = 1
+    end
 end
 
 function Game:update(dt)
