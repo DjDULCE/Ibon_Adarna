@@ -58,7 +58,7 @@ local enemy_float = {
 
 function Game:new(index, init_hp)
     print("game", index)
-    self.use_last_enemy = UserData.data.stage == index
+    self.use_last_enemy = (UserData.data.stage == index) and UserData.data.last_enemy_index
     UserData.data.init_hp = init_hp or UserData.data.life
     UserData.data.stage = index
     UserData:save()
