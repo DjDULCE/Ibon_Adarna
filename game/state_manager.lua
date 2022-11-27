@@ -26,13 +26,17 @@ end
 function StateManager:update(dt)
     self.current:update(dt)
 
-    for _, key in ipairs(self.current.orders) do
-        local obj = self.current.objects[key]
-        if obj and obj.sound then
-            obj.sound:setVolume(UserData.data.sound)
+    if self.current.orders then
+        for _, key in ipairs(self.current.orders) do
+            local obj = self.current.objects[key]
+            if obj and obj.sound then
+                obj.sound:setVolume(UserData.data.sound)
+            end
         end
     end
-    self.current.sources.bgm:setVolume(UserData.data.music)
+    if self.current.sources then
+        self.current.sources.bgm:setVolume(UserData.data.music)
+    end
 end
 
 function StateManager:draw()
