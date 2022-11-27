@@ -182,7 +182,7 @@ end
 
 function Sprite:draw()
     local sx, sy = self.sx, self.sy
-    if self.is_hoverable and self.is_overlap and love.mouse.isDown(1) then
+    if self.is_hoverable and self.is_overlap then
         sx = sx + self.sx_dt
         sy = sy + self.sy_dt
     end

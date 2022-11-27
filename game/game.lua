@@ -489,6 +489,7 @@ function Game:on_paused(bool)
         local font = Assets.fonts.impact32
         self.pause_objects.paused_text_box.text = "I-Paused"
         self.pause_objects.paused_text_box.tox = font:getWidth("I-Paused") * 0.5
+        self.pause_objects.paused_text_box.text_color = { 0, 0, 0 }
 
         self.pause_objects.btn_music.alpha = 1
         self.pause_objects.btn_music.is_hoverable = true
@@ -1134,6 +1135,7 @@ function Game:open_yugto()
     local font = Assets.fonts.impact32
     self.pause_objects.paused_text_box.text = "MGA YUGTO"
     self.pause_objects.paused_text_box.tox = font:getWidth("MGA YUGTO") * 0.5
+    self.pause_objects.paused_text_box.text_color = {1, 1, 1, 1}
 
     self.pause_objects.btn_close.alpha = 1
     self.pause_objects.btn_close.is_hoverable = true
@@ -1197,6 +1199,10 @@ function Game:open_yugto()
         self.pause_objects.paused_text_box.alpha = 1
 
         self.pause_objects.pause_bg.text = ""
+
+        self.pause_objects.btn_close.alpha = 1
+        self.pause_objects.btn_close.is_clickable = true
+        self.pause_objects.btn_close.is_hoverable = true
     end
 
     local yugtos = {
@@ -1231,7 +1237,7 @@ function Game:open_yugto()
             is_hoverable = false, is_clickable = false,
             alpha = 0,
             sound = self.sfx.select,
-            text_color = {1, 1, 1, 1},
+            text_color = {0, 0, 0, 1},
             text = text,
             font = font_yugto,
             tox = font_yugto:getWidth(text) * 0.5,
@@ -1262,6 +1268,10 @@ function Game:open_yugto()
             self.pause_objects.pause_bg.font = font3
             self.pause_objects.pause_bg.tox = font3:getWidth(new_text) * 0.5
             self.pause_objects.pause_bg.toy = font3:getHeight() * 4
+
+            self.pause_objects.btn_close.alpha = 0
+            self.pause_objects.btn_close.is_clickable = false
+            self.pause_objects.btn_close.is_hoverable = false
 
             self.pause_objects.btn_yes.on_clicked = function()
                 local game = require("game")

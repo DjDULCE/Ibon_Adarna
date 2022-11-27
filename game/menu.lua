@@ -848,9 +848,11 @@ function Menu:update(dt)
     if self.timer then self.timer:update(dt) end
     if self.controls_timer then self.controls_timer:update(dt) end
 
-    local bool = UserData.data.last_id ~= nil
-    self.objects.btn_magpatuloy.is_clickable = bool
-    self.objects.btn_magpatuloy.is_hoverable = bool
+    if self.objects.btn_magpatuloy.alpha == 1 then
+        local bool = UserData.data.last_id ~= nil
+        self.objects.btn_magpatuloy.is_clickable = bool
+        self.objects.btn_magpatuloy.is_hoverable = bool
+    end
 
     iter_objects(self.orders, self.objects, "update", dt)
 end
