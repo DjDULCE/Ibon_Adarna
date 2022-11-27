@@ -159,6 +159,7 @@ end
 function Game:load()
     self.sources.bgm:play()
     self.sources.bgm:setLooping(true)
+    self.sources.bgm:setVolume(UserData.data.music)
 
     local bgw, bgh = self.images.bg:getDimensions()
     self.objects.bg = Sprite({
