@@ -1136,7 +1136,6 @@ function Game:open_yugto()
     local font = Assets.fonts.impact32
     self.pause_objects.paused_text_box.text = "MGA YUGTO"
     self.pause_objects.paused_text_box.tox = font:getWidth("MGA YUGTO") * 0.5
-    self.pause_objects.paused_text_box.text_color = {1, 1, 1, 1}
 
     self.pause_objects.btn_close.alpha = 1
     self.pause_objects.btn_close.is_hoverable = true
