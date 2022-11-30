@@ -9,7 +9,7 @@ local options = {
 local pad = 16
 local btn_scale = 1.25
 local text_color = { 0, 0, 0 }
-local font_arial_regular32, font_arial_regular28
+local font_arial_regular24, font_arial_regular20
 local ctrl_text1 = "MGA PANGUNAHING KONTROL"
 local ctrl_text2 = "Mga Kontrol Para Sa Instraksyon"
 local ctrl_color = {197/255, 179/255, 38/255}
@@ -29,6 +29,7 @@ function Menu:new()
     local id = self:type()
     self.images = Assets.load_images(id)
     self.images_control = Assets.load_images("controls")
+    self.tutorial = Assets.load_images("tutorial")
     self.ui = Assets.load_images("ui")
     self.faces = Assets.load_images("faces")
     self.sources = Assets.load_sources("menu")
@@ -38,6 +39,7 @@ function Menu:new()
     self.orders = {
         "box_title", "ibong_adarna", "title",
         "btn_gear", "btn_trophy", "btn_credits",
+        "btn_tutorial",
         "box_bg", "denice", "jayson", "veronica",
         "menu_box", "box_settings", "btn_start", "btn_back",
         "box_settings_controls1", "box_settings_controls2",
@@ -48,15 +50,19 @@ function Menu:new()
         "avatar1", "avatar2", "avatar3",
         "btn_reset", "ctrl_avatar",
         "btn_a", "btn_b", "btn_left", "btn_right",
+        "tutorial_pic", "tutorial_back",
+        "tutorial_left", "tutorial_right",
     }
 
     for _, opt in ipairs(options) do
         table.insert(self.orders, 6, "btn_" .. string.lower(opt))
     end
 
-    font_arial_regular28 = Assets.fonts.arial_regular28
-    font_arial_regular32 = Assets.fonts.arial_regular32
+    font_arial_regular24 = Assets.fonts.arial_regular24
+    font_arial_regular20 = Assets.fonts.arial_regular20
     self.in_controls = false
+    self.in_tutorial = false
+    self.tutorial_index = 1
 end
 
 function Menu:load(show_main)
@@ -126,6 +132,17 @@ function Menu:load(show_main)
         sound = self.sfx.select,
     })
 
+    local tutorial_w, tutorial_h = self.images.btn_tutorial:getDimensions()
+    self.objects.btn_tutorial = Sprite({
+        image = self.images.btn_tutorial,
+        x = self.objects.btn_trophy.x - trophy_w * btn_scale * 0.5 - tutorial_w * 0.5 * btn_scale,
+        y = self.objects.btn_trophy.y,
+        sx = btn_scale, sy = btn_scale,
+        ox = tutorial_w * 0.5, oy = tutorial_h * 0.5,
+        alpha = 0,
+        sound = self.sfx.select,
+    })
+
     local bb_sx, bb_sy = 0.55, 0.5
     local bb_w, bb_h = self.images.box_button:getDimensions()
     local font = Assets.fonts.impact24
@@ -156,6 +173,7 @@ function Menu:load(show_main)
                 update_group(self.group_start, 0, false)
                 update_group(self.group_settings, 0, false)
                 update_group(self.group_leaderboards, 0, false)
+                update_group(self.group_tutorial, 0, false)
                 update_group(self.group_controls, 1, false)
                 self.in_controls = true
                 self.controls_timer = timer(2, nil, function()
@@ -315,6 +333,7 @@ function Menu:load(show_main)
         self.objects.btn_credits,
         self.objects.btn_gear,
         self.objects.btn_trophy,
+        self.objects.btn_tutorial,
     }
     self.group_start = {
         self.objects.box_title,
@@ -364,6 +383,7 @@ function Menu:load(show_main)
                         self.objects.btn_credits.alpha = progress
                         self.objects.btn_gear.alpha = progress
                         self.objects.btn_trophy.alpha = progress
+                        self.objects.btn_tutorial.alpha = progress
                     end,
                     function()
                         update_group(self.group_main, 1, true)
@@ -401,7 +421,7 @@ function Menu:load(show_main)
     end
 
     self:setup_settings()
-    self:setup_leaderboards()
+    self:setup_leaderboards_and_tutorial()
     self:setup_controls()
 
     if show_main then
@@ -424,6 +444,7 @@ function Menu:load(show_main)
         self.objects.btn_credits.alpha = 1
         self.objects.btn_gear.alpha = 1
         self.objects.btn_trophy.alpha = 1
+        self.objects.btn_tutorial.alpha = 1
         update_group(self.group_main, 1, true)
     end
 end
@@ -449,9 +470,9 @@ function Menu:setup_settings()
         sx = bs_sx, sy = bs_sy,
         text = "I-Settings",
         text_color = text_color,
-        font = font_arial_regular32,
-        tx = HALF_WW - font_arial_regular32:getWidth("I-Settings") * 0.5,
-        ty = bs_y - font_arial_regular32:getHeight() * 0.5,
+        font = font_arial_regular24,
+        tx = HALF_WW - font_arial_regular24:getWidth("I-Settings") * 0.5,
+        ty = bs_y - font_arial_regular24:getHeight() * 0.5,
         is_clickable = false, is_hoverable = false,
         force_non_interactive = true,
         alpha = 0,
@@ -473,9 +494,9 @@ function Menu:setup_settings()
             sx = bsc_sx, sy = bsc_sy,
             text = text,
             text_color = text_color,
-            font = font_arial_regular32,
-            tx = self.objects.menu_box.x - mb_width * 0.5 + font_arial_regular32:getWidth(text) * 0.5,
-            ty = bsc_y - font_arial_regular32:getHeight() * 0.5,
+            font = font_arial_regular24,
+            tx = self.objects.menu_box.x - mb_width * 0.5 + font_arial_regular24:getWidth(text) * 0.5,
+            ty = bsc_y - font_arial_regular24:getHeight() * 0.5,
             is_clickable = false, is_hoverable = false,
             force_non_interactive = true,
             alpha = 0,
@@ -516,11 +537,11 @@ function Menu:setup_settings()
             sx = btn_control_sx, sy = btn_control_sy,
             color = left_color,
             text = "ON",
-            font = font_arial_regular32,
+            font = font_arial_regular24,
             text_color = { 1, 1, 1 },
             tx = left_x, ty = self.objects[ref].y,
-            tox = font_arial_regular32:getWidth("ON") * 0.5,
-            toy = font_arial_regular32:getHeight() * 0.5,
+            tox = font_arial_regular24:getWidth("ON") * 0.5,
+            toy = font_arial_regular24:getHeight() * 0.5,
             sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
             is_clickable = false, is_hoverable = false,
             alpha = 0,
@@ -537,10 +558,10 @@ function Menu:setup_settings()
             color = right_color,
             text = "OFF",
             text_color = { 1, 1, 1 },
-            font = font_arial_regular32,
+            font = font_arial_regular24,
             tx = right_x, ty = self.objects[ref].y,
-            tox = font_arial_regular32:getWidth("OFF") * 0.5,
-            toy = font_arial_regular32:getHeight() * 0.5,
+            tox = font_arial_regular24:getWidth("OFF") * 0.5,
+            toy = font_arial_regular24:getHeight() * 0.5,
             sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
             is_clickable = false, is_hoverable = false,
             alpha = 0,
@@ -584,6 +605,7 @@ function Menu:setup_settings()
         update_group(self.group_main, 1, true)
         update_group(self.group_settings, 0, false)
         update_group(self.group_leaderboards, 0, false)
+        update_group(self.group_tutorial, 0, false)
     end
 
     local btn_music_left = self.objects.btn_music_left
@@ -630,7 +652,7 @@ function Menu:toggle_control(btn)
     UserData:save()
 end
 
-function Menu:setup_leaderboards()
+function Menu:setup_leaderboards_and_tutorial()
     local mb_width, mb_height = self.images.menu_box:getDimensions()
 
     local bs_width, bs_height = self.images.box_settings:getDimensions()
@@ -643,16 +665,16 @@ function Menu:setup_leaderboards()
         sx = bl_sx, sy = bl_sy,
         text = "TALAAN NG ISKOR",
         text_color = text_color,
-        font = font_arial_regular32,
-        tx = HALF_WW - font_arial_regular32:getWidth("TALAAN NG ISKOR") * 0.5,
-        ty = bl_y - font_arial_regular32:getHeight() * 0.5,
+        font = font_arial_regular24,
+        tx = HALF_WW - font_arial_regular24:getWidth("TALAAN NG ISKOR") * 0.5,
+        ty = bl_y - font_arial_regular24:getHeight() * 0.5,
         is_clickable = false, is_hoverable = false,
         force_non_interactive = true,
         alpha = 0,
         sound = self.sfx.select,
     })
 
-    local reset_sx = (bs_width * 0.7)/font_arial_regular32:getWidth("Bumalik sa Umpisa")
+    local reset_sx = (bs_width * 0.7)/font_arial_regular24:getWidth("Bumalik sa Umpisa")
     local reset_sy = 0.4
     local reset_y = self.objects.menu_box.y + mb_height * 0.5 - bs_height * 0.5 + pad * 0.5
     self.objects.btn_reset = Sprite({
@@ -662,10 +684,10 @@ function Menu:setup_leaderboards()
         sx = reset_sx, sy = reset_sy,
         text = "Bumalik sa Umpisa",
         text_color = text_color,
-        font = font_arial_regular32,
+        font = font_arial_regular24,
         tx = HALF_WW, ty = reset_y,
-        tox = font_arial_regular32:getWidth("Bumalik sa Umpisa") * 0.5,
-        toy = font_arial_regular32:getHeight() * 0.5,
+        tox = font_arial_regular24:getWidth("Bumalik sa Umpisa") * 0.5,
+        toy = font_arial_regular24:getHeight() * 0.5,
         is_clickable = false, is_hoverable = false,
         alpha = 0,
         sound = self.sfx.select,
@@ -706,10 +728,10 @@ function Menu:setup_leaderboards()
             is_clickable = false, is_hoverable = false,
             text = text,
             text_color = text_color,
-            font = font_arial_regular32,
+            font = font_arial_regular24,
             tx = bs_x - score_width * bs_sx * 0.5 + pad,
             ty = avatar_y,
-            toy = font_arial_regular32:getHeight() * 0.5,
+            toy = font_arial_regular24:getHeight() * 0.5,
             force_non_interactive = true,
             alpha = 0,
         })
@@ -728,11 +750,73 @@ function Menu:setup_leaderboards()
         self.objects.avatar3,
     }
 
+    local tw, th, tsx, tsy = self:change_tutorial(0, 0)
+    local tbw, tbh = self.tutorial.btn_back:getDimensions()
+    self.objects.tutorial_back = Sprite({
+        image = self.tutorial.btn_back,
+        x = 64, y = 64,
+        ox = tbw * 0.5, oy = tbh * 0.5,
+        sx = 0.8, sy = 0.8,
+        is_clickable = false, is_hoverable = false,
+        alpha = 0,
+    })
+
+    local gap = 64
+    local tlw, tlh = self.tutorial.btn_left:getDimensions()
+    self.objects.tutorial_left = Sprite({
+        image = self.tutorial.btn_left,
+        x = self.objects.tutorial_pic.x - tw * 0.5 * tsx - gap,
+        y = self.objects.tutorial_pic.y,
+        ox = tlw * 0.5, oy = tlh * 0.5,
+        sx = 0.8, sy = 0.8,
+        is_clickable = false, is_hoverable = false,
+        alpha = 0,
+    })
+
+    local trw, trh = self.tutorial.btn_right:getDimensions()
+    self.objects.tutorial_right = Sprite({
+        image = self.tutorial.btn_right,
+        x = self.objects.tutorial_pic.x + tw * 0.5 * tsx + gap,
+        y = self.objects.tutorial_pic.y,
+        ox = trw * 0.5, oy = trh * 0.5,
+        sx = 0.8, sy = 0.8,
+        is_clickable = false, is_hoverable = false,
+        alpha = 0,
+    })
+
+    self.group_tutorial = {
+        self.objects.tutorial_pic,
+        self.objects.tutorial_back,
+        self.objects.tutorial_left,
+        self.objects.tutorial_right,
+    }
+
     self.objects.btn_trophy.on_clicked = function()
         update_group(self.group_main, 0, false)
         update_group(self.group_start, 0, false)
+        update_group(self.group_tutorial, 0, false)
         update_group(self.group_leaderboards, 1, true)
     end
+
+    self.objects.btn_tutorial.on_clicked = function()
+        update_group(self.group_main, 0, false)
+        update_group(self.group_start, 0, false)
+        update_group(self.group_tutorial, 1, true)
+        self.in_tutorial = true
+    end
+
+    self.objects.tutorial_back.on_clicked = function()
+        update_group(self.group_main, 1, true)
+        update_group(self.group_start, 0, false)
+        update_group(self.group_tutorial, 0, false)
+        self.objects.box_title.alpha = 1
+        self.objects.ibong_adarna.alpha = 1
+        self.objects.title.alpha = 1
+        self.in_tutorial = false
+    end
+
+    self.objects.tutorial_left.on_clicked = function() self:change_tutorial(-1) end
+    self.objects.tutorial_right.on_clicked = function() self:change_tutorial(1) end
 
     self.objects.btn_reset.on_clicked = function()
         UserData:reset_progress()
@@ -762,16 +846,16 @@ function Menu:setup_controls()
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
         text = a_text,
-        font = font_arial_regular28,
+        font = font_arial_regular20,
         tx = 72 + gap * 4,
-        toy = font_arial_regular28:getHeight() * 0.5,
+        toy = font_arial_regular20:getHeight() * 0.5,
         alpha = 0,
         text_color = ctrl_color,
     })
 
     local b_width, b_height = self.images_control.btn_b:getDimensions()
     local b_text = "Ipagliban/Huwag Ipagpatuloy"
-    local bx = self.objects.btn_a.x + font_arial_regular28:getWidth(a_text) + gap * 2 + a_width * 0.5 + btn_ctrl_scale
+    local bx = self.objects.btn_a.x + font_arial_regular20:getWidth(a_text) + gap * 2 + a_width * 0.5 + btn_ctrl_scale
     self.objects.btn_b = Sprite({
         image = self.images_control.btn_b,
         x = bx,
@@ -783,8 +867,8 @@ function Menu:setup_controls()
         force_non_interactive = true,
         text = b_text,
         tx = bx + gap * 4,
-        toy = font_arial_regular28:getHeight() * 0.5,
-        font = font_arial_regular28,
+        toy = font_arial_regular20:getHeight() * 0.5,
+        font = font_arial_regular20,
         alpha = 0,
         text_color = ctrl_color,
     })
@@ -814,10 +898,10 @@ function Menu:setup_controls()
         force_non_interactive = true,
         text = dir_text,
         tx = HALF_WW,
-        ty = self.objects.btn_left.y + r_height * 0.5 * btn_ctrl_scale + font_arial_regular28:getHeight() * 0.5 + gap,
-        tox = font_arial_regular28:getWidth(dir_text) * 0.5,
-        toy = font_arial_regular28:getHeight() * 0.5,
-        font = font_arial_regular28,
+        ty = self.objects.btn_left.y + r_height * 0.5 * btn_ctrl_scale + font_arial_regular20:getHeight() * 0.5 + gap,
+        tox = font_arial_regular20:getWidth(dir_text) * 0.5,
+        toy = font_arial_regular20:getHeight() * 0.5,
+        font = font_arial_regular20,
         alpha = 0,
         text_color = ctrl_color,
     })
@@ -844,6 +928,31 @@ function Menu:setup_controls()
     }
 end
 
+function Menu:change_tutorial(dt, alpha)
+    self.tutorial_index = self.tutorial_index + dt
+    if self.tutorial_index < 1 then
+        self.tutorial_index = 1
+    elseif self.tutorial_index > 11 then
+        self.tutorial_index = 11
+    end
+
+    local img_tutorial = self.tutorial[tostring(self.tutorial_index)]
+    local tw, th = img_tutorial:getDimensions()
+    local tsx = (WW * 0.6)/tw
+    local tsy = (WH * 0.6)/th
+    self.objects.tutorial_pic = Sprite({
+        image = img_tutorial,
+        x = HALF_WW,
+        y = HALF_WH,
+        ox = tw * 0.5, oy = th * 0.5,
+        sx = tsx, sy = tsy,
+        is_clickable = false, is_hoverable = false,
+        force_non_interactive = true,
+        alpha = alpha or 1,
+    })
+    return tw, th, tsx, tsy
+end
+
 function Menu:update(dt)
     if self.timer then self.timer:update(dt) end
     if self.controls_timer then self.controls_timer:update(dt) end
@@ -859,9 +968,16 @@ end
 
 function Menu:draw()
     love.graphics.setColor(1, 1, 1, 1)
-    local bg_w, bg_h = self.images.bg:getDimensions()
-    local bg_sx, bg_sy = WW / bg_w, WH / bg_h
-    love.graphics.draw(self.images.bg, 0, 0, 0, bg_sx, bg_sy)
+
+    local bg
+    if not self.in_tutorial then
+        bg = self.images.bg
+    else
+        bg = self.images.bg_tutorial
+    end
+    local bg_w, bg_h = bg:getDimensions()
+    local bg_sx, bg_sy = WW/bg_w, WH/bg_h
+    love.graphics.draw(bg, 0, 0, 0, bg_sx, bg_sy)
 
     if self.in_controls then
         love.graphics.setColor(0, 0, 0, 1)
@@ -870,18 +986,18 @@ function Menu:draw()
         local r, g, b = unpack(ctrl_color)
         print(r, g, b)
         love.graphics.setColor(r, g, b, self.objects.ctrl_avatar.alpha)
-        love.graphics.setFont(font_arial_regular32)
+        love.graphics.setFont(font_arial_regular24)
         love.graphics.print(ctrl_text1,
             HALF_WW, 64, 0, 1, 1,
-            font_arial_regular32:getWidth(ctrl_text1) * 0.5,
-            font_arial_regular32:getHeight()
+            font_arial_regular24:getWidth(ctrl_text1) * 0.5,
+            font_arial_regular24:getHeight()
         )
-        love.graphics.setFont(font_arial_regular28)
+        love.graphics.setFont(font_arial_regular20)
         love.graphics.print(ctrl_text2,
             64,
-            64 + font_arial_regular32:getHeight() * 1.1, 0, 1, 1,
-            -- font_arial_regular28:getWidth(ctrl_text2) * 0.5,
-            font_arial_regular28:getHeight()
+            64 + font_arial_regular24:getHeight() * 1.1, 0, 1, 1,
+            -- font_arial_regular20:getWidth(ctrl_text2) * 0.5,
+            font_arial_regular20:getHeight()
         )
     end
 
@@ -922,7 +1038,6 @@ function Menu:draw()
             j.y + jh * j.sy * 0.5 + 16
         )
     end
-
 
     love.graphics.setColor(1, 1, 1, 1)
 end
