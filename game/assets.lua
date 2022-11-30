@@ -6,11 +6,15 @@ local ASSETS_PATH = "assets/"
 local SOURCES_PATH = ASSETS_PATH .. "sources/"
 local VIDEOS_PATH = ASSETS_PATH .. "videos/"
 local IMPACT_PATH = ASSETS_PATH .. "impact.ttf"
+local ARIAL_L_PATH = ASSETS_PATH .. "arial_light.ttf"
+local ARIAL_R_PATH = ASSETS_PATH .. "arial_regular.ttf"
 local font_sizes = {18, 20, 24, 28, 32}
 
 function Assets.init()
     for _, size in ipairs(font_sizes) do
         Assets.fonts["impact" .. size] = love.graphics.newFont(IMPACT_PATH, size)
+        Assets.fonts["arial_light" .. size] = love.graphics.newFont(ARIAL_L_PATH, size)
+        Assets.fonts["arial_regular" .. size] = love.graphics.newFont(ARIAL_R_PATH, size)
     end
 end
 

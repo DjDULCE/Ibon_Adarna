@@ -176,7 +176,7 @@ function Game:load()
     local bbw, bbh = self.ui.box_bg:getDimensions()
     local bbsx = (WW * 0.5) / bbw
     local bbsy = (WH - padding) / bbh
-    local text = "PAGHAHANAP AT GAWAIN"
+    local text = "PAGHANAP AT GAWAIN"
     local font = Assets.fonts.impact32
     self.objects.box_bg = Sprite({
         image = self.ui.box_bg,
@@ -1206,11 +1206,11 @@ function Game:open_yugto()
     end
 
     local yugtos = {
-        "UNANG YUGTO - PAGLALAKBAY",
-        "IKALAWA YUGTO - IBONG ADARNA",
-        "IKATLO YUGTO - HIGANTE AT SERPYENTE",
-        "IKAAPAT YUGTO - PRINSESA MARIA",
-        "IKALIMA YUGTO - HARING SALERMO",
+        "Unang Yugto - Paglalakbay",
+        "Ikalawang Yugto - Adarna",
+        "Ikatlong Yugto - Higante at Serpyente",
+        "Ikaapat na Yugto - Prinsesa Maria",
+        "Ikalimang Yugto - Haring Salermo",
     }
 
     local w, h = self.ui.box_yugto:getDimensions()

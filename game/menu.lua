@@ -447,7 +447,7 @@ function Menu:setup_settings()
         x = HALF_WW, y = bs_y,
         ox = bs_width * 0.5, oy = bs_height * 0.5,
         sx = bs_sx, sy = bs_sy,
-        text = "SETTINGS",
+        text = "I-Settings",
         text_color = text_color,
         font = font_arial_regular32,
         tx = HALF_WW - font_arial_regular32:getWidth("I-Settings") * 0.5,
@@ -895,29 +895,29 @@ function Menu:draw()
         love.graphics.setColor(0, 0, 0, 1)
 
         love.graphics.print(
-            "Developed By:",
+            "Ginawa nila:",
             bb.x - bw * bb.sx * 0.5 + 32,
             bb.y - bh * bb.sy * 0.5 + 32
         )
         love.graphics.print(
-            "Voice over By:",
+            "Boses ni:",
             bb.x + bw * bb.sx * 0.5 - 64,
             bb.y - bh * bb.sy * 0.5 + 32,
             0, 1, 1,
-            font:getWidth("Voice over By:")
+            font:getWidth("Boses ni:")
         )
 
         local j = self.objects.jayson
         local jh = self.faces.jayson:getHeight()
         love.graphics.print(
-            "Dialog scripts By:\n- Jhulie_nyx",
+            "Dyalogo ni:\n- Jhulie_nyx",
             bb.x - bw * bb.sx * 0.5 + 32,
             j.y + jh * j.sy * 0.5 + 32
         )
 
         local vw = self.faces.veronica:getWidth()
         love.graphics.print(
-            "Music By:\n- Always music\n- Orchestral\n- Dag reinhott",
+            "Musika nila:\n- Always music\n- Orchestral\n- Dag reinhott",
             HALF_WW + vw * 0.5 * 0.5 + 16,
             j.y + jh * j.sy * 0.5 + 16
         )
