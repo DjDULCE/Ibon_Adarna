@@ -7,7 +7,7 @@ return {
 		c = "Ermitanyo",
 	},
 	{
-		question = "Saang bundok matatagpuan ang Ibong Adarna?",
+		question = "Saang bundok matatagpuan ang ibong adarna?",
 		answer = "b",
 		a = "Bundok Armenya",
 		b = "Bundok Tabor",
@@ -21,7 +21,7 @@ return {
 		c = "Don Diego",
 	},
 	{
-		question = "Sa anong puno matatagpuan ang Mahiwagang Ibon?",
+		question = "Sa anong puno matatagpuan ang mahiwagang ibon?",
 		answer = "c",
 		a = "Pedras Platas",
 		b = "Pieras Platas",

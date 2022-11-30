@@ -1,6 +1,6 @@
 return {
 	{
-		question = "Ano ang epekto ng awit ng Ibong Adarna pag ito ay iyong narinig?",
+		question = "Ano ang epekto ng awit ng ibong adarna pag ito ay iyong narinig?",
 		answer = "c",
 		a = "Ikaw ay magkakasakit",
 		b = "Ikaw ay aantukin",
@@ -14,14 +14,14 @@ return {
 		c = "Awit",
 	},
 	{
-		question = "Ano ang nangyari kay Don Pedro mataapos sya makatulog at napataakan ng ipot ng Ibong Adarna?",
+		question = "Ano ang nangyari kay don pedro mataapos sya makatulog at napataakan ng ipot ng ibong adarna?",
 		answer = "a",
 		a = "Naging Bato",
 		b = "Naging Buto",
 		c = "Naging Batak",
 	},
 	{
-		question = "Si Don Pedro ang _______ na naglakbay upang hanapin ang mahiwagang ibon?",
+		question = "Si don pedro ang _______ na naglakbay upang hanapin ang mahiwagang ibon?",
 		answer = "a",
 		a = "Una",
 		b = "Nagumpisa",

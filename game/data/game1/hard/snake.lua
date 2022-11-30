@@ -1,6 +1,6 @@
 return {
 	{
-		question = "Sino ang nakita ni Haring Fernando sa kanyang panaginip??",
+		question = "Sino ang nakita ni haring fernando sa kanyang panaginip??",
 		answer = "a",
 		a = "Don Juan",
 		b = "Don Juana",
@@ -14,7 +14,7 @@ return {
 		c = "Don Degio",
 	},
 	{
-		question = "Sino ang pumunta sa kaharian upang sabihin ang lunas sa sakit ni Haring Fernando?",
+		question = "Sino ang pumunta sa kaharian upang sabihin ang lunas sa sakit ni haring fernando?",
 		answer = "a",
 		a = "Matandang Ermitanyo",
 		b = "Matandang Ermetanyo",
@@ -28,7 +28,7 @@ return {
 		c = "Bangungot",
 	},
 	{
-		question = "Ano ang pangalan ng Ibon na nabanggit ng Matandang Ermitanyo?",
+		question = "Ano ang pangalan ng ibon na nabanggit ng matandang ermitanyo?",
 		answer = "a",
 		a = "Ibong Adarna",
 		b = "Ibon Adarnna",

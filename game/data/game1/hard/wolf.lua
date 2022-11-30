@@ -7,14 +7,14 @@ return {
 		c = "Berbanya",
 	},
 	{
-		question = "Sinong Hari ang namumuno sa kaharian ng Berbanya??",
+		question = "Sinong hari ang namumuno sa kaharian ng berbanya??",
 		answer = "b",
 		a = "Haring Salermo",
 		b = "Haring Fernando",
 		c = "Haring Fernandino",
 	},
 	{
-		question = "Sino ang Panganay sa tatlong anak ni Haring Fernando at Reyna Valeriana?",
+		question = "Sino ang Panganay sa tatlong anak ni haring fernando at reyna valeriana?",
 		answer = "c",
 		a = "Don Pedru",
 		b = "Don Diego",

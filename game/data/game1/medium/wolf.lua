@@ -1,13 +1,13 @@
 return {
 	{
-		question = "Pinagmumunuan ni Haring Fernando ang _______?",
+		question = "Pinagmumunuan ni haring fernando ang _______?",
 		answer = "c",
 		a = "Reyno de los Cristales",
 		b = "Armenya",
 		c = "Berbanya",
 	},
 	{
-		question = "Si Don Pedro ang _______ sa tatlong magkapatid?",
+		question = "Si don pedro ang _______ sa tatlong magkapatid?",
 		answer = "a",
 		a = "Panganay",
 		b = "Bunso",

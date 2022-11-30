@@ -28,7 +28,7 @@ return {
 		c = "Don Diego",
 	},
 	{
-		question = "Si Don Pedro ang _______ naglakbay upang hanapin ang mahiwagang ibon?",
+		question = "Si don pedro ang _______ naglakbay upang hanapin ang mahiwagang ibon?",
 		answer = "b",
 		a = "Pangatlo",
 		b = "Una",

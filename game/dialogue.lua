@@ -24,6 +24,9 @@ function Dialogue:new(opt)
     self.sfx = Assets.load_sources("sfx", "static")
     self.sfx.dialogue_next:setLooping(false)
 
+    self.vos = Assets.load_vo(self.id)
+    self.vo_index = 0
+
     self.enabled = not not opt.enabled
     self.repeating = opt.repeating
     self.simple = opt.simple
@@ -110,6 +113,18 @@ function Dialogue:show()
         self.sfx.dialogue_next:stop()
     end
     self.sfx.dialogue_next:play()
+
+    local vo_index = tostring(self.vo_index)
+    if self.vos[vo_index]:isPlaying() then
+        self.vos[vo_index]:stop()
+    end
+
+    self.vo_index = self.vo_index + 1
+    vo_index = tostring(self.vo_index)
+    if self.vos[vo_index] then
+        self.vos[vo_index]:play()
+        self.vos[vo_index]:setVolume(1)
+    end
 
     if self.simple then
         self.w = self.bg_w
