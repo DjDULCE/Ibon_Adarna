@@ -7,7 +7,7 @@ return {
     {
         name = "Don Juan",
         side = "left",
-		"Batik o ay magandang hapon sa Hari kong panginoon. Ako si Prinsipe Juan ng Berbanya. Ang inyong kaharian ay nilakbay mula sa kalayuan upang masilayaan at mahingi mula sa inyo ang anak niyong aking iniibig.",
+		"Batik o ay magandang hapon sa hari kong panginoon. Ako si don juan ng berbanya. Ang inyong kaharian ay nilakbay mula sa kalayuan upang masilayan at mahingi mula sa inyo ang anak niyong aking iniibig.",
     },
 	{
 		name = "Haring Salermo",

@@ -1,13 +1,13 @@
 return {
 	{
-		question = "Ang baon ni Don Juan ay _______ sa paglalakbay?",
+		question = "Ang baon ni don juan ay _______ sa paglalakbay?",
 		answer = "c",
 		a = "Espada",
 		b = "Gamot",
 		c = "Tinapay at Tubig",
 	},
 	{
-		question = "Naglakbay si Don Juan ng higit _______ taon upang hanapin ang Ibong Adarna?",
+		question = "Naglakbay si don juan ng higit _______ taon upang hanapin ang ibong adarna?",
 		answer = "a",
 		a = "Isang",
 		b = "Dalawa",
@@ -21,7 +21,7 @@ return {
 		c = "Binaon",
 	},
 	{
-		question = "Bilang sukli sa ginawang kabaitan ni Don Juan sa ermitanyo ito siya ay _______.?",
+		question = "Bilang sukli sa ginawang kabaitan ni don juan sa ermitanyo ito siya ay _______.?",
 		answer = "b",
 		a = "Binigyan ng ginto",
 		b = "Tinulungan",

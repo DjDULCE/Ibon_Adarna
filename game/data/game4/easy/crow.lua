@@ -1,13 +1,13 @@
 return {
 	{
-		question = "Lugar na kung saan tumira si Don Juan matapos umalis sa Berbanya?",
+		question = "Lugar na kung saan tumira si don juan matapos umalis sa berbanya?",
 		answer = "c",
 		a = "Ibong Adarna",
 		b = "Berbanya",
 		c = "Armenya",
 	},
 	{
-		question = "Ano ang nakita ng magkakapatid sa pagtira sa Armenya?",
+		question = "Ano ang nakita ng magkakapatid sa pagtira sa armenya?",
 		answer = "a",
 		a = "Balon",
 		b = "Ilog",
@@ -28,7 +28,7 @@ return {
 		c = "Don Diego",
 	},
 	{
-		question = "Sino ang sumunod na bumaba matapos si Don Pedro?",
+		question = "Sino ang sumunod na bumaba matapos si don pedro?",
 		answer = "a",
 		a = "Don Diego",
 		b = "Don Juan",

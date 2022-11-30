@@ -21,14 +21,14 @@ return {
 		c = "Supot",
 	},
 	{
-		question = "Ilang awit ang inaawit ng Ibong Adarna bago ito umidlip?",
+		question = "Ilang awit ang inaawit ng ibong adarna bago ito umidlip?",
 		answer = "c",
 		a = "Lima",
 		b = "Apat",
 		c = "Pito",
 	},
 	{
-		question = "Ang Ibong Adarna ay ugaling _______ bago matulog?",
+		question = "Ang ibong adarna ay ugaling _______ bago matulog?",
 		answer = "c",
 		a = "Gumalaw",
 		b = "Sumayaw",

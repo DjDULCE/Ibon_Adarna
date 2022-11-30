@@ -1,5 +1,5 @@
 return {
 	{
-		"Natuklasan ni Donya Maria ang binabalak  ng ama kaya tumakas silang dalawa patunong berbanya.",
+		"Natuklasan ni prinsesa maria ang binabalak ng ama kaya tumakas silang dalawa patunong berbanya.",
 	},
 }

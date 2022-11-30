@@ -1,13 +1,13 @@
 return {
 	{
-		question = "Nagawa ni Don Juan lahat ng pagsubok sa tulong ng maria _______ ni Prinsesa Maria?",
+		question = "Nagawa ni don juan lahat ng pagsubok sa tulong ng maria _______ ni prinsesa maria?",
 		answer = "b",
 		a = "Salamangka",
 		b = "Blanca",
 		c = "Mahika",
 	},
 	{
-		question = "Pinili ni Don Juan si _______ na pakasalan?",
+		question = "Pinili ni don juan si _______ na pakasalan?",
 		answer = "a",
 		a = "Juana",
 		b = "Leonora",
@@ -21,14 +21,14 @@ return {
 		c = "Amerika",
 	},
 	{
-		question = "Si Don Juan at Prinsesa Maria ay  _______ paalis ng kaharian?",
+		question = "Si don juan at prinsesa maria ay  _______ paalis ng kaharian?",
 		answer = "b",
 		a = "Nanatili",
 		b = "Tumakas",
 		c = "Nagtago",
 	},
 	{
-		question = "Umalis sila ng kaharian ng Reyno de los Cristales patungo sa _______?",
+		question = "Umalis sila ng kaharian ng reyno de los cristales patungo sa _______?",
 		answer = "c",
 		a = "Inglatera",
 		b = "Armenya",

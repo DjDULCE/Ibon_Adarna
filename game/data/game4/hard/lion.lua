@@ -1,20 +1,20 @@
 return {
 	{
-		question = "Nagpasya ang hari na _______ ang dalawang magkapatid  matapos malaman ang ginawa ni Don Pedro at Diego kay Don Juan?",
+		question = "Nagpasya ang hari na _______ ang dalawang magkapatid  matapos malaman ang ginawa ni don pedro at diego kay don juan?",
 		answer = "b",
 		a = "Palayain",
 		b = "Palayasin",
 		c = "Bitayin",
 	},
 	{
-		question = "_______ ni Haring Fernando sa dalawa si Don Juan?",
+		question = "_______ ni haring fernando sa dalawa si don juan?",
 		answer = "c",
 		a = "Pinapatay",
 		b = "Binilin",
 		c = "Pinahanap",
 	},
 	{
-		question = "Nailigtas ni Don Juan si Prinsesa _______ mula sa higante?",
+		question = "Nailigtas ni don juan si prinsesa _______ mula sa higante?",
 		answer = "a",
 		a = "Juana",
 		b = "Leonora",
@@ -28,7 +28,7 @@ return {
 		c = "Buntot",
 	},
 	{
-		question = "Nang makita ng Ibong Adarna si Don Juan ito ay _______ at umawit?",
+		question = "Nang makita ng ibong adarna si don juan ito ay _______ at umawit?",
 		answer = "c",
 		a = "Natakot",
 		b = "Natuwa",

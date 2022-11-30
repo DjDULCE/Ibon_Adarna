@@ -7,7 +7,7 @@ return {
 		c = "Don Pedro",
 	},
 	{
-		question = "Si Don Diego ang _______ na naglakbay upang hanapin ang mahiwagang ibon?",
+		question = "Si don diego ang _______ na naglakbay upang hanapin ang mahiwagang ibon?",
 		answer = "b",
 		a = "Una",
 		b = "Pangalawa",
@@ -21,7 +21,7 @@ return {
 		c = "Ermitanyo",
 	},
 	{
-		question = "Ayaw pumayag ni _______ na umalis si Don Juan?",
+		question = "Ayaw pumayag ni _______ na umalis si don juan?",
 		answer = "a",
 		a = "Haring Fernando",
 		b = "Reyna Valeriana",

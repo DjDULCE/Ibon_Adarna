@@ -7,7 +7,7 @@ return {
 		c = "Hating gabi",
 	},
 	{
-		question = "Ang _______  ginamit ni Don Juan upang hindi siya maka idlip sa awit ng ibon?",
+		question = "Ang _______  ginamit ni don juan upang hindi siya maka idlip sa awit ng ibon?",
 		answer = "b",
 		a = "Bayabas at Kutsilyo",
 		b = "Labada at Dayap",
@@ -28,7 +28,7 @@ return {
 		c = "Pinatakan",
 	},
 	{
-		question = "Binuhusan ni Don Juan ang _______ upang bumalik sa dati nitong anyo?",
+		question = "Binuhusan ni don juan ang _______ upang bumalik sa dati nitong anyo?",
 		answer = "b",
 		a = "Ermitanyo",
 		b = "Kapatid",

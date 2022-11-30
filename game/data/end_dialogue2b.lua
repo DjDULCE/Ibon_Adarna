@@ -2,12 +2,12 @@ return {
     {
         name = "Don Diego",
 		side = "left",
-        "Salamat, bunsong kapatid na Juan! Sa iyo ay utang ko ang aking buhay!",
+        "Salamat, bunsong kapatid na juan! Sa iyo ay utang ko ang aking buhay!",
     },
     {
         name = "Don Pedro",
 		side = "left",
-        "Nasaan na ang Adarna, Juan? Nagtagumpay ka ba sa paghuli sa kanya kaya't hindi kami ngayon bato? Tayo na't humayo papuntang Berbanya upang mabigyan lunas ang amang hari.",
+        "Nasaan na ang Adarna, Juan? Nagtagumpay ka ba sa paghuli sa kanya kaya't hindi kami ngayon bato? Tayo na't humayo papuntang berbanya upang mabigyan lunas ang amang hari.",
 	},
 	{
 		name = "Ermitanyo",
@@ -32,6 +32,6 @@ return {
 	{
         name = "Ermitanyo",
         side = "right",
-		"Kung iyan ang iyong kagustuhan. Ikaw ay aking benindisyunan na maging mapayapa at malayosa panganib ang inyong paglalakbay pabalik sa Berbanya.",
+		"Kung iyan ang iyong kagustuhan. Ikaw ay aking benindisyunan na maging mapayapa at malayosa panganib ang inyong paglalakbay pabalik sa berbanya.",
     },
 }

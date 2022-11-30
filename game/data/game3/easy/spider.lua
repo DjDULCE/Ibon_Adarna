@@ -1,13 +1,13 @@
 return {
 	{
-		question = "Kailan dumadating at namamahinga ang Ibong Adarna sa kanyang pugad?",
+		question = "Kailan dumadating at namamahinga ang ibong adarna sa kanyang pugad?",
 		answer = "b",
 		a = "Tanghali",
 		b = "Hating Gabi",
 		c = "Umaga",
 	},
 	{
-		question = "Ilang awit ang ginagawa ng Ibong Adarna bago ito umidlip?",
+		question = "Ilang awit ang ginagawa ng ibong adarna bago ito umidlip?",
 		answer = "c",
 		a = "Lima",
 		b = "Apat",
@@ -21,14 +21,14 @@ return {
 		c = "Bayabas at Kutsilyo",
 	},
 	{
-		question = "Ano ang ginawa ni Don Juan habang umaawit ang ibon?",
+		question = "Ano ang ginawa ni don juan habang umaawit ang ibon?",
 		answer = "c",
 		a = "Natulog",
 		b = "Nagdasal",
 		c = "Sinugatan ang kamay",
 	},
 	{
-		question = "Ano ang ipinatak na katas ni Don Juan sa sinugatang palad?",
+		question = "Ano ang ipinatak na katas ni don juan sa sinugatang palad?",
 		answer = "b",
 		a = "Suha",
 		b = "Dayap",

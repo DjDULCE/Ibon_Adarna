@@ -1,6 +1,6 @@
 return {
 	{
-		question = "Unang sinubok ni Don Pedro na _______ ang balon?",
+		question = "Unang sinubok ni don pedro na _______ ang balon?",
 		answer = "a",
 		a = "Babain",
 		b = "Umalis",
@@ -14,21 +14,21 @@ return {
 		c = "Don Diego",
 	},
 	{
-		question = "nakakita si Don Juan ng _______ sa dulo ng balon?",
+		question = "nakakita si don juan ng _______ sa dulo ng balon?",
 		answer = "b",
 		a = "Bundok",
 		b = "Kaharian",
 		c = "Lawa",
 	},
 	{
-		question = "Nakalaban ni Don Juan ay isang _______ na bantay ng isang magandang prinsesa na nag ngagalang juana?",
+		question = "Nakalaban ni don juan ay isang _______ na bantay ng isang magandang prinsesa na nag ngagalang juana?",
 		answer = "c",
 		a = "Lobo",
 		b = "Serpyente",
 		c = "Higante",
 	},
 	{
-		question = "Nailigtas ni Don Juan si Prinsesa _______ mula sa higante?",
+		question = "Nailigtas ni don juan si prinsesa _______ mula sa higante?",
 		answer = "b",
 		a = "Maria",
 		b = "Juana",

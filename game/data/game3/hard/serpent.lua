@@ -7,14 +7,14 @@ return {
 		c = "Naghiganti",
 	},
 	{
-		question = "Nang makauwi si Don Pedro at Diego sa kaharian ang ibon ay _______?",
+		question = "Nang makauwi si don Pedro at diego sa kaharian ang ibon ay _______?",
 		answer = "b",
 		a = "Umawit",
 		b = "Hindi umawit",
 		c = "Nagwala",
 	},
 	{
-		question = "Habang naglalakad _______ ng dalawa si Don Juan?",
+		question = "Habang naglalakad _______ ng dalawa si don juan?",
 		answer = "c",
 		a = "Ginapos",
 		b = "Tinulungan",
@@ -28,7 +28,7 @@ return {
 		c = "Siyam",
 	},
 	{
-		question = "Dahil sa _______ kaya nagawang saktan ng dalawa si Don Juan?",
+		question = "Dahil sa _______ kaya nagawang saktan ng dalawa si don juan?",
 		answer = "a",
 		a = "Inggit",
 		b = "Bagot",

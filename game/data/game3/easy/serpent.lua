@@ -1,6 +1,6 @@
 return {
 	{
-		question = "Sa pag dating ni Don juan sa Berbanya ano ang ginawa ng ibong adarna?",
+		question = "Sa pag dating ni don juan sa berbanya ano ang ginawa ng ibong adarna?",
 		answer = "a",
 		a = "Umawit sa hari",
 		b = "Sumigaw sa hari",
@@ -14,7 +14,7 @@ return {
 		c = "Naging Puno",
 	},
 	{
-		question = "Ano din ang inawit ng ibon sa hari?",
+		question = "Ano ang inawit ng ibon sa hari?",
 		answer = "c",
 		a = "Pangitain",
 		b = "Magandang balita",
@@ -28,7 +28,7 @@ return {
 		c = "Ginapos",
 	},
 	{
-		question = "Ano ang makaawa ni Don juan sa hari?",
+		question = "Ano ang makaawa ni don juan sa hari?",
 		answer = "c",
 		a = "Palayasin ng tuluyan",
 		b = "Paslangin",

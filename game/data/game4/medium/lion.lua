@@ -1,20 +1,20 @@
 return {
 	{
-		question = "Habang tulog si Don Juan ang dalawang mag kapatid ay _______ ang ibong adarna?",
+		question = "Habang tulog si don juan ang dalawang mag kapatid ay _______ ang ibong adarna?",
 		answer = "a",
 		a = "Pinakawalan",
 		b = "Itinago",
 		c = "Pinatay",
 	},
 	{
-		question = "Dahil sa nangyari nagpasya si Don Juan na _______ sa berbanya?",
+		question = "Dahil sa nangyari nagpasya si don juan na _______ sa berbanya?",
 		answer = "b",
 		a = "Pagkawala",
 		b = "Paggaling",
 		c = "Paglala",
 	},
 	{
-		question = "_______ ni Haring Fernando sa dalawa magkapatid si Don Juan sa nangyari sa pagwala ng ibon?",
+		question = "_______ ni haring fernando sa dalawa magkapatid si don juan sa nangyari sa pagwala ng ibon?",
 		answer = "a",
 		a = "Pinahanap",
 		b = "Binilin",

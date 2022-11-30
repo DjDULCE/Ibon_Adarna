@@ -4,7 +4,7 @@ return {
 		side = "right",
         "Hindi to maari. Pitong kahilingan ko ay walang hirap niyang nagawa. Anong klaseng prinsipe ito? Mula sa isang gabing paggawa ng tinapay patungo sa pagpapaamo ng aking kabayo,",
 		"nakakamangha man pero hindi ko kayang ibigay sa kanya ang isa sa aking tatlong anak upang gawing asawa.",
-		"Ngunit ang kanilang kamay lamang ang iyong makikita mula sa mga pinto. Kapag nakapili ka na, kahit sino man ang iyong  napili, ay papayagan kong kayo ay ikasal na.",
+		"Ngunit ang kanilang kamay lamang ang iyong makikita mula sa mga pinto. Kapag nakapili ka na, kahit sino man ang iyong napili, ay papayagan kong kayo ay ikasal na.",
     },
     {
         name = "Don Juan",

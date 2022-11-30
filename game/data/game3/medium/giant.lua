@@ -7,7 +7,7 @@ return {
 		c = "Nagpasalamat",
 	},
 	{
-		question = "Binasbasan ng _______ si Don Juan bago umalis?",
+		question = "Binasbasan ng _______ si don juan bago umalis?",
 		answer = "a",
 		a = "Ermitanyo",
 		b = "Don Pedro",
@@ -21,14 +21,14 @@ return {
 		c = "Hawla",
 	},
 	{
-		question = "Habang naglalakad _______ ng dalawang magkapatid si Don Juan?",
+		question = "Habang naglalakad _______ ng dalawang magkapatid si don juan?",
 		answer = "a",
 		a = "sinaktan",
 		b = "Tinulungan",
 		c = "Ginapos",
 	},
 	{
-		question = "Iniwan ng dalawang magkapatid si Don Juan at _______ ang kinuha ang Ibong Adarna?",
+		question = "Iniwan ng dalawang magkapatid si don juan at _______ ang kinuha ang ibong adarna?",
 		answer = "c",
 		a = "Pinatay",
 		b = "Pinakawalan",

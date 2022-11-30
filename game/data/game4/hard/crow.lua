@@ -14,14 +14,14 @@ return {
 		c = "Paglala",
 	},
 	{
-		question = "Nakalaban ni Don Juan ay isang _______ na bantay ng isang magandang prinsesa na nag ngangalang juana?",
+		question = "Nakalaban ni don juan ay isang _______ na bantay ng isang magandang prinsesa na nag ngangalang juana?",
 		answer = "c",
 		a = "Dragon",
 		b = "Serpyente",
 		c = "Higante",
 	},
 	{
-		question = "Pinatid ni Don Pedro ang lubid mula sa balon dahilan ng pagkalasug-lasog ng _______ ni Don Juan?",
+		question = "Pinatid ni don pedro ang lubid mula sa balon dahilan ng pagkalasug-lasog ng _______ ni don juan?",
 		answer = "b",
 		a = "Sandata",
 		b = "Buto",

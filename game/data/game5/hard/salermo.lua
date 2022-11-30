@@ -1,20 +1,20 @@
 return {
 	{
-		question = "Sino ang nagbigay ng mga pagsubok kay Don Juan?",
+		question = "Sino ang nagbigay ng mga pagsubok kay don juan?",
 		answer = "c",
 		a = "Solomon",
 		b = "Fernando",
 		c = "Salermo",
 	},
 	{
-		question = "Humarap si Don Juan sa _______ ng Reyno de los Cristales?",
+		question = "Humarap si don juan sa _______ ng reyno de los cristales?",
 		answer = "a",
 		a = "Hari",
 		b = "Prinsipe",
 		c = "Reyna",
 	},
 	{
-		question = "Sino ang prinsesa ng kaharian ng Reyno de los Cristales?",
+		question = "Sino ang prinsesa ng kaharian ng reyno de los cristales?",
 		answer = "b",
 		a = "Leonora",
 		b = "Maria",
@@ -28,7 +28,7 @@ return {
 		c = "Lobo",
 	},
 	{
-		question = "Pinili ni Don Juan si _______ na pakasalan?",
+		question = "Pinili ni don juan si _______ na pakasalan?",
 		answer = "c",
 		a = "Juana",
 		b = "Leonora",

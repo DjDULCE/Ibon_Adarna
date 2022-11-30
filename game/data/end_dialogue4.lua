@@ -39,7 +39,7 @@ return {
     {
         name = "Prinsesa Maria",
         side = "right",
-		"Don Juan. Tanggapin mo ang aking kanang kamay. Ito ay tanda ng pagsinta kong panghabangbuhay. Sa ating pagmamahalan. Maglihim ay kataksilan.",
+		"Don Juan. Tanggapin mo ang aking kanang kamay, ito ay tanda ng pagsinta kong panghabangbuhay. Sa ating pagmamahalan maglihim ay kataksilan.",
     },
 	{
 		name = "Don Juan",

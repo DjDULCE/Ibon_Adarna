@@ -21,14 +21,14 @@ return {
 		c = "Madaling araw",
 	},
 	{
-		question = "Ang _______ ginamit ni Don Juan upang hindi siya maka iglip sa awit ng ibon?",
+		question = "Ang _______ ginamit ni don juan upang hindi siya maka iglip sa awit ng ibon?",
 		answer = "a",
 		a = "Labaha at Dayap",
 		b = "Bayabas at Kutsilyo",
 		c = "Kamote at Kandila",
 	},
 	{
-		question = "Habang umaawit ang ibong adarna, _______ ni Don Juan ang kanyang palad",
+		question = "Habang umaawit ang ibong adarna, _______ ni don juan ang kanyang palad",
 		answer = "b",
 		a = "Hinampas",
 		b = "Sinugatan",

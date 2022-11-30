@@ -1,6 +1,6 @@
 return {
 	{
-		question = "Ang kapatid ni Leonora na kanyang kasama ay si _______?",
+		question = "Ang kapatid ni leonora na kanyang kasama ay si _______?",
 		answer = "c",
 		a = "Maria",
 		b = "Josefa",
@@ -14,14 +14,14 @@ return {
 		c = "Lobo",
 	},
 	{
-		question = "Si Don Juan at Prinsesa Maria ay _______ paalis ng kaharian ng Reyno de los Cristales?",
+		question = "Si don juan at prinsesa maria ay _______ paalis ng kaharian ng reyno de los cristales?",
 		answer = "b",
 		a = "Nanatili",
 		b = "Tumakas",
 		c = "Nagtago",
 	},
 	{
-		question = "Nagawa ni Don Juan lahat ng pagsubok sa tulong ng mahika  _______ ni Prinsesa Maria?",
+		question = "Nagawa ni don juan lahat ng pagsubok sa tulong ng mahika  _______ ni prinsesa maria?",
 		answer = "b",
 		a = "Salamangka",
 		b = "Blanca",
