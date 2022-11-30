@@ -9,7 +9,7 @@ local options = {
 local pad = 16
 local btn_scale = 1.25
 local text_color = { 0, 0, 0 }
-local font_impact32, font_impact28
+local font_arial_regular32, font_arial_regular28
 local ctrl_text1 = "MGA PANGUNAHING KONTROL"
 local ctrl_text2 = "Mga Kontrol Para Sa Instraksyon"
 local ctrl_color = {197/255, 179/255, 38/255}
@@ -54,8 +54,8 @@ function Menu:new()
         table.insert(self.orders, 6, "btn_" .. string.lower(opt))
     end
 
-    font_impact32 = Assets.fonts.impact32
-    font_impact28 = Assets.fonts.impact24
+    font_arial_regular28 = Assets.fonts.arial_regular28
+    font_arial_regular32 = Assets.fonts.arial_regular32
     self.in_controls = false
 end
 
@@ -449,9 +449,9 @@ function Menu:setup_settings()
         sx = bs_sx, sy = bs_sy,
         text = "SETTINGS",
         text_color = text_color,
-        font = font_impact32,
-        tx = HALF_WW - font_impact32:getWidth("SETTINGS") * 0.5,
-        ty = bs_y - font_impact32:getHeight() * 0.5,
+        font = font_arial_regular32,
+        tx = HALF_WW - font_arial_regular32:getWidth("I-Settings") * 0.5,
+        ty = bs_y - font_arial_regular32:getHeight() * 0.5,
         is_clickable = false, is_hoverable = false,
         force_non_interactive = true,
         alpha = 0,
@@ -473,9 +473,9 @@ function Menu:setup_settings()
             sx = bsc_sx, sy = bsc_sy,
             text = text,
             text_color = text_color,
-            font = font_impact32,
-            tx = self.objects.menu_box.x - mb_width * 0.5 + font_impact32:getWidth(text) * 0.5,
-            ty = bsc_y - font_impact32:getHeight() * 0.5,
+            font = font_arial_regular32,
+            tx = self.objects.menu_box.x - mb_width * 0.5 + font_arial_regular32:getWidth(text) * 0.5,
+            ty = bsc_y - font_arial_regular32:getHeight() * 0.5,
             is_clickable = false, is_hoverable = false,
             force_non_interactive = true,
             alpha = 0,
@@ -516,11 +516,11 @@ function Menu:setup_settings()
             sx = btn_control_sx, sy = btn_control_sy,
             color = left_color,
             text = "ON",
-            font = font_impact32,
+            font = font_arial_regular32,
             text_color = { 1, 1, 1 },
             tx = left_x, ty = self.objects[ref].y,
-            tox = font_impact32:getWidth("ON") * 0.5,
-            toy = font_impact32:getHeight() * 0.5,
+            tox = font_arial_regular32:getWidth("ON") * 0.5,
+            toy = font_arial_regular32:getHeight() * 0.5,
             sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
             is_clickable = false, is_hoverable = false,
             alpha = 0,
@@ -537,10 +537,10 @@ function Menu:setup_settings()
             color = right_color,
             text = "OFF",
             text_color = { 1, 1, 1 },
-            font = font_impact32,
+            font = font_arial_regular32,
             tx = right_x, ty = self.objects[ref].y,
-            tox = font_impact32:getWidth("OFF") * 0.5,
-            toy = font_impact32:getHeight() * 0.5,
+            tox = font_arial_regular32:getWidth("OFF") * 0.5,
+            toy = font_arial_regular32:getHeight() * 0.5,
             sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
             is_clickable = false, is_hoverable = false,
             alpha = 0,
@@ -643,16 +643,16 @@ function Menu:setup_leaderboards()
         sx = bl_sx, sy = bl_sy,
         text = "TALAAN NG ISKOR",
         text_color = text_color,
-        font = font_impact32,
-        tx = HALF_WW - font_impact32:getWidth("TALAAN NG ISKOR") * 0.5,
-        ty = bl_y - font_impact32:getHeight() * 0.5,
+        font = font_arial_regular32,
+        tx = HALF_WW - font_arial_regular32:getWidth("TALAAN NG ISKOR") * 0.5,
+        ty = bl_y - font_arial_regular32:getHeight() * 0.5,
         is_clickable = false, is_hoverable = false,
         force_non_interactive = true,
         alpha = 0,
         sound = self.sfx.select,
     })
 
-    local reset_sx = (bs_width * 0.7)/font_impact32:getWidth("Bumalik sa Umpisa")
+    local reset_sx = (bs_width * 0.7)/font_arial_regular32:getWidth("Bumalik sa Umpisa")
     local reset_sy = 0.4
     local reset_y = self.objects.menu_box.y + mb_height * 0.5 - bs_height * 0.5 + pad * 0.5
     self.objects.btn_reset = Sprite({
@@ -662,10 +662,10 @@ function Menu:setup_leaderboards()
         sx = reset_sx, sy = reset_sy,
         text = "Bumalik sa Umpisa",
         text_color = text_color,
-        font = font_impact32,
+        font = font_arial_regular32,
         tx = HALF_WW, ty = reset_y,
-        tox = font_impact32:getWidth("Bumalik sa Umpisa") * 0.5,
-        toy = font_impact32:getHeight() * 0.5,
+        tox = font_arial_regular32:getWidth("Bumalik sa Umpisa") * 0.5,
+        toy = font_arial_regular32:getHeight() * 0.5,
         is_clickable = false, is_hoverable = false,
         alpha = 0,
         sound = self.sfx.select,
@@ -706,10 +706,10 @@ function Menu:setup_leaderboards()
             is_clickable = false, is_hoverable = false,
             text = text,
             text_color = text_color,
-            font = font_impact32,
+            font = font_arial_regular32,
             tx = bs_x - score_width * bs_sx * 0.5 + pad,
             ty = avatar_y,
-            toy = font_impact32:getHeight() * 0.5,
+            toy = font_arial_regular32:getHeight() * 0.5,
             force_non_interactive = true,
             alpha = 0,
         })
@@ -762,16 +762,16 @@ function Menu:setup_controls()
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
         text = a_text,
-        font = font_impact28,
+        font = font_arial_regular28,
         tx = 72 + gap * 4,
-        toy = font_impact28:getHeight() * 0.5,
+        toy = font_arial_regular28:getHeight() * 0.5,
         alpha = 0,
         text_color = ctrl_color,
     })
 
     local b_width, b_height = self.images_control.btn_b:getDimensions()
     local b_text = "Ipagliban/Huwag Ipagpatuloy"
-    local bx = self.objects.btn_a.x + font_impact28:getWidth(a_text) + gap * 2 + a_width * 0.5 + btn_ctrl_scale
+    local bx = self.objects.btn_a.x + font_arial_regular28:getWidth(a_text) + gap * 2 + a_width * 0.5 + btn_ctrl_scale
     self.objects.btn_b = Sprite({
         image = self.images_control.btn_b,
         x = bx,
@@ -783,8 +783,8 @@ function Menu:setup_controls()
         force_non_interactive = true,
         text = b_text,
         tx = bx + gap * 4,
-        toy = font_impact28:getHeight() * 0.5,
-        font = font_impact28,
+        toy = font_arial_regular28:getHeight() * 0.5,
+        font = font_arial_regular28,
         alpha = 0,
         text_color = ctrl_color,
     })
@@ -814,10 +814,10 @@ function Menu:setup_controls()
         force_non_interactive = true,
         text = dir_text,
         tx = HALF_WW,
-        ty = self.objects.btn_left.y + r_height * 0.5 * btn_ctrl_scale + font_impact28:getHeight() * 0.5 + gap,
-        tox = font_impact28:getWidth(dir_text) * 0.5,
-        toy = font_impact28:getHeight() * 0.5,
-        font = font_impact28,
+        ty = self.objects.btn_left.y + r_height * 0.5 * btn_ctrl_scale + font_arial_regular28:getHeight() * 0.5 + gap,
+        tox = font_arial_regular28:getWidth(dir_text) * 0.5,
+        toy = font_arial_regular28:getHeight() * 0.5,
+        font = font_arial_regular28,
         alpha = 0,
         text_color = ctrl_color,
     })
@@ -870,18 +870,18 @@ function Menu:draw()
         local r, g, b = unpack(ctrl_color)
         print(r, g, b)
         love.graphics.setColor(r, g, b, self.objects.ctrl_avatar.alpha)
-        love.graphics.setFont(font_impact32)
+        love.graphics.setFont(font_arial_regular32)
         love.graphics.print(ctrl_text1,
             HALF_WW, 64, 0, 1, 1,
-            font_impact32:getWidth(ctrl_text1) * 0.5,
-            font_impact32:getHeight()
+            font_arial_regular32:getWidth(ctrl_text1) * 0.5,
+            font_arial_regular32:getHeight()
         )
-        love.graphics.setFont(font_impact28)
+        love.graphics.setFont(font_arial_regular28)
         love.graphics.print(ctrl_text2,
             64,
-            64 + font_impact32:getHeight() * 1.1, 0, 1, 1,
-            -- font_impact28:getWidth(ctrl_text2) * 0.5,
-            font_impact28:getHeight()
+            64 + font_arial_regular32:getHeight() * 1.1, 0, 1, 1,
+            -- font_arial_regular28:getWidth(ctrl_text2) * 0.5,
+            font_arial_regular28:getHeight()
         )
     end
 

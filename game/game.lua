@@ -126,7 +126,7 @@ function Game:new(index, init_hp)
 
     self.dialogue = Dialogue({
         id = "end_dialogue" .. self.index,
-        font = Assets.fonts.impact24,
+        font = Assets.fonts.arial_light24,
         data = require("data.end_dialogue" .. self.index),
         align = "left",
         repeating = false,
@@ -136,7 +136,7 @@ function Game:new(index, init_hp)
     if self.index == 2 then
         self.prologue = Dialogue({
             id = "prologue" .. self.index,
-            font = Assets.fonts.impact24,
+            font = Assets.fonts.arial_light24,
             data = require("data.prologue" .. self.index),
             align = "center",
             repeating = false,
@@ -761,7 +761,7 @@ function Game:handle_prologue_2(obj_dialogue)
 
         self.dialogue = Dialogue({
             id = "end_dialogue" .. self.index .. "b",
-            font = Assets.fonts.impact24,
+            font = Assets.fonts.arial_light24,
             data = require("data.end_dialogue" .. self.index .. "b"),
             align = "left",
             repeating = false,
@@ -779,7 +779,7 @@ function Game:handle_prologue_2(obj_dialogue)
         self.controls.enabled = true
         self.prologue = Dialogue({
             id = "prologue" .. self.index .. "b",
-            font = Assets.fonts.impact24,
+            font = Assets.fonts.arial_light24,
             data = require("data.prologue" .. self.index .. "b"),
             align = "center",
             repeating = false,
@@ -851,7 +851,7 @@ function Game:show_enemy(enemy_name)
     elseif enemy_name == "giant" or enemy_name == "serpent" then
         self.enemy_dialogue = Dialogue({
             id = "enemy_dialogue_" .. enemy_name,
-            font = Assets.fonts.impact24,
+            font = Assets.fonts.arial_light24,
             data = require("data.enemy_dialogue_" .. enemy_name),
             align = "left",
             repeating = false,
@@ -900,7 +900,7 @@ function Game:show_other(name)
     if name == "juana" or name == "leonora" then
         self.other_dialogue = Dialogue({
             id = "other_dialogue_" .. name,
-            font = Assets.fonts.impact24,
+            font = Assets.fonts.arial_light24,
             data = require("data.other_dialogue_" .. name),
             align = "left",
             repeating = false,
