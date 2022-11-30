@@ -1,5 +1,5 @@
 return {
 	{
-		"Habang binubuhusan ni don juan ng tubig para sa magkapatid ito muna bumalik sa dati at naging tao na sila don pedro at don diego.",
+		"Habang umaawit ang ibon ay sinugatan niya ang kanyang palad upang di makatulog. Iniwasan din niyang mapatakan sa pagbabawas ng ibon. Sa pagkakataong iyon, nahuli ni prinsipe juan ang engkantadang ibon.",
 	},
 }

@@ -46,7 +46,9 @@ function Enemy:new(name, opts, images)
             if self.dialogue then
                 Events.emit("on_dialogue_show", self.dialogue)
             else
-                Events.emit("start_battle", self)
+                if self.name ~= "adarna" then
+                    Events.emit("start_battle", self)
+                end
             end
         end)
 
@@ -147,36 +149,37 @@ end
 
 function Enemy:draw()
     self.sprite:draw()
+    if self.name ~= "adarna" then
+        local gap = 8
+        local scale = 0.25
+        local iw = self.images.icon:getWidth()
+        local font = Assets.fonts.impact20
+        local ix = WW - iw * scale
+        love.graphics.draw(self.images.icon, ix - iw * scale, gap, 0, scale, scale)
 
-    local gap = 8
-    local scale = 0.25
-    local iw = self.images.icon:getWidth()
-    local font = Assets.fonts.impact20
-    local ix = WW - iw * scale
-    love.graphics.draw(self.images.icon, ix - iw * scale, gap, 0, scale, scale)
-
-    local hw, hh = self.images.heart:getDimensions()
-    local hscale = 0.15
-    local bx = ix - gap * 2 - iw * scale - hw * hscale * 0.5
-    local by = gap * 3 + hh * hscale * 0.5
-    for i = 1, self.max_health do
-        if i <= self.health then
-            love.graphics.setColor(1, 0, 0, 1)
-        else
-            love.graphics.setColor(0, 0, 0, 1)
+        local hw, hh = self.images.heart:getDimensions()
+        local hscale = 0.15
+        local bx = ix - gap * 2 - iw * scale - hw * hscale * 0.5
+        local by = gap * 3 + hh * hscale * 0.5
+        for i = 1, self.max_health do
+            if i <= self.health then
+                love.graphics.setColor(1, 0, 0, 1)
+            else
+                love.graphics.setColor(0, 0, 0, 1)
+            end
+            local x = bx - (i - 1) * hw * hscale - gap * (i - 1)
+            love.graphics.draw(self.images.heart, x, by, 0, hscale, hscale, hw * 0.5, hh * 0.5)
         end
-        local x = bx - (i - 1) * hw * hscale - gap * (i - 1)
-        love.graphics.draw(self.images.heart, x, by, 0, hscale, hscale, hw * 0.5, hh * 0.5)
-    end
-    love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.setColor(1, 1, 1, 1)
 
-    love.graphics.setFont(font)
-    love.graphics.print(self.name_filipino,
-        ix - gap * 2 - iw * scale,
-        by + hh * scale * 0.5 + gap,
-        0, 1, 1,
-        font:getWidth(self.name_filipino), font:getHeight() * 0.5
-    )
+        love.graphics.setFont(font)
+        love.graphics.print(self.name_filipino,
+            ix - gap * 2 - iw * scale,
+            by + hh * scale * 0.5 + gap,
+            0, 1, 1,
+            font:getWidth(self.name_filipino), font:getHeight() * 0.5
+        )
+    end
 end
 
 return Enemy

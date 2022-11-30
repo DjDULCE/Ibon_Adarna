@@ -6,14 +6,14 @@ local settings_boxes = {"resume", "yugto", "restart", "exit"}
 
 local enemies = {
     { "wolf", "snake", "boar", "spider" },
-    { "boar", "eagle", "snake", "adarna" },
+    { "boar", "eagle", "snake", "adarna"},
     { "spider", "bat", "giant", "serpent" },
     { "crow", "lion", "snake", "boar" },
     { "wolf", "eagle", "snake", "salermo" },
 }
 local additional_objs = {
     {},
-    { "don_pedro", "don_diego", "ermitanyo", "statue1", "statue2", "tree", },
+    { "don_pedro", "don_diego", "ermitanyo", "statue1", "statue2", "tree", "adarna"},
     { "juana", "leonora", },
     { "maria", },
     { "maria", "salermo2", },
@@ -411,7 +411,9 @@ function Game:load()
     })
 
     local obj_bar = self.objects.bar
-    local spacing = (bar_w * bar_sx) / (#enemies[self.index] + 2)
+    local n_enemies = #enemies[self.index]
+    local spacing = (bar_w * bar_sx) / (n_enemies + 2)
+
     local offset = bar_w * bar_sx * 0.25
     for i, str in ipairs(enemies[self.index]) do
         local key = "icon_" .. str
@@ -425,6 +427,10 @@ function Game:load()
             is_hoverable = false, is_clickable = false,
             force_non_interactive = true,
         })
+
+        if str == "adarna" then
+            self.objects[key].alpha = 0
+        end
     end
 
     local ipw, iph = self.ui.icon_player:getDimensions()
@@ -578,7 +584,20 @@ function Game:on_player_move_x(dir, dt)
         local ip = self.objects.icon_player
         local ep = self.objects["icon_" .. key_enemy]
 
-        if self.index == 3 and ip.x >= (ep.x - 64) then
+        if self.index == 2 and key_enemy == "adarna" and not self.objects.adarna and not self.tree_timer then
+            local obj_tree = self.objects.tree
+            local tx = WW * 0.5
+            local orig_x = obj_tree.x
+            self.tree_timer = timer(2,
+                function(tree_progress)
+                    obj_tree.x = mathx.lerp(orig_x, tx, tree_progress)
+                end,
+                function()
+                    self.tree_timer = nil
+                    self:show_other("adarna")
+                end
+            )
+        elseif self.index == 3 and ip.x >= (ep.x - 64) then
             if key_enemy == "giant" and (not self.objects.juana) then
                 self:show_other("juana")
                 self.player.can_move = false
@@ -589,7 +608,9 @@ function Game:on_player_move_x(dir, dt)
         end
 
         if (not self.enemy) and (ip.x >= (ep.x - 36)) then
-            self:show_enemy(enemies[self.index][self.current_enemy])
+            if key_enemy ~= "adarna" then
+                self:show_enemy(enemies[self.index][self.current_enemy])
+            end
         end
 
         if ip.x >= ep.x then
@@ -837,17 +858,17 @@ function Game:show_enemy(enemy_name)
     })
 
     if enemy_name == "adarna" then
-        local obj_tree = self.objects.tree
-        local tx = WW * 0.7
-        local orig_x = obj_tree.x
-        self.tree_timer = timer(1,
-            function(tree_progress)
-                obj_tree.x = mathx.lerp(orig_x, tx, tree_progress)
-            end,
-            function()
-                self.tree_timer = nil
-            end
-        )
+        -- local obj_tree = self.objects.tree
+        -- local tx = WW * 0.7
+        -- local orig_x = obj_tree.x
+        -- self.tree_timer = timer(1,
+        --     function(tree_progress)
+        --         obj_tree.x = mathx.lerp(orig_x, tx, tree_progress)
+        --     end,
+        --     function()
+        --         self.tree_timer = nil
+        --     end
+        -- )
     elseif enemy_name == "giant" or enemy_name == "serpent" then
         self.enemy_dialogue = Dialogue({
             id = "enemy_dialogue_" .. enemy_name,
@@ -865,6 +886,15 @@ function Game:show_other(name)
     print("showing other:", name)
     local ow, oh = self.images[name]:getDimensions()
     local osx, osy = -1, 1
+    local cw, ch = 24, 39
+    local dur = 1
+
+    if name == "adarna" then
+        cw, ch = 147, 133
+        osx = 1
+        dur = 3
+    end
+
     self.objects[name] = Sprite({
         image = self.images[name],
         x = WW * 1.5 + ow * osx * 0.5,
@@ -874,15 +904,15 @@ function Game:show_other(name)
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
         collider = {
-            w = 24,
-            h = 49,
+            w = cw,
+            h = ch,
             origin = "center"
         }
     })
 
     local tx = WW * 0.85
     local orig_x = self.objects[name].x
-    self.show_timer = timer(1,
+    self.show_timer = timer(dur,
         function(progress)
             self.objects[name].x = mathx.lerp(orig_x, tx, progress)
         end,
@@ -890,14 +920,27 @@ function Game:show_other(name)
             self.show_timer = nil
             self.player.can_move = true
 
-            if self.index == 4 then
+            if self.index == 2 then
+                Events.emit("on_dialogue_show", self.other_dialogue)
+            elseif self.index == 4 then
                 self.player.fake_move2 = true
                 self.player.fake_move = false
             end
         end
     )
 
-    if name == "juana" or name == "leonora" then
+    if name == "adarna" then
+        self.other_dialogue = Dialogue({
+            id = "prologue2",
+            font = Assets.fonts.arial_light24,
+            data = require("data.prologue2"),
+            align = "left",
+            repeating = false,
+            enabled = false,
+            simple = true,
+        })
+        self.objects[name].dialogue = self.other_dialogue
+    elseif name == "juana" or name == "leonora" then
         self.other_dialogue = Dialogue({
             id = "other_dialogue_" .. name,
             font = Assets.fonts.arial_light24,
@@ -1014,19 +1057,19 @@ end
 
 function Game:post_battle(enemy_name)
     if enemy_name == "adarna" then
-        self.player.can_move = false
-        self.player.show_health = false
-        self.fade_timer = timer(1,
-            function(progress)
-                self.fade_alpha = progress
-            end,
-            function()
-                self.fade_timer = nil
-                self.wait_timer = timer(1, nil, function()
-                    Events.emit("on_dialogue_show", self.prologue)
-                end)
-            end
-        )
+        -- self.player.can_move = false
+        -- self.player.show_health = false
+        -- self.fade_timer = timer(1,
+        --     function(progress)
+        --         self.fade_alpha = progress
+        --     end,
+        --     function()
+        --         self.fade_timer = nil
+        --         self.wait_timer = timer(1, nil, function()
+        --             Events.emit("on_dialogue_show", self.prologue)
+        --         end)
+        --     end
+        -- )
     elseif enemy_name == "giant" or enemy_name == "serpent" then
         self.player.can_move = true
         self.player.fake_move2 = true
