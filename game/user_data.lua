@@ -49,7 +49,10 @@ function UserData:reset_progress()
     end
     data.difficulty = 1
     data.stage = 1
+    data.max_stage = 1
+    data.init_hp = 10
     data.last_id = nil
+    data.last_enemy_index = nil
 end
 
 return UserData
