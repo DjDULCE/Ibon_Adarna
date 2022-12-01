@@ -128,6 +128,7 @@ function Menu:load(show_main)
         y = WH - trophy_h * 0.5 - pad,
         sx = btn_scale, sy = btn_scale,
         ox = trophy_w * 0.5, oy = trophy_h * 0.5,
+        is_clickable = false, is_hoverable = false,
         alpha = 0,
         sound = self.sfx.select,
     })
@@ -141,6 +142,7 @@ function Menu:load(show_main)
         ox = tutorial_w * 0.5, oy = tutorial_h * 0.5,
         alpha = 0,
         sound = self.sfx.select,
+        is_clickable = false, is_hoverable = false,
     })
 
     local bb_sx, bb_sy = 0.55, 0.5
@@ -751,6 +753,7 @@ function Menu:setup_leaderboards_and_tutorial()
     }
 
     local tw, th, tsx, tsy = self:change_tutorial(0, 0)
+
     local tbw, tbh = self.tutorial.btn_back:getDimensions()
     self.objects.tutorial_back = Sprite({
         image = self.tutorial.btn_back,
@@ -950,6 +953,12 @@ function Menu:change_tutorial(dt, alpha)
         force_non_interactive = true,
         alpha = alpha or 1,
     })
+    self.group_tutorial = {
+        self.objects.tutorial_pic,
+        self.objects.tutorial_back,
+        self.objects.tutorial_left,
+        self.objects.tutorial_right,
+    }
     return tw, th, tsx, tsy
 end
 

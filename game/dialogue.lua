@@ -115,7 +115,7 @@ function Dialogue:show()
     self.sfx.dialogue_next:play()
 
     local vo_index = tostring(self.vo_index)
-    if self.vos[vo_index]:isPlaying() then
+    if self.vos[vo_index] and self.vos[vo_index]:isPlaying() then
         self.vos[vo_index]:stop()
     end
 
