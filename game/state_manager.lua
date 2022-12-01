@@ -30,12 +30,12 @@ function StateManager:update(dt)
         for _, key in ipairs(self.current.orders) do
             local obj = self.current.objects[key]
             if obj and obj.sound then
-                obj.sound:setVolume(UserData.data.sound)
+                obj.sound:setVolume(UserData.data.sound * 0.5)
             end
         end
     end
     if self.current.sources then
-        self.current.sources.bgm:setVolume(UserData.data.music)
+        self.current.sources.bgm:setVolume(UserData.data.music * 0.5)
     end
 end
 

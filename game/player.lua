@@ -16,6 +16,9 @@ function Player:new(x, y)
     self.ui = Assets.load_images("ui")
     self.sfx = Assets.load_sources("sfx", "static")
     self.sfx.player_attack:setLooping(false)
+    for _, sfx in pairs(self.sfx) do
+        sfx:setVolume(0.5)
+    end
     self.x = x
     self.y = y
     self.dir = 1

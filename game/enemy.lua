@@ -23,6 +23,9 @@ local translation = {
 function Enemy:new(name, opts, images)
     self.sfx = Assets.load_sources("sfx", "static")
     self.sfx.enemy_attack:setLooping(false)
+    for _, sfx in pairs(self.sfx) do
+        sfx:setVolume(0.5)
+    end
     local difficulty = UserData.data.difficulty
     self.name = name
     self.name_filipino = translation[name]

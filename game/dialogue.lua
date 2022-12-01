@@ -5,7 +5,7 @@ local Dialogue = class({
 local padding = 32
 local mapping = {
     ["Don Juan"] = "player",
-    ["Don Fernando"] = "fernando",
+    ["Haring Fernando"] = "fernando",
     ["Ermitanyo"] = "ermitanyo",
     ["Don Diego"] = "diego",
     ["Don Pedro"] = "pedro",
@@ -23,6 +23,9 @@ function Dialogue:new(opt)
     self.faces = Assets.load_images("faces")
     self.sfx = Assets.load_sources("sfx", "static")
     self.sfx.dialogue_next:setLooping(false)
+    for _, sfx in pairs(self.sfx) do
+        sfx:setVolume(0.5)
+    end
 
     self.vos = Assets.load_vo(self.id)
     self.vo_index = 0

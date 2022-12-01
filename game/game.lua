@@ -68,6 +68,9 @@ function Game:new(index, init_hp)
     self.ui = Assets.load_images("ui")
     self.sources = Assets.load_sources(id)
     self.sfx = Assets.load_sources("sfx", "static")
+    for _, sfx in pairs(self.sfx) do
+        sfx:setVolume(0.5)
+    end
     self.controls = Controls()
     self.difficulty = UserData.data.difficulty
     self.index = index
@@ -159,7 +162,7 @@ end
 function Game:load()
     self.sources.bgm:play()
     self.sources.bgm:setLooping(true)
-    self.sources.bgm:setVolume(UserData.data.music)
+    self.sources.bgm:setVolume(UserData.data.music * 0.5)
 
     local bgw, bgh = self.images.bg:getDimensions()
     self.objects.bg = Sprite({
@@ -267,7 +270,7 @@ function Game:load()
         else
             self.pause_objects.btn_music.image = self.ui.btn_music_off
         end
-        self.sources.bgm:setVolume(UserData.data.music)
+        self.sources.bgm:setVolume(UserData.data.music * 0.5)
         UserData:save()
     end
 
@@ -292,7 +295,7 @@ function Game:load()
         for _, key in ipairs(self.orders) do
             local obj = self.objects[key]
             if obj and obj.sound then
-                obj.sound:setVolume(UserData.data.sound)
+                obj.sound:setVolume(UserData.data.sound * 0.5)
             end
         end
 
