@@ -73,14 +73,13 @@ function Assets.load_sources(id, kind)
 end
 
 function Assets.load_vo(id)
-    kind = kind or "static"
     local sources = {}
     local path = VO_PATH .. id .. "/"
     local files = love.filesystem.getDirectoryItems(path)
     for _, filename in ipairs(files) do
         local key = filename:sub(0, -5)
         print("loading", filename)
-        sources[key] = love.audio.newSource(path .. filename, kind)
+        sources[key] = love.audio.newSource(path .. filename, "static")
     end
     return sources
 end

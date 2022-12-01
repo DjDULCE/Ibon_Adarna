@@ -10,8 +10,7 @@ return {
     {
         name = "Haring Fernando",
         side = "right",
-        "O, aking bunsong anak, kung ikaw ay mawawala sa aking tabi",
-        "at paningin at tiyak kong ikakamatay.",
+        "O, aking bunsong anak, kung ikaw ay mawawala sa aking tabi at paningin at tiyak kong ikakamatay.",
     },
     {
         name = "Don Juan",

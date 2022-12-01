@@ -81,6 +81,9 @@ function Dialogue:show()
     local data = self.data[self.current]
     if not data then
         self.enabled = false
+        for _, vo in pairs(self.vos) do
+            if vo:isPlaying() then vo:stop() end
+        end
         self.current_name = nil
         Events.emit("on_dialogue_end", self)
 
@@ -90,6 +93,17 @@ function Dialogue:show()
         end
         return
     end
+
+    for _, vo in pairs(self.vos) do
+        if vo:isPlaying() then vo:stop() end
+    end
+    self.vo_index = self.vo_index + 1
+    vo_index = tostring(self.vo_index)
+    if self.vos[vo_index] then
+        self.vos[vo_index]:play()
+        self.vos[vo_index]:setVolume(1)
+    end
+
 
     self.current_name = data.name
 
@@ -116,18 +130,6 @@ function Dialogue:show()
         self.sfx.dialogue_next:stop()
     end
     self.sfx.dialogue_next:play()
-
-    local vo_index = tostring(self.vo_index)
-    if self.vos[vo_index] and self.vos[vo_index]:isPlaying() then
-        self.vos[vo_index]:stop()
-    end
-
-    self.vo_index = self.vo_index + 1
-    vo_index = tostring(self.vo_index)
-    if self.vos[vo_index] then
-        self.vos[vo_index]:play()
-        self.vos[vo_index]:setVolume(1)
-    end
 
     if self.simple then
         self.w = self.bg_w
