@@ -28,7 +28,7 @@ function Dialogue:new(opt)
     end
 
     self.vos = Assets.load_vo(self.id)
-    self.vo_index = 0
+    self.vo_index = 1
 
     self.enabled = not not opt.enabled
     self.repeating = opt.repeating
@@ -64,6 +64,7 @@ function Dialogue:new(opt)
     Events.register(self, "on_clicked_a")
     Events.register(self, "on_clicked_b")
     Events.register(self, "on_dialogue_show")
+    Events.register(self, "on_exit")
 
     if self.enabled then
         self:show()
@@ -81,9 +82,6 @@ function Dialogue:show()
     local data = self.data[self.current]
     if not data then
         self.enabled = false
-        for _, vo in pairs(self.vos) do
-            if vo:isPlaying() then vo:stop() end
-        end
         self.current_name = nil
         Events.emit("on_dialogue_end", self)
 
@@ -94,16 +92,13 @@ function Dialogue:show()
         return
     end
 
-    for _, vo in pairs(self.vos) do
-        if vo:isPlaying() then vo:stop() end
+    self.current_vo = self.vos[tostring(self.vo_index)]
+    if self.current_vo then
+        self.current_vo:setLooping(false)
+        self.current_vo:play()
+        self.current_vo:setVolume(1)
+        self.vo_index = self.vo_index + 1
     end
-    self.vo_index = self.vo_index + 1
-    vo_index = tostring(self.vo_index)
-    if self.vos[vo_index] then
-        self.vos[vo_index]:play()
-        self.vos[vo_index]:setVolume(1)
-    end
-
 
     self.current_name = data.name
 
@@ -111,6 +106,7 @@ function Dialogue:show()
     if self.text_index > #data then
         self.current = self.current + 1
         self.text_index = 0
+        self.vo_index = self.vo_index - 1
         self:show()
         return
     end
@@ -166,6 +162,13 @@ end
 
 function Dialogue:update(dt)
     if not self.enabled then return end
+
+    for _, vo in pairs(self.vos) do
+        if vo ~= self.current_vo then
+            vo:stop()
+        end
+    end
+
     if self.skipped then return end
     self.dt = math.min(self.t, self.dt + dt * self.speed)
 end
@@ -217,5 +220,11 @@ end
 
 function Dialogue:on_down_left() if self.enabled then return true end end
 function Dialogue:on_down_right() if self.enabled then return true end end
+
+function Dialogue:on_exit()
+    for _, vo in pairs(self.vos) do
+        vo:stop()
+    end
+end
 
 return Dialogue

@@ -1434,6 +1434,7 @@ function Game:mousereleased(mx, my, mb)
 end
 
 function Game:exit()
+    Events.emit("on_exit")
     self.player:exit()
     self.sources.bgm:stop()
     Events.clear()
