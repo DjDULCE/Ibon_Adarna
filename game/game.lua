@@ -66,7 +66,7 @@ function Game:new(index, init_hp)
     local idn = id .. tostring(index)
     self.images = Assets.load_images(idn)
     self.ui = Assets.load_images("ui")
-    self.sources = Assets.load_sources(id)
+    self.sources = Assets.load_sources(id, "static")
     self.sfx = Assets.load_sources("sfx", "static")
     for _, sfx in pairs(self.sfx) do
         sfx:setVolume(0.5)
@@ -639,10 +639,22 @@ function Game:on_player_move_x(dir, dt)
 end
 
 function Game:on_dialogue_show()
+    self.prev_bgm = self.sources.bgm:isPlaying()
+    self.sources.bgm:stop()
+
+    self.sources.bgm_dialogue:play()
+    self.sources.bgm_dialogue:setLooping(true)
+    self.sources.bgm_dialogue:setVolume(UserData.data.music * 0.5)
+
     self.can_pause = false
 end
 
 function Game:on_dialogue_end(obj_dialogue)
+    self.sources.bgm_dialogue:stop()
+    if self.prev_bgm then
+        self.sources.bgm:play()
+    end
+
     self.can_pause = true
     self.controls.enabled = false
     print("Finished", obj_dialogue.id)

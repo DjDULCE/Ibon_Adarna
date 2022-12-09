@@ -18,6 +18,7 @@ Events = require("events")
 Fade = require("fade")
 Player = require("player")
 Sprite = require("sprite")
+Slider = require("slider")
 StateManager = require("state_manager")
 UserData = require("user_data")
 

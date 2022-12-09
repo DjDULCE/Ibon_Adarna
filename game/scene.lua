@@ -212,6 +212,13 @@ function Scene:load()
 end
 
 function Scene:on_dialogue_show()
+    self.prev_bgm = self.sources.bgm:isPlaying()
+    self.sources.bgm:stop()
+
+    self.sources.bgm_dialogue:play()
+    self.sources.bgm_dialogue:setLooping(true)
+    self.sources.bgm_dialogue:setVolume(UserData.data.music * 0.5)
+
     if self.index == 5 and self.objects.maria then
         self.player.can_move = true
     else
@@ -221,6 +228,12 @@ end
 
 function Scene:on_dialogue_end(obj_dialogue)
     print("on_dialogue_end", self.index, obj_dialogue.id)
+
+    self.sources.bgm_dialogue:stop()
+    if self.prev_bgm then
+        self.sources.bgm:play()
+    end
+
     if self.index == 3 and obj_dialogue.id == "scene3" then
         self.dialogue = Dialogue({
             id = "scene" .. self.index .. "b",
@@ -367,8 +380,10 @@ function Scene:mousereleased(mx, my, mb)
 end
 
 function Scene:exit()
+    Events.emit("on_exit")
     Events.clear()
     self.sources.bgm:stop()
+    self.sources.bgm_dialogue:stop()
 end
 
 return Scene

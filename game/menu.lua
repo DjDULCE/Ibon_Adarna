@@ -52,6 +52,7 @@ function Menu:new()
         "btn_a", "btn_b", "btn_left", "btn_right",
         "tutorial_pic", "tutorial_back",
         "tutorial_left", "tutorial_right",
+        "slider",
     }
 
     for _, opt in ipairs(options) do
@@ -462,6 +463,27 @@ function Menu:setup_settings()
         alpha = 0,
     })
 
+    local sbg_width, sbg_height = self.ui.slider_bg:getDimensions()
+    self.objects.slider = Slider({
+        knob_image = self.ui.slider_knob,
+        bg_image = self.ui.slider_bg,
+        x = self.objects.menu_box.x,
+        y = self.objects.menu_box.y,
+        sx = 0.85, sy = 0.85,
+        ox = sbg_width * 0.5, oy = sbg_height * 0.5,
+        current_value = UserData.data.music,
+        max_value = 1,
+        width = mb_width,
+        height = 11,
+        alpha = 0,
+        is_clickable = false,
+    })
+
+    self.objects.slider.on_dragged = function(_, current_value)
+        love.audio.setVolume(current_value)
+        UserData.data.music = current_value
+    end
+
     local bs_width, bs_height = self.images.box_settings:getDimensions()
     local bs_y = self.objects.menu_box.y - mb_height * 0.5
     local bs_sx, bs_sy = 0.5, 0.75
@@ -595,6 +617,7 @@ function Menu:setup_settings()
         self.objects.btn_sound_left,
         self.objects.btn_sound_right,
         self.objects.btn_x,
+        self.objects.slider,
     }
 
     self.objects.btn_gear.on_clicked = function()
@@ -764,7 +787,7 @@ function Menu:setup_leaderboards_and_tutorial()
         alpha = 0,
     })
 
-    local gap = 64
+    local gap = 0
     local tlw, tlh = self.tutorial.btn_left:getDimensions()
     self.objects.tutorial_left = Sprite({
         image = self.tutorial.btn_left,
@@ -1072,9 +1095,11 @@ function Menu:mousereleased(mx, my, mb)
 end
 
 function Menu:mousemoved(mx, my, dmx, dmy, istouch)
+    self.objects.slider:mousemoved(mx, my, dmx, dmy, istouch)
 end
 
 function Menu:mousefocus(focus)
+    self.objects.slider:mousefocus(focus)
 end
 
 function Menu:exit()

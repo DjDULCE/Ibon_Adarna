@@ -24,7 +24,7 @@ function Dialogue:new(opt)
     self.sfx = Assets.load_sources("sfx", "static")
     self.sfx.dialogue_next:setLooping(false)
     for _, sfx in pairs(self.sfx) do
-        sfx:setVolume(0.5)
+        sfx:setVolume(UserData.data.music * 0.5)
     end
 
     self.vos = Assets.load_vo(self.id)
