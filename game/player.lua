@@ -17,7 +17,7 @@ function Player:new(x, y)
     self.sfx = Assets.load_sources("sfx", "static")
     self.sfx.player_attack:setLooping(false)
     for _, sfx in pairs(self.sfx) do
-        sfx:setVolume(0.5)
+        sfx:setVolume(UserData.data.music * 0.5)
     end
     self.x = x
     self.y = y
@@ -253,7 +253,7 @@ function Player:draw()
         local gap = 8
         local scale = 0.25
         local ipw = self.ui.icon_player:getWidth()
-        local font = Assets.fonts.impact20
+        local font = Assets.fonts.arial_regular20
         love.graphics.draw(self.ui.icon_player, gap, gap, 0, scale, scale)
 
         local hw, hh = self.ui.heart:getDimensions()

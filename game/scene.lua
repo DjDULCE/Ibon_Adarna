@@ -30,7 +30,7 @@ function Scene:new(index)
 
     self.dialogue = Dialogue({
         id = "scene" .. index,
-        font = Assets.fonts.impact24,
+        font = Assets.fonts.arial_light24,
         data = require("data.scene" .. index),
         align = "left",
         repeating = false,
@@ -237,7 +237,7 @@ function Scene:on_dialogue_end(obj_dialogue)
     if self.index == 3 and obj_dialogue.id == "scene3" then
         self.dialogue = Dialogue({
             id = "scene" .. self.index .. "b",
-            font = Assets.fonts.impact24,
+            font = Assets.fonts.arial_light24,
             data = require("data.scene" .. self.index .. "b"),
             align = "center",
             repeating = false,
@@ -252,7 +252,7 @@ function Scene:on_dialogue_end(obj_dialogue)
             self.player.x = WW * 0.45
             self.dialogue = Dialogue({
                 id = "scene" .. self.index .. "b",
-                font = Assets.fonts.impact24,
+                font = Assets.fonts.arial_light24,
                 data = require("data.scene" .. self.index .. "b"),
                 align = "center",
                 repeating = false,
@@ -276,7 +276,7 @@ function Scene:on_dialogue_end(obj_dialogue)
 
             self.dialogue = Dialogue({
                 id = "scene" .. self.index .. "c",
-                font = Assets.fonts.impact24,
+                font = Assets.fonts.arial_light24,
                 data = require("data.scene" .. self.index .. "c"),
                 align = "center",
                 repeating = false,
@@ -291,7 +291,7 @@ function Scene:on_dialogue_end(obj_dialogue)
             self.objects.maria = nil
             self.dialogue = Dialogue({
                 id = "scene" .. self.index .. "d",
-                font = Assets.fonts.impact24,
+                font = Assets.fonts.arial_light24,
                 data = require("data.scene" .. self.index .. "d"),
                 align = "center",
                 repeating = false,

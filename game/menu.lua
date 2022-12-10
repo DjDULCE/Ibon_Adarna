@@ -43,9 +43,9 @@ function Menu:new()
         "box_bg", "denice", "jayson", "veronica",
         "menu_box", "box_settings", "btn_start", "btn_back",
         "box_settings_controls1", "box_settings_controls2",
-        "btn_music_left", "btn_music_right",
-        "btn_sound_left", "btn_sound_right", "btn_x",
-        "box_leaderboards",
+        -- "btn_music_left", "btn_music_right",
+        -- "btn_sound_left", "btn_sound_right",
+        "btn_x", "box_leaderboards",
         "box_score1", "box_score2", "box_score3",
         "avatar1", "avatar2", "avatar3",
         "btn_reset", "ctrl_avatar",
@@ -148,7 +148,7 @@ function Menu:load(show_main)
 
     local bb_sx, bb_sy = 0.55, 0.5
     local bb_w, bb_h = self.images.box_button:getDimensions()
-    local font = Assets.fonts.impact24
+    local font = Assets.fonts.arial_regular18
     for i = 1, #options do
         local opt = options[i]
         local y = WH * 0.4 + (pad + bb_h * bb_sy) * (((i - 1) % 3) + 1)
@@ -246,7 +246,7 @@ function Menu:load(show_main)
         love.event.quit()
     end
 
-    local font2 = Assets.fonts.impact18
+    local font2 = Assets.fonts.arial_regular18
     local bw, bh = self.ui.box_bg:getDimensions()
     local bsx = (WW * 0.6)/bw
     local bsy = (WH * 0.8)/bh
@@ -469,11 +469,12 @@ function Menu:setup_settings()
         bg_image = self.ui.slider_bg,
         x = self.objects.menu_box.x,
         y = self.objects.menu_box.y,
-        sx = 0.85, sy = 0.85,
+        sx = 0.75, sy = 0.75,
         ox = sbg_width * 0.5, oy = sbg_height * 0.5,
         current_value = UserData.data.music,
         max_value = 1,
-        width = mb_width,
+        -- width = mb_width * 0.8,
+        knob_scale = 0.75,
         height = 11,
         alpha = 0,
         is_clickable = false,
@@ -504,29 +505,29 @@ function Menu:setup_settings()
 
     local bsc_width, bsc_height = self.images.box_settings_controls:getDimensions()
     local bsc_sx, bsc_sy = 0.4, 0.4
-    local settings_texts = { "MUSIKA", "TUNOG" }
-    for i = 1, 2 do
-        local key = "box_settings_controls" .. i
-        local text = settings_texts[i]
-        local bsc_x = HALF_WW + pad * 2
-        local bsc_y = self.objects.box_settings.y + bs_height * bs_sy + pad
-        bsc_y = bsc_y + (bsc_height * bsc_sy * (i - 1)) + pad * (i - 1)
-        self.objects[key] = Sprite({
-            image = self.images.box_settings_controls,
-            x = bsc_x, y = bsc_y,
-            ox = bsc_width * 0.5, oy = bsc_height * 0.5,
-            sx = bsc_sx, sy = bsc_sy,
-            text = text,
-            text_color = text_color,
-            font = font_arial_regular24,
-            tx = self.objects.menu_box.x - mb_width * 0.5 + font_arial_regular24:getWidth(text) * 0.5,
-            ty = bsc_y - font_arial_regular24:getHeight() * 0.5,
-            is_clickable = false, is_hoverable = false,
-            force_non_interactive = true,
-            alpha = 0,
-            sound = self.sfx.select,
-        })
-    end
+    -- local settings_texts = { "MUSIKA", "TUNOG" }
+    -- for i = 1, 2 do
+    --     local key = "box_settings_controls" .. i
+    --     local text = settings_texts[i]
+    --     local bsc_x = HALF_WW + pad * 2
+    --     local bsc_y = self.objects.box_settings.y + bs_height * bs_sy + pad
+    --     bsc_y = bsc_y + (bsc_height * bsc_sy * (i - 1)) + pad * (i - 1)
+    --     self.objects[key] = Sprite({
+    --         image = self.images.box_settings_controls,
+    --         x = bsc_x, y = bsc_y,
+    --         ox = bsc_width * 0.5, oy = bsc_height * 0.5,
+    --         sx = bsc_sx, sy = bsc_sy,
+    --         text = text,
+    --         text_color = text_color,
+    --         font = font_arial_regular24,
+    --         tx = self.objects.menu_box.x - mb_width * 0.5 + font_arial_regular24:getWidth(text) * 0.5,
+    --         ty = bsc_y - font_arial_regular24:getHeight() * 0.5,
+    --         is_clickable = false, is_hoverable = false,
+    --         force_non_interactive = true,
+    --         alpha = 0,
+    --         sound = self.sfx.select,
+    --     })
+    -- end
 
     local btn_control_scale_dt = 0.05
     local total_width = (bsc_width * bsc_sx) - pad * 2
@@ -547,51 +548,51 @@ function Menu:setup_settings()
         },
     }
 
-    for i = 1, 2 do
-        local control, left_color, right_color = unpack(ctrl_data[i])
-        local key = string.format("btn_%s_left", control)
-        local key2 = string.format("btn_%s_right", control)
-        local ref = "box_settings_controls" .. i
-
-        local left_x = self.objects[ref].x - total_width * 0.25 - pad * 0.5
-        self.objects[key] = Sprite({
-            image = self.images.btn_control,
-            x = left_x, y = self.objects[ref].y,
-            ox = btn_control_width * 0.5, oy = btn_control_height * 0.5,
-            sx = btn_control_sx, sy = btn_control_sy,
-            color = left_color,
-            text = "ON",
-            font = font_arial_regular24,
-            text_color = { 1, 1, 1 },
-            tx = left_x, ty = self.objects[ref].y,
-            tox = font_arial_regular24:getWidth("ON") * 0.5,
-            toy = font_arial_regular24:getHeight() * 0.5,
-            sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
-            is_clickable = false, is_hoverable = false,
-            alpha = 0,
-            sound = self.sfx.select,
-        })
-
-        local right_x = self.objects[key].x + btn_control_width * btn_control_sx + pad * 0.5
-        self.objects[key2] = Sprite({
-            image = self.images.btn_control,
-            x = right_x,
-            y = self.objects[ref].y,
-            ox = btn_control_width * 0.5, oy = btn_control_height * 0.5,
-            sx = btn_control_sx, sy = btn_control_sy,
-            color = right_color,
-            text = "OFF",
-            text_color = { 1, 1, 1 },
-            font = font_arial_regular24,
-            tx = right_x, ty = self.objects[ref].y,
-            tox = font_arial_regular24:getWidth("OFF") * 0.5,
-            toy = font_arial_regular24:getHeight() * 0.5,
-            sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
-            is_clickable = false, is_hoverable = false,
-            alpha = 0,
-            sound = self.sfx.select,
-        })
-    end
+    -- for i = 1, 2 do
+    --     local control, left_color, right_color = unpack(ctrl_data[i])
+    --     local key = string.format("btn_%s_left", control)
+    --     local key2 = string.format("btn_%s_right", control)
+    --     local ref = "box_settings_controls" .. i
+    --
+    --     local left_x = self.objects[ref].x - total_width * 0.25 - pad * 0.5
+    --     self.objects[key] = Sprite({
+    --         image = self.images.btn_control,
+    --         x = left_x, y = self.objects[ref].y,
+    --         ox = btn_control_width * 0.5, oy = btn_control_height * 0.5,
+    --         sx = btn_control_sx, sy = btn_control_sy,
+    --         color = left_color,
+    --         text = "ON",
+    --         font = font_arial_regular24,
+    --         text_color = { 1, 1, 1 },
+    --         tx = left_x, ty = self.objects[ref].y,
+    --         tox = font_arial_regular24:getWidth("ON") * 0.5,
+    --         toy = font_arial_regular24:getHeight() * 0.5,
+    --         sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
+    --         is_clickable = false, is_hoverable = false,
+    --         alpha = 0,
+    --         sound = self.sfx.select,
+    --     })
+    --
+    --     local right_x = self.objects[key].x + btn_control_width * btn_control_sx + pad * 0.5
+    --     self.objects[key2] = Sprite({
+    --         image = self.images.btn_control,
+    --         x = right_x,
+    --         y = self.objects[ref].y,
+    --         ox = btn_control_width * 0.5, oy = btn_control_height * 0.5,
+    --         sx = btn_control_sx, sy = btn_control_sy,
+    --         color = right_color,
+    --         text = "OFF",
+    --         text_color = { 1, 1, 1 },
+    --         font = font_arial_regular24,
+    --         tx = right_x, ty = self.objects[ref].y,
+    --         tox = font_arial_regular24:getWidth("OFF") * 0.5,
+    --         toy = font_arial_regular24:getHeight() * 0.5,
+    --         sx_dt = btn_control_scale_dt, sy_dt = btn_control_scale_dt,
+    --         is_clickable = false, is_hoverable = false,
+    --         alpha = 0,
+    --         sound = self.sfx.select,
+    --     })
+    -- end
 
     local x_width, x_height = self.images.btn_x:getDimensions()
     local x_scale = 0.2
@@ -633,14 +634,14 @@ function Menu:setup_settings()
         update_group(self.group_tutorial, 0, false)
     end
 
-    local btn_music_left = self.objects.btn_music_left
-    local btn_music_right = self.objects.btn_music_right
-    local btn_sound_left = self.objects.btn_sound_left
-    local btn_sound_right = self.objects.btn_sound_right
-    btn_music_left.on_clicked = function() self:toggle_control(btn_music_left) end
-    btn_music_right.on_clicked = function() self:toggle_control(btn_music_right) end
-    btn_sound_left.on_clicked = function() self:toggle_control(btn_sound_left) end
-    btn_sound_right.on_clicked = function() self:toggle_control(btn_sound_right) end
+    -- local btn_music_left = self.objects.btn_music_left
+    -- local btn_music_right = self.objects.btn_music_right
+    -- local btn_sound_left = self.objects.btn_sound_left
+    -- local btn_sound_right = self.objects.btn_sound_right
+    -- btn_music_left.on_clicked = function() self:toggle_control(btn_music_left) end
+    -- btn_music_right.on_clicked = function() self:toggle_control(btn_music_right) end
+    -- btn_sound_left.on_clicked = function() self:toggle_control(btn_sound_left) end
+    -- btn_sound_right.on_clicked = function() self:toggle_control(btn_sound_right) end
 end
 
 function Menu:toggle_control(btn)
@@ -1037,7 +1038,7 @@ function Menu:draw()
 
     local bb = self.objects.box_bg
     if bb.alpha == 1 then
-        local font = Assets.fonts.impact18
+        local font = Assets.fonts.arial_regular18
         local bw, bh = self.ui.box_bg:getDimensions()
         love.graphics.setFont(font)
         love.graphics.setColor(0, 0, 0, 1)

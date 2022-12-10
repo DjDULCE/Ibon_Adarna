@@ -26,9 +26,11 @@ function Slider:new(opts)
     self.mouse = vec2()
     self.hold = false
 
+    self.knob_scale = opts.knob_scale or 1
+
     local value = self.current_value/self.max_value
     local bg_width = self.bg_image:getWidth()
-    self.base_kx = self.x - self.ox * 0.25
+    self.base_kx = self.x - self.ox * 0.4
     self.kw = bg_width * self.sx * 0.7
     local kx = self.base_kx + value * self.kw
     local ky = self.y
@@ -64,9 +66,8 @@ function Slider:draw()
     love.graphics.setColor(1, 1, 1, self.alpha)
     love.graphics.draw(self.bg_image, self.x, self.y, 0, self.sx, self.sy, self.ox, self.oy)
 
-    local knob_scale = 1
     if self.is_knob_hovered then
-        knob_scale = knob_scale + 0.1
+        knob_scale = self.knob_scale + 0.1
     end
 
     love.graphics.setColor(1, 1, 1, self.alpha)
@@ -76,7 +77,7 @@ function Slider:draw()
         self.knob_pos.x,
         self.knob_pos.y,
         0,
-        knob_scale, knob_scale,
+        self.knob_scale, self.knob_scale,
         knob_width * 0.5,
         knob_height * 0.5
     )

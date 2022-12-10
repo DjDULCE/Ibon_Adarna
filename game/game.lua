@@ -69,7 +69,7 @@ function Game:new(index, init_hp)
     self.sources = Assets.load_sources(id, "static")
     self.sfx = Assets.load_sources("sfx", "static")
     for _, sfx in pairs(self.sfx) do
-        sfx:setVolume(0.5)
+        sfx:setVolume(UserData.data.music * 0.5)
     end
     self.controls = Controls()
     self.difficulty = UserData.data.difficulty
@@ -121,7 +121,7 @@ function Game:new(index, init_hp)
     end
 
     self.damage_text = {
-        font = Assets.fonts.impact24,
+        font = Assets.fonts.arial_regular24,
         color = { 1, 0, 0, 1 },
         x = -100, y = -100,
         text = "0"
@@ -180,7 +180,7 @@ function Game:load()
     local bbsx = (WW * 0.5) / bbw
     local bbsy = (WH - padding) / bbh
     local text = "PAGHANAP AT GAWAIN"
-    local font = Assets.fonts.impact32
+    local font = Assets.fonts.arial_regular32
     self.objects.box_bg = Sprite({
         image = self.ui.box_bg,
         x = HALF_WW, y = HALF_WH,
@@ -340,7 +340,7 @@ function Game:load()
     end
 
     local bw, bh = self.ui.box:getDimensions()
-    local font2 = Assets.fonts.impact20
+    local font2 = Assets.fonts.arial_regular20
     local text2 = tasks[self.index][1]
     self.objects.box1 = Sprite({
         image = self.ui.box,
@@ -459,7 +459,7 @@ function Game:load()
         is_hoverable = false, is_clickable = false,
         force_non_interactive = true,
         alpha = 0,
-        font = Assets.fonts.impact20,
+        font = Assets.fonts.arial_regular20,
         text_color = { 0, 0, 0 },
         is_printf = true, align = "center",
         limit = qbg_w * 0.8,
@@ -496,7 +496,7 @@ function Game:on_paused(bool)
             obj.alpha = 0
         end
 
-        local font = Assets.fonts.impact32
+        local font = Assets.fonts.arial_regular32
         self.pause_objects.paused_text_box.text = "I-Paused"
         self.pause_objects.paused_text_box.tox = font:getWidth("I-Paused") * 0.5
         self.pause_objects.paused_text_box.text_color = { 0, 0, 0 }
@@ -995,7 +995,7 @@ function Game:start_battle(obj_enemy)
     obj_question.ty = obj_question.y - h * obj_question.sy * 0.5 + 16
 
 
-    local font = Assets.fonts.impact18
+    local font = Assets.fonts.arial_regular18
     local img_choice = self.ui.btn_choice
     local icw, ich = img_choice:getDimensions()
     local choice_scale = 0.5
@@ -1191,7 +1191,7 @@ function Game:on_game_over()
 end
 
 function Game:open_yugto()
-    local font = Assets.fonts.impact32
+    local font = Assets.fonts.arial_regular32
     self.pause_objects.paused_text_box.text = "MGA YUGTO"
     self.pause_objects.paused_text_box.tox = font:getWidth("MGA YUGTO") * 0.5
 
@@ -1274,7 +1274,7 @@ function Game:open_yugto()
     local w, h = self.ui.box_yugto:getDimensions()
     local sx = 1.25
     local sy = 0.5
-    local font_yugto = Assets.fonts.impact24
+    local font_yugto = Assets.fonts.arial_regular24
     for i, str in ipairs(yugtos) do
         local text
 
@@ -1320,7 +1320,7 @@ function Game:open_yugto()
             local new_text = "GUSTO MO BA BUMALIK SA UMPISA?"
             self.pause_objects.paused_text_box.alpha = 0
 
-            local font3 = Assets.fonts.impact24
+            local font3 = Assets.fonts.arial_regular24
             self.pause_objects.pause_bg.text = new_text
             self.pause_objects.pause_bg.text_color = {0, 0, 0, 1}
             self.pause_objects.pause_bg.font = font3
@@ -1416,7 +1416,7 @@ function Game:draw()
     love.graphics.setColor(1, 1, 1, 1)
 
     if self.gameover then
-        local font = Assets.fonts.impact32
+        local font = Assets.fonts.arial_regular32
         love.graphics.setFont(font)
         love.graphics.print(
             "IKAW AY NATALO",

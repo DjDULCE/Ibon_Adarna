@@ -24,7 +24,7 @@ function Enemy:new(name, opts, images)
     self.sfx = Assets.load_sources("sfx", "static")
     self.sfx.enemy_attack:setLooping(false)
     for _, sfx in pairs(self.sfx) do
-        sfx:setVolume(0.5)
+        sfx:setVolume(UserData.data.music * 0.5)
     end
     local difficulty = UserData.data.difficulty
     self.name = name
@@ -156,7 +156,7 @@ function Enemy:draw()
         local gap = 8
         local scale = 0.25
         local iw = self.images.icon:getWidth()
-        local font = Assets.fonts.impact20
+        local font = Assets.fonts.arial_regular20
         local ix = WW - iw * scale
         love.graphics.draw(self.images.icon, ix - iw * scale, gap, 0, scale, scale)
 
