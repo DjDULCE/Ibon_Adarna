@@ -591,6 +591,7 @@ function Game:on_player_move_x(dir, dt)
             local obj_tree = self.objects.tree
             local tx = WW * 0.5
             local orig_x = obj_tree.x
+            self:stop_vos()
             self.tree_timer = timer(2,
                 function(tree_progress)
                     obj_tree.x = mathx.lerp(orig_x, tx, tree_progress)
@@ -854,6 +855,7 @@ function Game:on_clicked_a()
 end
 
 function Game:show_enemy(enemy_name)
+    self:stop_vos()
     print("showing enemy:", enemy_name)
     local ew, eh = self.images[enemy_name]:getDimensions()
     local esx, esy = 1, 1
@@ -898,6 +900,7 @@ function Game:show_enemy(enemy_name)
 end
 
 function Game:show_other(name)
+    self:stop_vos()
     print("showing other:", name)
     local ow, oh = self.images[name]:getDimensions()
     local osx, osy = -1, 1
@@ -1149,6 +1152,7 @@ function Game:goto_next(str, shown_quest)
         return
     end
     Events.emit("fadeout", 3, function()
+        self:stop_vos()
         self.fade_alpha = 1
         self.controls.should_draw = false
         Events.emit("fadein", 1, function()
@@ -1180,6 +1184,7 @@ function Game:on_game_over()
     self.gameover = true
     self.gameover_timer = timer(1.25, nil,
         function()
+            self:stop_vos()
             local menu = require("menu")
             StateManager:switch(menu, true)
             UserData.data.last_id = nil
@@ -1446,10 +1451,29 @@ function Game:mousereleased(mx, my, mb)
 end
 
 function Game:exit()
+    self:stop_vos()
     Events.emit("on_exit")
     self.player:exit()
     self.sources.bgm:stop()
     Events.clear()
+end
+
+function Game:stop_vos()
+    if self.dialogue then
+        for _, vo in pairs(self.dialogue.vos) do
+            vo:stop()
+        end
+    end
+    if self.enemy_dialogue then
+        for _, vo in pairs(self.enemy_dialogue.vos) do
+            vo:stop()
+        end
+    end
+    if self.other_dialogue then
+        for _, vo in pairs(self.other_dialogue.vos) do
+            vo:stop()
+        end
+    end
 end
 
 return Game

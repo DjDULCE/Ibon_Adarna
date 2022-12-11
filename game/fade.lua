@@ -10,7 +10,6 @@ function Fade:new()
 end
 
 function Fade:fadeout(duration, cb)
-    Events.emit("on_exit")
     self.timer = timer(duration,
         function(progress)
             self.alpha = progress

@@ -83,6 +83,7 @@ function Dialogue:show()
     if not data then
         self.enabled = false
         self.current_name = nil
+        self:on_exit()
         Events.emit("on_dialogue_end", self)
 
         if self.repeating then
