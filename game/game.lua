@@ -1061,6 +1061,7 @@ function Game:finished_turn()
 end
 
 function Game:end_battle()
+    self:stop_vos()
     self.in_battle = false
     self.current_enemy = self.current_enemy + 1
     local obj_question = self.objects.question_bg
@@ -1074,6 +1075,7 @@ function Game:end_battle()
 end
 
 function Game:post_battle(enemy_name)
+    self:stop_vos()
     if enemy_name == "adarna" then
         -- self.player.can_move = false
         -- self.player.show_health = false

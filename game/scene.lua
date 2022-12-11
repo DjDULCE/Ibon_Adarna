@@ -52,8 +52,9 @@ end
 function Scene:on_player_move_x() end
 
 function Scene:load()
-    -- self.sources.bgm:play()
-    -- self.sources.bgm:setLooping(true)
+    self.sources.bgm_dialogue:play()
+    self.sources.bgm_dialogue:setLooping(true)
+    self.sources.bgm_dialogue:setVolume(UserData.data.music * 0.5)
 
     local p_width, p_height = self.images.platform:getDimensions()
     local p_sy = 1
@@ -212,9 +213,9 @@ function Scene:load()
 end
 
 function Scene:on_dialogue_show()
-    self.sources.bgm_dialogue:play()
-    self.sources.bgm_dialogue:setLooping(true)
-    self.sources.bgm_dialogue:setVolume(UserData.data.music * 0.5)
+    -- self.sources.bgm_dialogue:play()
+    -- self.sources.bgm_dialogue:setLooping(true)
+    -- self.sources.bgm_dialogue:setVolume(UserData.data.music * 0.5)
 
     if self.index == 5 and self.objects.maria then
         self.player.can_move = true
@@ -226,10 +227,10 @@ end
 function Scene:on_dialogue_end(obj_dialogue)
     print("on_dialogue_end", self.index, obj_dialogue.id)
 
-    self.sources.bgm_dialogue:stop()
-    if self.prev_bgm then
-        self.sources.bgm:play()
-    end
+    -- self.sources.bgm_dialogue:stop()
+    -- if self.prev_bgm then
+    --     self.sources.bgm:play()
+    -- end
 
     if self.index == 3 and obj_dialogue.id == "scene3" then
         self.dialogue = Dialogue({
@@ -379,8 +380,8 @@ end
 function Scene:exit()
     Events.emit("on_exit")
     Events.clear()
-    -- self.sources.bgm:stop()
-    self.sources.bgm_dialogue:stop()
+    self.sources.bgm:stop()
+    -- self.sources.bgm_dialogue:stop()
 end
 
 return Scene
