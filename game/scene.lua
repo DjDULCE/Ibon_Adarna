@@ -52,8 +52,8 @@ end
 function Scene:on_player_move_x() end
 
 function Scene:load()
-    self.sources.bgm:play()
-    self.sources.bgm:setLooping(true)
+    -- self.sources.bgm:play()
+    -- self.sources.bgm:setLooping(true)
 
     local p_width, p_height = self.images.platform:getDimensions()
     local p_sy = 1
@@ -212,9 +212,6 @@ function Scene:load()
 end
 
 function Scene:on_dialogue_show()
-    self.prev_bgm = self.sources.bgm:isPlaying()
-    self.sources.bgm:stop()
-
     self.sources.bgm_dialogue:play()
     self.sources.bgm_dialogue:setLooping(true)
     self.sources.bgm_dialogue:setVolume(UserData.data.music * 0.5)
@@ -382,7 +379,7 @@ end
 function Scene:exit()
     Events.emit("on_exit")
     Events.clear()
-    self.sources.bgm:stop()
+    -- self.sources.bgm:stop()
     self.sources.bgm_dialogue:stop()
 end
 

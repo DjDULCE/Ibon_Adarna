@@ -1072,6 +1072,23 @@ function Menu:draw()
         )
     end
 
+    local slider = self.objects.slider
+    if slider.alpha == 1 then
+        local font = Assets.fonts.arial_regular24
+        love.graphics.setColor(0, 0, 0, 1)
+        love.graphics.setFont(font)
+        love.graphics.print(
+            "Musika",
+            HALF_WW,
+            HALF_WH + 64,
+            0,
+            1, 1,
+            font:getWidth("Musika") * 0.5,
+            font:getHeight() * 0.5
+        )
+        love.graphics.setColor(1, 1, 1, 1)
+    end
+
     love.graphics.setColor(1, 1, 1, 1)
 end
 
