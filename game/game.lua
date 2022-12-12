@@ -1458,6 +1458,10 @@ function Game:draw()
     love.graphics.print(self.index, 32, 32)
     local key_enemy = enemies[self.index][self.current_enemy]
     love.graphics.print(key_enemy or "", 32, 64)
+    if self.enemy then
+        love.graphics.print(self.enemy.sprite.x, 32, 96)
+        love.graphics.print(self.enemy.sprite.y, 32, 128)
+    end
 
     love.graphics.setColor(1, 1, 1, 1)
 end
