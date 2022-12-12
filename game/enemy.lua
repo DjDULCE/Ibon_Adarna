@@ -34,6 +34,7 @@ function Enemy:new(name, opts, images)
     self.damage = damages_data[difficulty]
 
     self.sprite = Sprite(opts)
+    self.sprite.alpha = 1
     self.images = images
 
     self.target_x = WW * 0.7
@@ -44,7 +45,7 @@ function Enemy:new(name, opts, images)
             self.sprite.x = mathx.lerp(orig_x, self.target_x, progress)
         end,
         function()
-            self.timer = nil
+            -- self.timer = nil
 
             if self.dialogue then
                 Events.emit("on_dialogue_show", self.dialogue)

@@ -936,7 +936,7 @@ function Game:show_other(name)
             self.objects[name].x = mathx.lerp(orig_x, tx, progress)
         end,
         function()
-            self.show_timer = nil
+            -- self.show_timer = nil
             self.player.can_move = true
 
             if self.index == 2 then
@@ -1387,6 +1387,22 @@ function Game:update(dt)
     local obj_maria = self.objects.maria
     if obj_maria then
         obj_maria.sx = self.player.x <= obj_maria.x and -1 or 1
+    end
+
+    if self.index == 3 then
+        local key_enemy = enemies[self.index][self.current_enemy]
+        if key_enemy and key_enemy == "giant" then
+            if self.enemy then
+                self.enemy.sprite.alpha = 1
+            end
+        end
+
+        if self.objects.juana then
+            self.objects.juana.alpha = 1
+        end
+        if self.objects.leonora then
+            self.objects.juana.leonora = 1
+        end
     end
 end
 
