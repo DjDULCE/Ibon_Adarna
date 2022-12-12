@@ -19,7 +19,7 @@ function Scene:new(index)
     local idn = id .. tostring(index)
     self.index = index
     self.images = Assets.load_images(idn)
-    self.sources = Assets.load_sources(id, "static")
+    self.sources = Assets.load_sources(id, "stream")
     self.controls = Controls()
     self.alpha = 0
     self.alpha2 = 0

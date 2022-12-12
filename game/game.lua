@@ -66,7 +66,7 @@ function Game:new(index, init_hp)
     local idn = id .. tostring(index)
     self.images = Assets.load_images(idn)
     self.ui = Assets.load_images("ui")
-    self.sources = Assets.load_sources(id, "static")
+    self.sources = Assets.load_sources(id, "stream")
     self.sfx = Assets.load_sources("sfx", "static")
     for _, sfx in pairs(self.sfx) do
         sfx:setVolume(UserData.data.music * 0.5)
@@ -1455,13 +1455,13 @@ function Game:draw()
     love.graphics.setFont(self.damage_text.font)
     love.graphics.print(self.damage_text.text, self.damage_text.x, self.damage_text.y)
 
-    love.graphics.print(self.index, 32, 32)
-    local key_enemy = enemies[self.index][self.current_enemy]
-    love.graphics.print(key_enemy or "", 32, 64)
-    if self.enemy then
-        love.graphics.print(self.enemy.sprite.x, 32, 96)
-        love.graphics.print(self.enemy.sprite.y, 32, 128)
-    end
+    -- love.graphics.print(self.index, 32, 32)
+    -- local key_enemy = enemies[self.index][self.current_enemy]
+    -- love.graphics.print(key_enemy or "", 32, 64)
+    -- if self.enemy then
+    --     love.graphics.print(self.enemy.sprite.x, 32, 96)
+    --     love.graphics.print(self.enemy.sprite.y, 32, 128)
+    -- end
 
     love.graphics.setColor(1, 1, 1, 1)
 end

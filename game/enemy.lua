@@ -46,7 +46,6 @@ function Enemy:new(name, opts, images)
         end,
         function()
             -- self.timer = nil
-
             if self.dialogue then
                 Events.emit("on_dialogue_show", self.dialogue)
             else

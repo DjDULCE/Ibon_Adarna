@@ -79,7 +79,7 @@ function Assets.load_vo(id)
     for _, filename in ipairs(files) do
         local key = filename:sub(0, -5)
         print("loading", filename)
-        sources[key] = love.audio.newSource(path .. filename, "static")
+        sources[key] = love.audio.newSource(path .. filename, "stream")
     end
     return sources
 end
