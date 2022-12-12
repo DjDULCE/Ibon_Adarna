@@ -9,7 +9,7 @@ local VIDEOS_PATH = ASSETS_PATH .. "videos/"
 local IMPACT_PATH = ASSETS_PATH .. "impact.ttf"
 local ARIAL_L_PATH = ASSETS_PATH .. "arial_light.ttf"
 local ARIAL_R_PATH = ASSETS_PATH .. "arial_regular.ttf"
-local font_sizes = {18, 20, 24, 28, 32}
+local font_sizes = {18, 20, 22, 24, 28, 32}
 
 if DEV then
     local list = {}

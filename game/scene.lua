@@ -19,7 +19,7 @@ function Scene:new(index)
     local idn = id .. tostring(index)
     self.index = index
     self.images = Assets.load_images(idn)
-    self.sources = Assets.load_sources(id)
+    self.sources = Assets.load_sources(id, "static")
     self.controls = Controls()
     self.alpha = 0
     self.alpha2 = 0
@@ -381,7 +381,7 @@ function Scene:exit()
     Events.emit("on_exit")
     Events.clear()
     self.sources.bgm:stop()
-    -- self.sources.bgm_dialogue:stop()
+    self.sources.bgm_dialogue:stop()
 end
 
 return Scene

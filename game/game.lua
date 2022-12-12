@@ -807,6 +807,7 @@ function Game:handle_prologue_2(obj_dialogue)
         self.fade_timer = timer(1,
             function(progress) self.fade_alpha = 1 - progress end,
             function()
+                self.fade_alpha = 0
                 self.fade_timer = nil
                 self.wait_timer = timer(1, nil, function()
                     Events.emit("on_dialogue_show", self.dialogue)
@@ -1279,9 +1280,9 @@ function Game:open_yugto()
     }
 
     local w, h = self.ui.box_yugto:getDimensions()
-    local sx = 1.25
+    local sx = 1.35
     local sy = 0.5
-    local font_yugto = Assets.fonts.arial_regular24
+    local font_yugto = Assets.fonts.arial_regular22
     for i, str in ipairs(yugtos) do
         local text
 
@@ -1461,21 +1462,20 @@ function Game:exit()
 end
 
 function Game:stop_vos()
-    if self.dialogue then
-        for _, vo in pairs(self.dialogue.vos) do
-            vo:stop()
+    local ds = {
+        self.dialogue,
+        self.enemy_dialogue,
+        self.other_dialogue,
+        self.prologue
+    }
+    for _, d in ipairs(ds) do
+        if d then
+            for _, vo in pairs(d.vos) do
+                vo:stop()
+            end
         end
     end
-    if self.enemy_dialogue then
-        for _, vo in pairs(self.enemy_dialogue.vos) do
-            vo:stop()
-        end
-    end
-    if self.other_dialogue then
-        for _, vo in pairs(self.other_dialogue.vos) do
-            vo:stop()
-        end
-    end
+    self.sources.bgm_dialogue:stop()
 end
 
 return Game
