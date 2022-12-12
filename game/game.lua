@@ -1456,6 +1456,8 @@ function Game:draw()
     love.graphics.print(self.damage_text.text, self.damage_text.x, self.damage_text.y)
 
     love.graphics.print(self.index, 32, 32)
+    local key_enemy = enemies[self.index][self.current_enemy]
+    love.graphics.print(key_enemy or "", 32, 64)
 
     love.graphics.setColor(1, 1, 1, 1)
 end
