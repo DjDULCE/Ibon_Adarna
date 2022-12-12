@@ -1454,6 +1454,9 @@ function Game:draw()
     love.graphics.setColor(self.damage_text.color)
     love.graphics.setFont(self.damage_text.font)
     love.graphics.print(self.damage_text.text, self.damage_text.x, self.damage_text.y)
+
+    love.graphics.print(self.index, 32, 32)
+
     love.graphics.setColor(1, 1, 1, 1)
 end
 
