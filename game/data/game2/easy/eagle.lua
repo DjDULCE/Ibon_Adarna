@@ -2,9 +2,9 @@ return {
 	{
 		question = "Ano ang binilin ng ermitanyo bago umalis si don juan?",
 		answer = "a",
-		a = "Mag ingat upang hind maging bato",
-		b = "Hanapin mo ang Ibong Adarna",
-		c = "Bumalik kana sa kaharian",
+		a = "Wag maging bato",
+		b = "Hanapin ang ibong adarna",
+		c = "Bumalik sa kaharian",
 	},
 	{
 		question = "Ano ang tinutukoy ng ermitanyo na madadaanan ni don juan",

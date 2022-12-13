@@ -936,7 +936,8 @@ function Game:show_other(name)
             self.objects[name].x = mathx.lerp(orig_x, tx, progress)
         end,
         function()
-            -- self.show_timer = nil
+            self.show_timer = nil
+            self.objects[name].x = tx
             self.player.can_move = true
 
             if self.index == 2 then

@@ -45,7 +45,8 @@ function Enemy:new(name, opts, images)
             self.sprite.x = mathx.lerp(orig_x, self.target_x, progress)
         end,
         function()
-            -- self.timer = nil
+            self.timer = nil
+            self.sprite.x = self.target_x
             if self.dialogue then
                 Events.emit("on_dialogue_show", self.dialogue)
             else

@@ -306,6 +306,7 @@ function Scene:on_dialogue_end(obj_dialogue)
             self.player.can_move = false
             self.controls.enabled = false
             self.controls.should_draw = false
+            self:stop_vos()
             Events.emit("fadeout", 3, function()
                 self.alpha = 1
                 Events.emit("fadein", 1, function()
@@ -320,6 +321,7 @@ function Scene:on_dialogue_end(obj_dialogue)
     self.player.can_move = false
     self.controls.enabled = false
     self.controls.should_draw = false
+    self:stop_vos()
     Events.emit("fadeout", 3, function()
         self.alpha = 1
         Events.emit("fadein", 1, function()
@@ -378,10 +380,19 @@ function Scene:mousereleased(mx, my, mb)
 end
 
 function Scene:exit()
+    self:stop_vos()
     Events.emit("on_exit")
     Events.clear()
     self.sources.bgm:stop()
     self.sources.bgm_dialogue:stop()
+end
+
+function Scene:stop_vos()
+    if self.dialogue then
+        for _, vo in pairs(self.dialogue.vos) do
+            vo:stop()
+        end
+    end
 end
 
 return Scene
