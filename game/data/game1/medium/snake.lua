@@ -3,8 +3,8 @@ return {
 		question = "Si _______ ang gitna sa magkakapatid?",
 		answer = "a",
 		a = "Don Diego",
-		b = "Don Pedro
-		c = "Don Juan
+		b = "Don Pedro",
+		c = "Don Juan",
 	},
 	{
 		question = "Ang bunsong anak ay si _______?",
