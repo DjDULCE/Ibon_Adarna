@@ -12,7 +12,7 @@ local text_color = { 0, 0, 0 }
 local font_arial_regular24, font_arial_regular20
 local ctrl_text1 = "MGA PANGUNAHING KONTROL"
 local ctrl_text2 = "Mga Kontrol Para Sa Instraksyon"
-local ctrl_color = {197/255, 179/255, 38/255}
+local ctrl_color = {1, 1, 1,}
 
 local function update_group(tbl, alpha, interactive)
     for i = 1, #tbl do
@@ -864,6 +864,7 @@ function Menu:setup_controls()
     local a_width, a_height = self.images_control.btn_a:getDimensions()
     local a_text = "Tanggapin/Kausapin"
     self.objects.btn_a = Sprite({
+        color = {0, 0, 0,},
         image = self.images_control.btn_a,
         x = 72,
         y = WH * 0.4,
@@ -884,6 +885,7 @@ function Menu:setup_controls()
     local b_text = "Ipagliban/Huwag Ipagpatuloy"
     local bx = self.objects.btn_a.x + font_arial_regular20:getWidth(a_text) + gap * 2 + a_width * 0.5 + btn_ctrl_scale
     self.objects.btn_b = Sprite({
+        color = {0, 0, 0,},
         image = self.images_control.btn_b,
         x = bx,
         y = self.objects.btn_a.y,
@@ -902,6 +904,7 @@ function Menu:setup_controls()
 
     local l_width, l_height = self.images_control.btn_left:getDimensions()
     self.objects.btn_left = Sprite({
+        color = {0, 0, 0,},
         image = self.images_control.btn_left,
         x = HALF_WW - l_width * btn_ctrl_scale,
         y = self.objects.btn_b.y + b_height * btn_ctrl_scale + gap,
@@ -916,6 +919,7 @@ function Menu:setup_controls()
     local dir_text = "Kontrol Para sa Paggalaw"
     local r_width, r_height = self.images_control.btn_right:getDimensions()
     self.objects.btn_right = Sprite({
+        color = {0, 0, 0,},
         image = self.images_control.btn_right,
         x = HALF_WW + r_width * btn_ctrl_scale,
         y = self.objects.btn_left.y,
@@ -1012,29 +1016,14 @@ function Menu:draw()
     local bg_sx, bg_sy = WW/bg_w, WH/bg_h
     love.graphics.draw(bg, 0, 0, 0, bg_sx, bg_sy)
 
-    if self.in_controls then
-        love.graphics.setColor(0, 0, 0, 1)
-        love.graphics.rectangle("fill", 0, 0, 4096, 4096)
-
-        local r, g, b = unpack(ctrl_color)
-        print(r, g, b)
-        love.graphics.setColor(r, g, b, self.objects.ctrl_avatar.alpha)
-        love.graphics.setFont(font_arial_regular24)
-        love.graphics.print(ctrl_text1,
-            HALF_WW, 64, 0, 1, 1,
-            font_arial_regular24:getWidth(ctrl_text1) * 0.5,
-            font_arial_regular24:getHeight()
-        )
-        love.graphics.setFont(font_arial_regular20)
-        love.graphics.print(ctrl_text2,
-            64,
-            64 + font_arial_regular24:getHeight() * 1.1, 0, 1, 1,
-            -- font_arial_regular20:getWidth(ctrl_text2) * 0.5,
-            font_arial_regular20:getHeight()
-        )
-    end
-
     iter_objects(self.orders, self.objects, "draw")
+
+    if self.in_controls then
+        local bg_w, bg_h = self.images_control.bg:getDimensions()
+        local bg_sx, bg_sy = WW/bg_w, WH/bg_h
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.draw(self.images_control.bg, 0, 0, 0, bg_sx, bg_sy)
+    end
 
     local bb = self.objects.box_bg
     if bb.alpha == 1 then
