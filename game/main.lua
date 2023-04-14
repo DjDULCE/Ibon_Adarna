@@ -132,3 +132,5 @@ end
 function love.mousefocus(focus)
 	StateManager:mousefocus(focus)
 end
+
+--by flamendless
